@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title></title>
+<link href="{W_CSS}" rel="stylesheet" type="text/css"/>
+<script charset="iso-8859-1" src="../../../../commonlib/trunk/script_js/edit_filter.js" type="text/javascript"></script>
+<script charset="iso-8859-1" src="../../../../commonlib/trunk/script_js/general.js" type="text/javascript"></script>
+<script type="text/javascript">
+function display_td(){
+	if (document.getElementById('CREAR_DESDE_0').checked)
+		document.getElementById('DISPLAY_TR').style.display= 'none';	
+	else if (document.getElementById('DUPLICAR_0').checked)
+		document.getElementById('DISPLAY_TR').style.display= '';	
+}
+
+function get_returnVal() {
+	var vl_res = '';
+	var vl_cod_orden_compra = document.getElementById('ORDEN_COMPRA_0').value;
+	var vl_cantidad = document.getElementById('CANTIDAD_0').value;
+	
+	if(vl_cod_orden_compra != ''){
+		if (document.getElementById('CREAR_DESDE_0').checked)
+			vl_res = "CREAR_DESDE|"+ vl_cod_orden_compra;
+		else if (document.getElementById('DUPLICAR_0').checked)
+			vl_res = "DUPLICAR|"+ vl_cod_orden_compra + '|' + vl_cantidad;	
+		return vl_res;
+	}else{
+		return vl_res;
+	}	
+}
+// DIALOG Required Code
+	var prntWindow = getParentWindowWithDialog(); //$(top)[0];
+
+	var $dlg = prntWindow && prntWindow.$dialog;
+
+	function getParentWindowWithDialog() {
+		var p = window.parent;
+		var previousParent = p;
+		while (p != null) {
+			if ($(p.document).find('#iframeDialog').length) return p;
+
+			p = p.parent;
+
+			if (previousParent == p) return null;
+
+			// save previous parent
+
+			previousParent = p;
+		}
+		return null;
+	}
+
+	function setWindowReturnValue(value) {
+		if ($dlg) $dlg.returnValue = value;
+		window.returnValue = value; // in case popup is called using showModalDialog
+
+	}
+
+	function getWindowReturnValue() {
+		// in case popup is called using showModalDialog
+
+		if (!$dlg && window.returnValue != null)
+			return window.returnValue;
+
+		return $dlg && $dlg.returnValue;
+	}
+
+	if ($dlg) window.dialogArguments = $dlg.dialogArguments;
+	if ($dlg) window.close = function() { if ($dlg) $dlg.dialogWindow.dialog('close'); };
+	// END of dialog Required Code
+
+    function okMe() {
+    	
+	returnValue=get_returnVal(); 
+	setWindowReturnValue(returnValue);
+	$dlg.dialogWindow.dialog('close');
+		
+	}
+    function closeMe() {
+        setWindowReturnValue(null);
+        $dlg.dialogWindow.dialog('close');
+    }
+</script>
+<style type="text/css">
+.button{
+	font-size: 14px;
+	text-align:center;
+}
+.oscuro{
+	background-color: #E5E5E5;
+    color: #000000;
+    font-size: 11px;
+    font-weight: 100;
+    height: 23px;
+}
+</style>
+</head>
+<body class="content_wm">
+<div class="titulo_tabla_wm">&nbsp;&nbsp;Select an option</div>
+	<table width="100%">
+		<tr class="oscuro">
+    		<td align="left" width="30%">{CREAR_DESDE}</td>
+			<td align="left" width="70%">{DUPLICAR}</td>
+  		</tr>
+  		<tr><td></td></tr>
+  		<tr class="oscuro">
+  			<td colspan="2" align="left">Code: {ORDEN_COMPRA}</td>
+  		</tr>
+  		<tr class="oscuro">
+  			<td id="DISPLAY_TR" colspan="2" align="left" style="display:{DISPLAY}">Divide into {CANTIDAD} Purchase Order</td>
+  		</tr>
+		<tr class="oscuro">
+			<td colspan="2" align="right"><input name="OK" type="button" value="OK" onclick="okMe();" class="button" />
+			<input name="Cancelar" type="button" value="Cancel" onclick="closeMe();" class="button"/></td>
+		</tr>
+	</table>
+</body>
+</html>

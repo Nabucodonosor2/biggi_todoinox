@@ -1,0 +1,70 @@
+<?php
+require_once(dirname(__FILE__)."/../../../../commonlib/trunk/php/auto_load.php");
+require_once(dirname(__FILE__)."/../../../../commonlib/trunk/php/clases/class_PHPMailer.php");	
+include(dirname(__FILE__)."/../../appl.ini");
+session::set('K_ROOT_DIR', K_ROOT_DIR);
+
+//funcion que crea el objeto del phpmailer con sus parametros
+function create_mail($asunto, $db){
+	$K_host		= 53;
+	$K_Username = 54;
+	$K_Password = 55;
+	$sql_host	= "SELECT VALOR
+				   FROM PARAMETRO 
+				   WHERE COD_PARAMETRO =$K_host
+				   OR COD_PARAMETRO =$K_Username
+				   OR COD_PARAMETRO =$K_Password";
+	$result_host	= $db->build_results($sql_host);
+	$host			= $result_host[0]['VALOR'];
+	$Username		= $result_host[1]['VALOR'];
+	$Password		= $result_host[2]['VALOR'];
+
+	$mail				= new phpmailer();
+	$mail->PluginDir	= dirname(__FILE__)."/../../../../commonlib/trunk/php/clases/";
+	$mail->Mailer		= "smtp";
+	$mail->SMTPAuth		= true;
+	$mail->SMTPSecure	= "ssl"; 
+    $mail->IsHTML(True);
+	$mail->Host			= $host;
+	$mail->Username		= $Username;
+	$mail->Password		= $Password;
+	$mail->Port			= 465;
+	$mail->From			= "soporte@biggi.cl";		
+	$mail->FromName		= "Comercial Biggi S.A.";
+	$mail->Timeout		= 30;
+	$mail->Subject		= $asunto;
+
+	$mail->ClearAddresses();
+	
+	return $mail;
+}
+
+$db = new database(K_TIPO_BD, K_SERVER, K_BD, K_USER, K_PASS);
+$temp = new Template_appl('mail_producto_stock_c.htm');
+
+//creacion de dw
+$sql = "exec spdw_mail_producto_stock_c";
+$dw = new datawindow($sql, "MAIL_PRODUCTO");
+$dw->retrieve();
+$dw->habilitar($temp, false);
+
+$sql = "SELECT CONVERT(VARCHAR, GETDATE(), 103) FECHA_ACTUAL";
+$result = $db->build_results($sql);
+
+$html = $temp->toString();
+$asunto = 'Informe Stock Crítico Comercial Todoinox al '.$result[0]['FECHA_ACTUAL'];
+
+$mail = create_mail($asunto, $db);
+
+$mail->AddAddress('mscianca@todoinox.cl', 'MARGARITA SCIANCA');
+$mail->AddAddress('lsun@todoinox.cl', 'LIFEN SUN');
+$mail->AddBCC('mherrera@biggi.cl', 'MARCELO HERRERA');
+$mail->AddBCC('ecastillo@biggi.cl', 'EDUARDO CASTILLO');
+
+$mail->Body = $html;
+$mail->AltBody = "";
+$mail->ContentType="text/html";
+$mail->Send();
+
+header('Location:mail_producto.htm');
+?>

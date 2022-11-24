@@ -1,0 +1,23 @@
+<?php
+require_once(dirname(__FILE__)."/../../../../commonlib/trunk/php/auto_load.php");
+require_once(dirname(__FILE__)."/../common_appl/class_w_output_biggi.php");
+
+class wo_cx_transportista extends w_output_biggi {
+   function wo_cx_transportista() {   	
+      $sql = "SELECT	COD_CX_TRANSPORTISTA
+						,NOM_CX_TRANSPORTISTA
+						,DIRECCION
+						,CONTACTO 
+			FROM		CX_TRANSPORTISTA
+			ORDER BY 	COD_CX_TRANSPORTISTA";
+			
+    //  parent::w_parametrica('cx_clausula_compra', $sql, $_REQUEST['cod_item_menu'], '352005');
+      parent::w_output_biggi('cx_transportista', $sql, $_REQUEST['cod_item_menu']);
+      // headers
+      $this->add_header(new header_text('COD_CX_TRANSPORTISTA', 'COD_CX_TRANSPORTISTA', 'Código'));
+      $this->add_header(new header_text('NOM_CX_TRANSPORTISTA', 'NOM_CX_TRANSPORTISTA', 'Transportista'));
+      $this->add_header(new header_text('DIRECCION', 'DIRECCION', 'Dirección'));
+      $this->add_header(new header_text('CONTACTO', 'CONTACTO', 'Contacto'));
+   }
+}
+?>

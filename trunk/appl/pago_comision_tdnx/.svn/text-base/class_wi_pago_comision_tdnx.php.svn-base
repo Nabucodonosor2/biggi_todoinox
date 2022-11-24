@@ -1,0 +1,351 @@
+<?php
+require_once(dirname(__FILE__)."/../../../../commonlib/trunk/php/auto_load.php");
+
+class dw_empresa_relacionada extends datawindow {
+	function dw_empresa_relacionada() {		
+		$sql = "SELECT COD_EMPRESA
+					  ,RUT
+					  ,DIG_VERIF
+					  ,NOM_EMPRESA
+				FROM EMPRESA
+				WHERE EMP_RELACIONADA_COMISION_TDNX = 1";
+					
+		parent::datawindow($sql, 'EMPRESA_RELACIONADA', false, false);
+		$this->add_control(new static_num('RUT'));
+	}
+}
+
+class dw_item_pago_comision extends datawindow {
+	function dw_item_pago_comision() {		
+		$sql = "SELECT COD_ITEM_US_PAGO_COMISION_TDNX
+					  ,COD_USUARIO_PAGO_COMISION
+					  ,PORC_COMISION
+					  ,MONTO_COMISION
+					  ,MONTO_COMISION MONTO_COMISION_H
+					  ,COD_PAGO_COMISION_TDNX
+				FROM ITEM_US_PAGO_COMISION_TDNX
+				WHERE COD_PAGO_COMISION_TDNX = {KEY1}";
+					
+		parent::datawindow($sql, 'ITEM_PAGO_COMISION', false, false);	
+		
+		$this->add_control(new edit_text_hidden('COD_ITEM_US_PAGO_COMISION_TDNX'));
+		$sql = "SELECT COD_USUARIO COD_USUARIO_PAGO_COMISION
+					  ,NOM_USUARIO
+				FROM USUARIO
+				WHERE TIENE_PATICIPACION_TDNX = 'S'";
+		$this->add_control($control = new drop_down_dw('COD_USUARIO_PAGO_COMISION', $sql, 125));
+		$this->add_control(new static_num('PORC_COMISION', 1));
+		$this->add_control(new static_num('MONTO_COMISION'));
+		$this->add_control(new edit_text_hidden('MONTO_COMISION_H'));
+		
+		$this->set_entrable('COD_USUARIO_PAGO_COMISION', false);
+		$this->set_entrable('PORC_COMISION', false);
+		$this->set_entrable('MONTO_COMISION', false);
+	}
+	
+	function update($db){
+		$sp = 'spu_item_pago_comision_tdnx';
+		for ($i = 0; $i < $this->row_count(); $i++){
+			$statuts = $this->get_status_row($i);
+			
+			$COD_ITEM_US_PAGO_COMISION_TDNX	= $this->get_item($i, 'COD_ITEM_US_PAGO_COMISION_TDNX');
+			$COD_USUARIO_PAGO_COMISION		= $this->get_item($i, 'COD_USUARIO_PAGO_COMISION');			
+			$PORC_COMISION					= $this->get_item($i, 'PORC_COMISION');
+			$MONTO_COMISION					= $this->get_item($i, 'MONTO_COMISION_H');
+			$COD_PAGO_COMISION_TDNX			= $this->get_item($i, 'COD_PAGO_COMISION_TDNX');
+			
+			$COD_ITEM_US_PAGO_COMISION_TDNX = ($COD_ITEM_US_PAGO_COMISION_TDNX=='') ? "null" : $COD_ITEM_US_PAGO_COMISION_TDNX;
+			
+			if ($statuts == K_ROW_NEW_MODIFIED) 
+				$operacion = 'INSERT';
+			elseif ($statuts == K_ROW_MODIFIED)
+				$operacion = 'UPDATE';
+				
+			$param = "'$operacion'
+					  ,$COD_ITEM_US_PAGO_COMISION_TDNX
+					  ,$COD_USUARIO_PAGO_COMISION
+					  ,$PORC_COMISION
+					  ,$MONTO_COMISION
+					  ,$COD_PAGO_COMISION_TDNX";		
+			if (!$db->EXECUTE_SP($sp, $param)) 
+				return false;
+			else{
+				if ($statuts == K_ROW_NEW_MODIFIED) {
+					$COD_ITEM_US_PAGO_COMISION_TDNX = $db->GET_IDENTITY();
+					$this->set_item($i, 'COD_ITEM_US_PAGO_COMISION_TDNX', $COD_ITEM_US_PAGO_COMISION_TDNX);		
+				}
+			}
+		}
+		return true;
+	}
+	
+}
+
+class wi_pago_comision_tdnx extends w_input {
+	var $hora_str;
+	
+	function wi_pago_comision_tdnx($cod_item_menu) {
+		parent::w_input('pago_comision_tdnx', $cod_item_menu);
+		$this->add_FK_delete_cascada('ITEM_US_PAGO_COMISION_TDNX');
+		
+		$sql = "SELECT COD_PAGO_COMISION_TDNX
+					  ,CONVERT(VARCHAR, FECHA_REGISTRO, 103) FECHA_REGISTRO
+					  ,PCT.COD_USUARIO
+					  ,U.NOM_USUARIO
+					  ,CONVERT(VARCHAR, FECHA_DESDE, 103) FECHA_DESDE
+					  ,CONVERT(VARCHAR, FECHA_HASTA, 103) FECHA_HASTA
+					  ,COD_ESTADO_PAGO_COMISION_TDNX
+					  ,PORC_COMISION_OTROS
+					  ,dbo.f_get_montos('OTROS', 2014, FECHA_DESDE, FECHA_HASTA) OTROS_2014
+					  ,dbo.f_get_montos('OTROS', 2015, FECHA_DESDE, FECHA_HASTA) OTROS_2015
+					  ,dbo.f_get_montos('NC', 2014, FECHA_DESDE, FECHA_HASTA) NC_2014
+					  ,dbo.f_get_montos('NC', 2015, FECHA_DESDE, FECHA_HASTA) NC_2015
+				FROM PAGO_COMISION_TDNX PCT
+					,USUARIO U
+				WHERE COD_PAGO_COMISION_TDNX = {KEY1}
+				AND PCT.COD_USUARIO = U.COD_USUARIO";
+		$this->dws['dw_pago_comision_tdnx'] = new datawindow($sql);
+		$this->dws['dw_item_pago_comision'] = new dw_item_pago_comision();
+		$this->dws['dw_empresa_relacionada'] = new dw_empresa_relacionada();
+
+		// asigna los formatos
+		$this->dws['dw_pago_comision_tdnx']->add_control(new static_text('COD_PAGO_COMISION_TDNX'));
+		$sql = "SELECT COD_ESTADO_PAGO_COMISION_TDNX
+					  ,NOM_ESTADO_PAGO_COMISION_TDNX
+				FROM ESTADO_PAGO_COMISION_TDNX";
+		$this->dws['dw_pago_comision_tdnx']->add_control(new drop_down_dw('COD_ESTADO_PAGO_COMISION_TDNX', $sql, 125));
+		$this->dws['dw_pago_comision_tdnx']->add_control(new edit_date('FECHA_DESDE'));
+		$this->dws['dw_pago_comision_tdnx']->add_control(new edit_date('FECHA_HASTA'));
+		$this->dws['dw_pago_comision_tdnx']->add_control(new static_num('OTROS_2014'));
+		$this->dws['dw_pago_comision_tdnx']->add_control(new static_num('OTROS_2015'));
+		$this->dws['dw_pago_comision_tdnx']->add_control(new static_num('NC_2014'));
+		$this->dws['dw_pago_comision_tdnx']->add_control(new static_num('NC_2015'));
+		$this->dws['dw_pago_comision_tdnx']->add_control($control = new edit_porcentaje('PORC_COMISION_OTROS'));
+		$control->set_onChange("calculo_porc_comision();");
+		
+		$this->dws['dw_pago_comision_tdnx']->set_entrable('FECHA_DESDE', false);
+		$this->dws['dw_pago_comision_tdnx']->set_entrable('FECHA_HASTA', false);
+		
+		// asigna los mandatorys		
+		$this->dws['dw_pago_comision_tdnx']->set_mandatory('COD_ESTADO_PAGO_COMISION_TDNX', 'Estado Pago Comision');	
+	}
+	function new_record() {
+		$this->dws['dw_pago_comision_tdnx']->insert_row();
+
+		$valores = session::get('ADD_VALORES');
+		$array = explode('|', $valores);
+		session::un_set('ADD_VALORES');
+		
+		if($array[1] == $array[3]){
+			$this->hora_str= $this->current_time();
+		}else
+			$this->hora_str='23:59:59';	
+
+		$fecha_desde = $this->str2date($array[0]);
+		$fecha_hasta = $this->str2date($array[1], $this->hora_str);
+		
+		$this->dws['dw_pago_comision_tdnx']->set_item(0, 'FECHA_REGISTRO', $this->current_date());
+		$this->dws['dw_pago_comision_tdnx']->set_item(0, 'COD_USUARIO', $this->cod_usuario);
+		$this->dws['dw_pago_comision_tdnx']->set_item(0, 'NOM_USUARIO', $this->nom_usuario);
+		$this->dws['dw_pago_comision_tdnx']->set_item(0, 'FECHA_DESDE', $array[0]);
+		$this->dws['dw_pago_comision_tdnx']->set_item(0, 'FECHA_HASTA', $array[1]);
+		$this->dws['dw_pago_comision_tdnx']->set_item(0, 'COD_ESTADO_PAGO_COMISION_TDNX', 1); //Emitida
+		
+		$db = new database(K_TIPO_BD, K_SERVER, K_BD, K_USER, K_PASS);
+		$sql = "SELECT ISNULL(SUM(TOTAL_NETO), 0) VARIABLE
+				FROM FACTURA F
+					,EMPRESA E
+				WHERE COD_ESTADO_DOC_SII IN (2, 3)
+				AND FECHA_FACTURA between DATEADD(YEAR, -1, $fecha_desde) and DATEADD(YEAR, -1, $fecha_hasta)
+				AND E.EMP_RELACIONADA_COMISION_TDNX = 0
+				AND F.COD_EMPRESA = E.COD_EMPRESA";
+		$result1 = $db->build_results($sql);
+		
+		$this->dws['dw_pago_comision_tdnx']->set_item(0, 'OTROS_2014', $result1[0]['VARIABLE']);
+
+		$db = new database(K_TIPO_BD, K_SERVER, K_BD, K_USER, K_PASS);
+		$sql = "SELECT ISNULL(SUM(TOTAL_NETO), 0) VARIABLE
+				FROM FACTURA F
+					,EMPRESA E
+				WHERE COD_ESTADO_DOC_SII IN (2, 3)
+				AND FECHA_FACTURA between $fecha_desde and $fecha_hasta
+				AND E.EMP_RELACIONADA_COMISION_TDNX = 0
+				AND F.COD_EMPRESA = E.COD_EMPRESA";
+		$result2 = $db->build_results($sql);
+
+		$this->dws['dw_pago_comision_tdnx']->set_item(0, 'OTROS_2015', $result2[0]['VARIABLE']);
+		
+		$db = new database(K_TIPO_BD, K_SERVER, K_BD, K_USER, K_PASS);
+		$sql = "SELECT ISNULL(SUM(TOTAL_NETO), 0) VARIABLE
+				FROM NOTA_CREDITO NC
+					,EMPRESA E
+				WHERE COD_ESTADO_DOC_SII IN (2, 3)
+				AND FECHA_NOTA_CREDITO between DATEADD(YEAR, -1, $fecha_desde) and DATEADD(YEAR, -1, $fecha_hasta)
+				AND E.EMP_RELACIONADA_COMISION_TDNX = 0
+				AND NC.COD_EMPRESA = E.COD_EMPRESA";
+		$result3 = $db->build_results($sql);
+
+		$this->dws['dw_pago_comision_tdnx']->set_item(0, 'NC_2014', $result3[0]['VARIABLE']);
+		
+		$db = new database(K_TIPO_BD, K_SERVER, K_BD, K_USER, K_PASS);
+		$sql = "SELECT ISNULL(SUM(TOTAL_NETO), 0) VARIABLE
+				FROM NOTA_CREDITO NC
+					,EMPRESA E
+				WHERE COD_ESTADO_DOC_SII IN (2, 3)
+				AND FECHA_NOTA_CREDITO between $fecha_desde and $fecha_hasta
+				AND E.EMP_RELACIONADA_COMISION_TDNX = 0
+				AND NC.COD_EMPRESA = E.COD_EMPRESA";
+		$result4 = $db->build_results($sql);
+
+		$this->dws['dw_pago_comision_tdnx']->set_item(0, 'NC_2015', $result4[0]['VARIABLE']);
+		$this->dws['dw_pago_comision_tdnx']->set_item(0, 'PORC_COMISION_OTROS', $this->get_parametro(64));
+		
+		$db = new database(K_TIPO_BD, K_SERVER, K_BD, K_USER, K_PASS);
+		$sql = "SELECT COD_USUARIO
+					  ,PORC_PARTICIPACION_TDNX
+				FROM USUARIO
+				WHERE TIENE_PATICIPACION_TDNX = 'S'";
+		$result = $db->build_results($sql);
+		
+		$total_2015 = $result2[0]['VARIABLE'] - $result4[0]['VARIABLE'];
+		$total_comision_otros = $total_2015 * ($this->get_parametro(64)/100);
+		
+		for($i=0 ; $i < count($result) ; $i++){
+			$this->dws['dw_item_pago_comision']->insert_row();
+			$this->dws['dw_item_pago_comision']->set_item($i, 'COD_USUARIO_PAGO_COMISION', $result[$i]['COD_USUARIO']);
+			$this->dws['dw_item_pago_comision']->set_item($i, 'PORC_COMISION', $result[$i]['PORC_PARTICIPACION_TDNX']);
+			$monto_comision = ($result[$i]['PORC_PARTICIPACION_TDNX'] * $total_comision_otros)/100;
+			
+			$this->dws['dw_item_pago_comision']->set_item($i, 'MONTO_COMISION', $monto_comision);
+			$this->dws['dw_item_pago_comision']->set_item($i, 'MONTO_COMISION_H', $monto_comision);
+		}
+	}
+	
+	function load_record(){
+		$cod_pago_comision_tdnx = $this->get_item_wo($this->current_record, 'COD_PAGO_COMISION_TDNX');
+		$this->dws['dw_pago_comision_tdnx']->retrieve($cod_pago_comision_tdnx);
+		$this->dws['dw_item_pago_comision']->retrieve($cod_pago_comision_tdnx);
+		$this->dws['dw_empresa_relacionada']->retrieve();
+		
+		$cod_estado = $this->dws['dw_pago_comision_tdnx']->get_item(0, 'COD_ESTADO_PAGO_COMISION_TDNX');
+		if($cod_estado <> 1){
+			$this->dws['dw_pago_comision_tdnx']->set_entrable_dw(false);
+			$this->dws['dw_item_pago_comision']->set_entrable_dw(false);
+		}
+
+	}
+	function get_key(){
+		return $this->dws['dw_pago_comision_tdnx']->get_item(0, 'COD_PAGO_COMISION_TDNX');
+	}
+	
+	function navegacion(&$temp){
+		parent::navegacion($temp);
+		
+		$porc_comision_otros = $this->dws['dw_pago_comision_tdnx']->get_item(0, 'PORC_COMISION_OTROS');
+		$otros_2014 = $this->dws['dw_pago_comision_tdnx']->get_item(0, 'OTROS_2014');
+		$otros_2015 = $this->dws['dw_pago_comision_tdnx']->get_item(0, 'OTROS_2015');
+		$nc_2014 = $this->dws['dw_pago_comision_tdnx']->get_item(0, 'NC_2014');
+		$nc_2015 = $this->dws['dw_pago_comision_tdnx']->get_item(0, 'NC_2015');
+		$total_2014 = $otros_2014 - $nc_2014;
+		$total_2015 = $otros_2015 - $nc_2015;
+		
+		$temp->setVar("TOTAL_2014", number_format($total_2014, 0, ',', '.'));
+		$temp->setVar("TOTAL_2015", number_format($total_2015, 0, ',', '.'));
+		$temp->setVar("TOTAL_2015_S", "<label id=\"TOTAL_OTROS_S_0\">".number_format($total_2015, 0, ',', '.'))."</label>";
+		
+		$total_comision_otros = $total_2015 * ($porc_comision_otros/100);
+		$temp->setVar("TOTAL_COMISION_OTROS", "<label id=\"TOTAL_COMISION_0\">".number_format($total_comision_otros, 0, ',', '.')."</label>");
+	}
+	
+	function print_record(){
+		$otros_2014 = $this->dws['dw_pago_comision_tdnx']->get_item(0, 'OTROS_2014');
+		$nc_2014 = $this->dws['dw_pago_comision_tdnx']->get_item(0, 'NC_2014');
+		$otros_2015 = $this->dws['dw_pago_comision_tdnx']->get_item(0, 'OTROS_2015');
+		$nc_2015 = $this->dws['dw_pago_comision_tdnx']->get_item(0, 'NC_2015');
+		
+		$total_2014 = $otros_2014 - $nc_2014;
+		$total_2015 = $otros_2015 - $nc_2015;
+		
+		$COD_PAGO_COMISION_TDNX = $this->get_key();
+		$sql= "SELECT PCT.COD_PAGO_COMISION_TDNX
+					  ,CONVERT(VARCHAR, FECHA_REGISTRO, 103) FECHA_REGISTRO
+					  ,U.NOM_USUARIO
+					  ,CONVERT(VARCHAR, FECHA_DESDE, 103) FECHA_DESDE
+					  ,CONVERT(VARCHAR, FECHA_HASTA, 103) FECHA_HASTA
+					  ,(SELECT NOM_ESTADO_PAGO_COMISION_TDNX
+					   FROM ESTADO_PAGO_COMISION_TDNX
+					   WHERE COD_ESTADO_PAGO_COMISION_TDNX = PCT.COD_ESTADO_PAGO_COMISION_TDNX) NOM_ESTADO_PAGO_COMISION_TDNX
+					  ,PORC_COMISION_OTROS
+					  ,dbo.f_get_montos('OTROS', 2014, FECHA_DESDE, FECHA_HASTA) OTROS_2014
+					  ,dbo.f_get_montos('OTROS', 2015, FECHA_DESDE, FECHA_HASTA) OTROS_2015
+					  ,dbo.f_get_montos('NC', 2014, FECHA_DESDE, FECHA_HASTA) NC_2014
+					  ,dbo.f_get_montos('NC', 2015, FECHA_DESDE, FECHA_HASTA) NC_2015
+					  ,(SELECT NOM_USUARIO FROM USUARIO WHERE COD_USUARIO = IUPCT.COD_USUARIO_PAGO_COMISION) NOM_USUARIO_COMISION
+					  ,IUPCT.PORC_COMISION
+					  ,IUPCT.MONTO_COMISION
+					  ,REPLACE(CONVERT(VARCHAR, GETDATE(), 107), ',', '')+','+ CONVERT(VARCHAR, GETDATE(), 108) FECHA
+					  ,$total_2015 TOTAL_COMISION_2015
+					  ,$total_2014 TOTAL_COMISION_2014
+					  ,$total_2015 * (PORC_COMISION_OTROS/100) TOTAL_COMISION_OTROS
+				FROM PAGO_COMISION_TDNX PCT
+					,USUARIO U
+					,ITEM_US_PAGO_COMISION_TDNX IUPCT
+				WHERE PCT.COD_PAGO_COMISION_TDNX = $COD_PAGO_COMISION_TDNX
+				AND PCT.COD_USUARIO = U.COD_USUARIO
+				AND IUPCT.COD_PAGO_COMISION_TDNX = PCT.COD_PAGO_COMISION_TDNX";
+
+		//reporte
+		$labels = array();
+		$labels['strCOD_PAGO_COMISION_TDNX'] = $COD_PAGO_COMISION_TDNX;
+		$rpt = new reporte($sql, $this->root_dir.'appl/pago_comision_tdnx/pago_comision_tdnx.xml', $labels, "Pago Comision ".$COD_PAGO_COMISION_TDNX.".pdf",1);
+		$this->redraw();
+	}
+	
+	function save_record($db) {
+		$COD_PAGO_COMISION_TDNX 		= $this->get_key();
+		$COD_USUARIO 					= $this->dws['dw_pago_comision_tdnx']->get_item(0, 'COD_USUARIO');
+		$FECHA_DESDE					= $this->dws['dw_pago_comision_tdnx']->get_item(0, 'FECHA_DESDE');
+		$FECHA_HASTA 					= $this->dws['dw_pago_comision_tdnx']->get_item(0, 'FECHA_HASTA');
+		$COD_ESTADO_PAGO_COMISION_TDNX	= $this->dws['dw_pago_comision_tdnx']->get_item(0, 'COD_ESTADO_PAGO_COMISION_TDNX');
+		$PORC_COMISION_OTROS 			= $this->dws['dw_pago_comision_tdnx']->get_item(0, 'PORC_COMISION_OTROS');
+		
+		$FECHA_DESDE = $this->str2date($FECHA_DESDE);
+		
+		$COD_PAGO_COMISION_TDNX = ($COD_PAGO_COMISION_TDNX=='') ? "null" : $COD_PAGO_COMISION_TDNX;
+    	
+		/*La fecha hasta se deja en esta condicion, pero cuando pasa a la operacion UPDATE
+		se deja null pero no es considerado en el update del procedimiento*/
+		$sp = 'spu_pago_comision_tdnx';
+	    if ($this->is_new_record()){
+	    	$operacion = 'INSERT';
+	    	$FECHA_HASTA = $this->str2date($FECHA_HASTA, $this->hora_str);
+	    }else{
+	    	$operacion = 'UPDATE';
+	    	$FECHA_HASTA = "null";
+	    }
+	    
+	    $param	= "'$operacion'
+	    		  ,$COD_PAGO_COMISION_TDNX
+	    		  ,$COD_USUARIO
+	    		  ,$FECHA_DESDE
+	    		  ,$FECHA_HASTA
+	    		  ,$COD_ESTADO_PAGO_COMISION_TDNX
+	    		  ,$PORC_COMISION_OTROS";
+     	
+		if ($db->EXECUTE_SP($sp, $param)){
+			if ($this->is_new_record()) {
+				$COD_PAGO_COMISION_TDNX = $db->GET_IDENTITY();
+				$this->dws['dw_pago_comision_tdnx']->set_item(0, 'COD_PAGO_COMISION_TDNX', $COD_PAGO_COMISION_TDNX);
+			}
+			for ($i=0; $i<$this->dws['dw_item_pago_comision']->row_count(); $i++)
+				$this->dws['dw_item_pago_comision']->set_item($i, 'COD_PAGO_COMISION_TDNX', $COD_PAGO_COMISION_TDNX);				
+			
+			if (!$this->dws['dw_item_pago_comision']->update($db))			
+			 	return false;
+			
+			return true;
+		}
+		return false;	
+	}
+}
+?>

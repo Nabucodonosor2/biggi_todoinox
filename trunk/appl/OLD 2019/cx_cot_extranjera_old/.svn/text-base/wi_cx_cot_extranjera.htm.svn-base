@@ -1,0 +1,312 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Sistema Grupo de Empresas Biggi</title>
+<link href="{W_CSS}" rel="stylesheet" type="text/css"/>
+<script src="../../../../commonlib/trunk/script_js/SpryTabbedPanels.js" type="text/javascript"></script>
+<link href="../../../../commonlib/trunk/css/SpryTabbedPanels.css" rel="stylesheet" type="text/css"/>
+<script charset="iso-8859-1" src="../../../../commonlib/trunk/script_js/edit_filter.js" type="text/javascript"></script>
+<script charset="iso-8859-1" src="../../../../commonlib/trunk/script_js/general.js" type="text/javascript"></script>
+<script charset="UTF-8" src="cx_cot_extranjera.js" type="text/javascript"></script>
+</head>
+<body {WI_ONLOAD}>
+{WI_JAVA_SCRIPT}
+<!-- DO NOT MOVE! The following AllWebMenus linking code section must always be placed right AFTER the BODY tag-->
+<!-- ******** BEGIN ALLWEBMENUS CODE FOR menu ******** -->
+<script type="text/javascript">var MenuLinkedBy="AllWebMenus [4]",awmMenuName="menu",awmBN="740";awmAltUrl="";</script>
+<script charset="UTF-8" src="{K_ROOT_URL}menu/menu.js" type="text/javascript"></script>
+<script type="text/javascript">{W_MENU}</script>
+<style type="text/css">
+<!--
+
+.encabezado_right2{
+	background-color:#7896DC;
+	font-size: 11px;
+	font-weight:bold;	
+	color: #FFF;
+	text-align:right;
+	height:23px;
+}
+.encabezado_center2{
+	background-color:#7896DC;
+	font-size: 11px;
+	font-weight:bold;	
+	color: #FFF;
+	text-align:center;
+	height:23px;
+}
+
+.encabezado_left2{
+	background-color:#7896DC;
+	font-size: 11px;
+	font-weight:bold;	
+	color: #FFF;
+	text-align:left;
+	height:23px;
+}
+.titulo_tabla2{
+	background-color:#EAEAEA;
+	font-size: 9px;
+	font-weight:bold;	
+	color: #700112;
+	text-align:left;
+	padding-top:9px;
+}
+-->
+</style>
+<!-- ******** END ALLWEBMENUS CODE FOR menu ******** -->
+<form action="" method="post" name="input" id="input">
+	<input name="wi_hidden" id="wi_hidden" type="hidden" value="">
+	<table width="1050" border="0" align="center">
+		<tr bgcolor="#FFFFFF">
+			<!-- menu superior-->
+			<td width="1000" height="51" align="center" id="awmAnchor-menu" style="width: 100px; height: 50px;"></td>
+		</tr>
+		<tr bgcolor="#FFFFFF">
+			<td>
+				<table width="1000" border="0">
+					<tr>
+						<td>
+							<table width="520" border="0">
+								<tr>
+									<td height="100%">
+									<div class="titulo_central">{WI_RUTA_MENU}</div>
+									</td>
+								</tr>
+								<tr>
+									<td height="0%">
+									<div class="tit_superior"><font color="#999999">{WI_FECHA_ACTUAL}</font></div>
+									</td>
+								</tr>
+								<tr>
+									<td height="0%">
+									<div class="tit_superior"><font color="#999999">{WI_FECHA_MODIF}</font></div>
+									</td>
+								</tr>
+							</table>
+						</td>
+						<td width="68"></td>
+						<td width="68">{WI_PRINT}</td>
+						<td width="68">{WI_NO_SAVE}</td>
+						<td width="68">{WI_SAVE}</td>
+						<td width="68">{WI_MODIFY}</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr bgcolor="#FFFFFF">
+			<td>
+				<table width="1000" border="0" align="center">
+					<tr>
+						<td height="95">
+							<table width="1015" border="0" align="center">
+								<tr valign="top">
+									<td>
+										<div id="TabbedPanels1" class="TabbedPanels">
+											<ul class="TabbedPanelsTabGroup">
+												<li class="TabbedPanelsTab" tabindex="0" style="display:{TAB_100505}">Quotation</li>
+												<li class="TabbedPanelsTab" tabindex="0" style="display:{TAB_100510}">Lista de Precio</li>
+											</ul>
+											<div class="TabbedPanelsContentGroup">
+												<!--INI PROVEEDOR-->
+												<div class="TabbedPanelsContent" style="height: {SIZE}">
+													<table width="1000" rules="none" border="1" align="center"	class="claro">
+														<tr class="titulo_tabla">
+															<td colspan="6">QUOTATION</td>
+														</tr>
+														<tr class="encabezado_right">
+															<td width="166">Código:</td>
+															<td width="166" class="claro" align="left">{COD_CX_COT_EXTRANJERA}</td>
+															<td width="166">Date:</td>
+															<td width="166" class="claro" align="left">{FECHA_CX_COT_EXTRANJERA}</td>
+															<td width="166">User:</td>
+															<td width="166" class="claro" align="left">{NOM_USUARIO}</td>
+														</tr>
+														<tr class="encabezado_right">
+															<td width="166">Correlativo Extranjeria:</td>
+															<td width="166" class="claro" align="left">{COD_CX_COT_EXTRANJERA}</td>
+															<td width="166">Estado Extranjeria:</td>
+															<td width="166" class="claro" align="left">{COD_CX_ESTADO_COT_EXTRANJERA}</td>
+															<td width="166">Usuario Estado:</td>
+															<td width="166" class="claro" align="left">{NOM_USUARIO_CAMBIO}</td>
+														</tr>
+														<tr class="encabezado_right">
+															<td>Provider:</td>
+															<td colspan="2" class="oscuro" align="left">{ALIAS_PROVEEDOR_EXT}</td>
+															<td>Provider:</td>
+															<td colspan="2" class="oscuro" align="left">{COD_PROVEEDOR_EXT}</td>
+														</tr>
+														<tr class="encabezado_right">
+															<td>Provider Name:</td>
+															<td colspan="5" class="oscuro" align="left">{NOM_PROVEEDOR_EXT}</td>
+														</tr>
+														<tr class="encabezado_right">
+															<td>Address:</td>
+															<td colspan="5" class="oscuro" align="left">{DIRECCION}</td>
+														</tr>
+														<tr class="encabezado_right">
+															<td>Country:</td>
+															<td class="claro" align="left">{NOM_PAIS}</td>
+															<td>City:</td>
+															<td class="claro" align="left">{NOM_CIUDAD}</td>
+															<td>Post Office:</td>
+															<td class="claro" align="left">{POST_OFFICE_BOX}</td>
+														</tr>
+														<tr class="encabezado_right">
+															<td>Contact:</td>
+															<td class="oscuro" align="left">{COD_CX_CONTACTO_PROVEEDOR_EXT}</td>
+														</tr>
+														<tr class="encabezado_right">
+															<td>Phone Contact:</td>
+															<td class="claro" align="left">{TELEFONO}</td>
+															<td>Mail:</td>
+															<td class="claro" align="left">{MAIL}</td>
+														</tr>
+													</table>
+													<table width="1000" rules="none" border="0" align="center" class="espacio_entre_tablas">
+														<tr class="encabezado_right">
+															<td width="166">Reference:</td>
+															<td class="oscuro" align="left">{REFERENCIA}</td>
+														</tr>
+														<tr class="encabezado_right">
+															<td width="166">Delivery Date:</td>
+															<td class="oscuro" align="left">{DELIVERY_DATE}</td>
+														</tr>
+													</table>
+													<table width="1000" rules="none" border="1" align="center"	class="claro">
+														<tr class="encabezado_right">
+															<td width="166">Port of Loading:</td>
+															<td width="332" class="oscuro" align="left">{COD_CX_PUERTO_SALIDA}</td>
+															<td width="166">Purchase:</td>
+															<td width="332" class="oscuro" align="left">{COD_CX_CLAUSULA_COMPRA}</td>
+														</tr>
+														<tr class="encabezado_right">
+															<td>port of:</td>
+															<td class="oscuro" align="left">{COD_CX_PUERTO_ARRIBO}</td>
+															<td>currency:</td>
+															<td class="oscuro" align="left">{COD_CX_MONEDA}</td>
+														</tr>
+														<tr class="encabezado_right">
+															<td>Packing:</td>
+															<td colspan="3" class="oscuro" align="left">{PACKING}</td>
+														</tr>
+														<tr class="encabezado_right">
+															<td>terms of:</td>
+															<td colspan="3" class="oscuro" align="left">{COD_CX_TERMINO_PAGO}</td>
+														</tr>
+													</table>
+												</div>
+													<!--FIN PROVEEDOR--> 
+													<!--INI ITEM_PROVEEDOR-->
+												<div class="TabbedPanelsContent" style="height: 492px;">
+													<table width="1000" rules="none" border="1" align="center" class="claro">
+														<tr class="titulo_tabla">
+															<td colspan="6">ITEM PROVEEDOR</td>
+														</tr>
+														<tr class="encabezado_right">
+															<td width="166">Código:</td>
+															<td width="166" class="claro" align="left">{COD_CX_COT_EXTRANJERA}</td>
+															<td width="166">Date:</td>
+															<td width="166" class="claro" align="left">{FECHA_CX_COT_EXTRANJERA}</td>
+															<td width="166">User:</td>
+															<td width="166" class="claro" align="left">{NOM_USUARIO}</td>
+														</tr>
+														<tr class="encabezado_right">
+															<td>Provider:</td>
+															<td colspan="2" class="oscuro" align="left">{ALIAS_PROVEEDOR_EXT}</td>
+															<td>Provider:</td>
+															<td colspan="2" class="oscuro" align="left">{COD_PROVEEDOR_EXT}</td>
+														</tr>
+														<tr class="encabezado_right">
+															<td>Provider Name:</td>
+															<td colspan="5" class="oscuro" align="left">{NOM_PROVEEDOR_EXT}</td>
+														</tr>
+													</table>
+													<table width="1000" rules="none" border="0" align="center" class="espacio_entre_tablas">
+														<tr>
+															<td></td>
+														</tr>
+													</table>
+													<table width="1000" rules="none" border="1" align="center" class="claro">
+														<tr class="titulo_tabla">
+															<td colspan="7"></td>
+															<td colspan="2" align="center">{COD_CX_MONEDA}</td>
+														</tr>
+														<tr class="titulo_tabla" align="center">
+															<td colspan="7"></td>
+															<td align="center">{COD_CX_CLAUSULA_COMPRA}</td>
+															<td align="center">{COD_CX_PUERTO_SALIDA}</td>
+															
+														</tr>
+														<tr class="encabezado_center">
+															<th width="10">Sec</th>
+															<th width="10">IT</th>
+															<th width="50">Shipping</th>
+															<th width="50">Model / Code</th>
+															<th width="200">Description</th>
+															<th width="50">QTY</th>
+															<th width="60">Unit</th>
+															<th width="60">Total</th>
+															<th width="60">Eliminar</th>
+														</tr>
+													</table>
+													<div style="overflow-x: hidden; overflow-y: auto; height: 230;">
+														<table width="1000" rules="none" border="1" align="center" class="claro" id="ITEM_CX_COT_EXTRANJERA">
+															<!-- startBlock(ITEM_CX_COT_EXTRANJERA) -->
+															<tr class="{DW_TR_CSS}" id="{DW_TR_ID}">
+																<td width="10" align="left">{COD_CX_ITEM_COT_EXTRANJERA}{ORDEN}</td>
+																<td width="10" align="left">{ITEM}</td>
+																<td width="50" align="left">{COD_PRODUCTO}</td>
+																<td width="50" align="right">{COD_EQUIPO_OC_EX}</td>
+																<td width="200" align="left">{DESC_EQUIPO_OC_EX}</td>
+																<td width="50" align="right">{CANTIDAD}</td>
+																<td width="60" align="left">{PRECIO}</td>
+																<td width="60" align="right">{TOTAL}</td>
+																<td width="60" align="center">{ELIMINAR_ITEM_CX_COT_EXTRANJERA}</td>
+															</tr>
+															<!-- endBlock(ITEM_CX_COT_EXTRANJERA) -->
+														</table>
+													</div>
+													<table width="1000" rules="none" border="1" align="center" class="claro">
+														<tr class="claro">
+															<td align="left" onClick="add_line_item(\''.$this->label_record.'\', \''.$this->nom_tabla.'\');">{AGREGAR_ITEM_CX_COT_EXTRANJERA}</td>
+														</tr>
+													</table>
+													<table width="1000" rules="none" border="1" align="center" class="claro">
+														<tr>
+															<td width="354">
+													  			<input type="button" value="Usar Secuencia" class="Button" onClick="usar_secuencia('ITEM_CX_COT_EXTRANJERA');" {DISABLE_BUTTON}>
+													  		</td>
+													  	</tr>	
+													 </table> 	
+												<!--FIN ITEM_PROVEEDOR--> 
+											</div>
+
+										</div>
+										<!--FIN TabbedPanelsContentGroup-->
+									</td>
+								</tr>
+							</table>
+							<table width="1000" border="0" align="center">
+								<tr valign="middle">
+									<td width="290">{WI_BACK}</td>
+									<td align="right">{WI_FIRST}{WI_PREV}</td>
+									<td align="left">{WI_NEXT}{WI_LAST}</td>
+									<td width="290"></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</form>
+<script type="text/javascript">
+<!--
+var TabbedPanels1 = new Spry.Widget.TabbedPanels("TabbedPanels1");
+//-->
+</script>
+</body>
+</html>

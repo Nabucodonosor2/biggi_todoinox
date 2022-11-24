@@ -1,0 +1,57 @@
+<?php
+require_once(dirname(__FILE__)."/../../../../commonlib/trunk/php/auto_load.php");
+
+class wo_cx_cot_extranjera extends w_output
+{
+	function wo_cx_cot_extranjera() {		
+		$this->b_add_visible  = true;
+		
+		$sql="select c.COD_CX_COT_EXTRANJERA			
+						,c.FECHA_CX_COT_EXTRANJERA        
+						,c.COD_USUARIO                    
+						,u.NOM_USUARIO
+						,c.CORRELATIVO_COT_EXTRANJERA     
+						,c.COD_CX_ESTADO_COT_EXTRANJERA   
+						,dbo.f_last_mod('NOM_USUARIO', 'CX_COT_EXTRANJERA', 'COD_CX_ESTADO_COT_EXTRANJERA', c.COD_CX_COT_EXTRANJERA) NOM_USUARIO_CAMBIO
+					    ,dbo.f_last_mod('FECHA_CAMBIO', 'CX_COT_EXTRANJERA', 'COD_CX_ESTADO_COT_EXTRANJERA', c.COD_CX_COT_EXTRANJERA) FECHA_CAMBIO
+						,p.ALIAS_PROVEEDOR_EXT
+						,c.COD_PROVEEDOR_EXT
+						,p.NOM_PROVEEDOR_EXT
+						,p.DIRECCION
+						,p.NOM_PAIS_4D NOM_PAIS
+						,p.NOM_CIUDAD_4D NOM_CIUDAD
+						,p.POST_OFFICE_BOX
+						,c.COD_CX_CONTACTO_PROVEEDOR_EXT  
+						,cc.TELEFONO
+						,cc.MAIL
+						,c.REFERENCIA                     
+						,c.DELIVERY_DATE                  
+						,c.COD_CX_PUERTO_SALIDA           
+						,c.COD_CX_CLAUSULA_COMPRA         
+						,c.COD_CX_PUERTO_ARRIBO           
+						,c.COD_CX_MONEDA                  
+						,c.PACKING                        
+						,c.COD_CX_TERMINO_PAGO            
+						,c.OBSERVACIONES                  
+						,c.MONTO_TOTAL	                    
+				from CX_COT_EXTRANJERA c, USUARIO u, PROVEEDOR_EXT p, CX_CONTACTO_PROVEEDOR_EXT cc
+				where cc.COD_CX_CONTACTO_PROVEEDOR_EXT= c.COD_CX_CONTACTO_PROVEEDOR_EXT
+				  and u.COD_USUARIO = c.COD_USUARIO
+				  and p.COD_PROVEEDOR_EXT = c.COD_PROVEEDOR_EXT
+				order by c.COD_CX_CONTACTO_PROVEEDOR_EXT";
+			
+		parent::w_output('cx_cot_extranjera', $sql, $_REQUEST['cod_item_menu']);
+		
+		//formato numeros
+		$this->dw->add_control(new static_num('RUT'));
+		
+		// headers
+		$this->add_header(new header_num('COD_PROVEEDOR_EXT', 'COD_PROVEEDOR_EXT', 'Código'));
+		$this->add_header(new header_text('NOM_PROVEEDOR_EXT', 'NOM_PROVEEDOR_EXT', 'Razón Social'));
+		$this->add_header(new header_rut('RUT', 'E', 'Rut'));
+		$this->add_header(new header_text('ALIAS_PROVEEDOR_EXT', 'ALIAS_PROVEEDOR_EXT', 'Alias'));
+		$this->add_header(new header_text('PACKING', 'PACKING', 'Giro'));     
+		$this->add_header(new header_text('NOM_CIUDAD', 'NOM_CIUDAD_4D', 'Ciudad'));
+	}
+}
+?>

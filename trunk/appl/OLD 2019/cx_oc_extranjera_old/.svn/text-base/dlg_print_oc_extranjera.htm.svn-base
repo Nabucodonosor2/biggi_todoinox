@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title></title>
+<link href="{W_CSS}" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">
+function get_returnVal() {
+	var res = 	'';
+	
+	if (document.getElementById('ORDEN_COMPRA_0').checked)
+		res = "ORDEN_COMPRA";
+	else if (document.getElementById('ORDEN_PAGO_0').checked)
+		res = "ORDEN_PAGO";		
+	else if (document.getElementById('INS_COBERTURA_0').checked)
+		res = "INS_COBERTURA";
+	else if (document.getElementById('ORDEN_CARGA_0').checked)
+	res = "ORDEN_CARGA";
+	
+	return res;
+}
+</script>
+</head>
+<body class="content_wm">
+	<div class="titulo_tabla_wm">&nbsp;&nbsp;Select an option</div>
+	<form id="form1" name="form1" method="post" action="">
+		<table width="435" border="0" class="table2_wm" align="left">  
+	  		<tr>
+	  			<td align="left">{ORDEN_COMPRA}</td>
+	  		</tr>
+	  		<tr>
+	  			<td align="left">{ORDEN_PAGO}</td>
+	  		</tr>
+	  		<tr>
+	  			<td align="left">{INS_COBERTURA}</td>
+	  		</tr>
+	  		<tr>
+	  			<td align="left">{ORDEN_CARGA}</td>
+	  		</tr>
+	  		<tr>
+	  			<td>
+		  			<input name="OK" type="button" value="OK"  onclick="returnValue=get_returnVal(); window.close();" class="button"/>
+					<input name="Cancelar" type="button" value="Cancelar" onclick="returnValue=null; window.close();" class="button"/>
+	  			</td>
+	  		</tr>	
+		</table>
+	</form>
+</body>
+</html>

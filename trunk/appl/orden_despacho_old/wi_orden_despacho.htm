@@ -1,0 +1,230 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+		<title>Sistema Grupo de Empresas Biggi</title>
+		<link href="{W_CSS}" rel="stylesheet" type="text/css"/>
+		<script src="../../../../commonlib/trunk/script_js/SpryTabbedPanels.js" type="text/javascript"></script>
+		<link href="../../../../commonlib/trunk/css/SpryTabbedPanels.css" rel="stylesheet" type="text/css"/>
+		<script charset="iso-8859-1" src="../../../../commonlib/trunk/script_js/edit_filter.js" type="text/javascript"></script>
+		<script charset="iso-8859-1" src="../../../../commonlib/trunk/script_js/general.js" type="text/javascript"></script>
+		<script charset="iso-8859-1" src="../common_appl/ingreso_TE.js" type="text/javascript"></script>
+		<script charset="iso-8859-1" src="../common_appl/common_cot_nv.js" type="text/javascript"></script>
+		<script charset="iso-8859-1" src="../empresa/help_empresa.js" type="text/javascript"></script>
+		<script charset="iso-8859-1" src="orden_despacho.js" type="text/javascript"></script>
+		{WI_JAVA_SCRIPT}
+	</head>
+	<body {WI_ONLOAD}>
+		<!-- DO NOT MOVE! The following AllWebMenus linking code section must always be placed right AFTER the BODY tag-->
+		<!-- ******** BEGIN ALLWEBMENUS CODE FOR menu ******** -->
+		<script type="text/javascript">var MenuLinkedBy="AllWebMenus [4]",awmMenuName="menu",awmBN="740";awmAltUrl="";</script>
+		<script charset="UTF-8" src="{K_ROOT_URL}menu/menu.js" type="text/javascript"></script>
+		<script type="text/javascript">{W_MENU}</script>
+		<!-- ******** END ALLWEBMENUS CODE FOR menu ******** -->
+		<form action="" method="post" name="input" id="input">
+			<input name="wi_hidden" id="wi_hidden" type="hidden" value=""/>
+			<input name="wi_impresora_dte" id="wi_impresora_dte" type="hidden" value=""/>
+			<table width="1050" border="0" align="center">
+				<tr bgcolor="#FFFFFF">
+					<!-- menu superior-->
+					<td width="1000"  height="51" align="center" id="awmAnchor-menu" style="width:100px; height:50px;"></td>
+				</tr>
+				<tr bgcolor="#FFFFFF">
+					<td>
+						<table width="1000" border="0">
+							<tr>
+								<td>
+									<table width="520" border="0">
+										<tr>
+											<td height="100%"><div class="titulo_central">{WI_RUTA_MENU}</div></td>
+											<td height="100%" align ="right"><div class="titulo_docto_anulada">{TITULO_DOC_ANULADA}</div></td>
+										</tr>
+										<tr>
+											<td colspan="2" height="0%"><div class="tit_superior"><font color="#999999">{WI_FECHA_ACTUAL}</font></div></td>
+										</tr>
+										<tr>
+											<td colspan="2" height="0%"><div class="tit_superior"><font color="#999999">{WI_FECHA_MODIF}</font></div></td>
+										</tr>
+									</table>
+								</td>
+								<td width="68"></td>
+								<td width="68">{WI_PRINT}</td>
+								<td width="68">{WI_NO_SAVE}</td>
+								<td width="68">{WI_SAVE}</td>
+								<td width="68">{WI_MODIFY}</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr bgcolor="#FFFFFF">
+					<td>
+						<table width="1000" border="0" align="center">
+							<tr>
+								<td height="95">
+									<table width="1015" border="0" align="center">
+										<tr valign="top">
+											<td height="528">
+												<div id="TabbedPanels1" class="TabbedPanels">
+													<ul class="TabbedPanelsTabGroup">
+														<li class="TabbedPanelsTab" tabindex="0" style="display:{}">Orden Despacho</li>
+														<li class="TabbedPanelsTab" tabindex="1" style="display:{}">Ítems</li>
+													</ul>
+													<div class="TabbedPanelsContentGroup">
+														<!--INI ORDEN_DESPACHO-->
+														<div class="TabbedPanelsContent">
+															<table width="1000" rules="none" border="1" align="center">
+																<tr class="titulo_tabla">
+																	<td colspan="6">DATOS GENERALES</td>
+																</tr>
+																<tr class="encabezado_right">
+																	<td width="166">Nº Orden Despacho:</td>
+																	<td width="167" class="claro" align="left">{COD_ORDEN_DESPACHO}</td>
+																	<td width="167">Fecha:</td>
+																	<td width="165" class="claro" align="left">{FECHA_ORDEN_DESPACHO}</td>
+																	<td width="167">Emisor:</td>
+																	<td width="166" class="claro" align="left">{NOM_USUARIO}</td>
+																</tr>
+																<tr class="encabezado_right">
+																	<td>Nº OC Cliente:</td>
+																	<td class="oscuro" align="left">{NRO_ORDEN_COMPRA}</td>
+																	<td>Fecha OC Cliente:</td>
+																	<td class="oscuro" align="left" colspan="3">{FECHA_ORDEN_COMPRA_CLIENTE}</td>
+																</tr>
+																<tr class="encabezado_right">
+																	<td>Vendedor 1:</td>
+																	<td class="claro" align="left">{COD_USUARIO_VENDEDOR1}</td>
+																	<td>Vendedor 2:</td>
+																	<td class="claro" align="left" colspan="3">{COD_USUARIO_VENDEDOR2}</td>
+																</tr>
+																<tr class="encabezado_right">
+																	<td>Referencia:</td>
+																	<td class="oscuro" colspan="5" align="left">{REFERENCIA}</td>
+																</tr>
+																<tr class="encabezado_right">
+																	<td>Estado:</td>
+																	<td class="claro" align="left">{COD_ESTADO_ORDEN_DESPACHO}</td>
+																	<td>Usuario despacho:</td>
+																	<td class="claro" align="left" colspan="3">{COD_USUARIO_DESPACHA}</td>
+																</tr>
+																<tr class="encabezado_right" id="TR_ANULA" style="display:{TR_DISPLAY}">
+																	<td>Anulación:</td>
+																	<td class="oscuro" colspan="3" align="left">{MOTIVO_ANULA}</td>
+																	<td class="oscuro" align="center">{FECHA_ANULA}</td>
+																	<td class="oscuro" align="left">{NOM_USUARIO_ANULA}</td>
+																</tr>
+															</table>
+															<p />
+															<table width="1000" rules="none" border="1" align="center">
+																<tr class="titulo_tabla">
+																	<td colspan="1">EMPRESA</td>
+																</tr>
+																<tr class="encabezado_right">
+																	<td width="166">Rut:</td>
+																	<td width="167" class="claro" align="left">{RUT}-{DIG_VERIF}</td>
+																	<td width="166">Alías:</td>
+																	<td width="167" class="claro" align="left">{ALIAS}</td>
+																	<td width="166">Código:</td>
+																	<td width="167" class="claro" align="left">{COD_EMPRESA}</td>
+																</tr>
+																<tr class="encabezado_right">
+																	<td>Razón Social:</td>
+																	<td colspan="5" class="oscuro" align="left">{NOM_EMPRESA}</td>
+																</tr>
+																<tr class="encabezado_right">
+																	<td>Giro:</td>
+																	<td colspan="5" align="left" class="claro">{GIRO}</td>
+																</tr>
+																<tr class="encabezado_right">
+																	<td>Dirección:</td>
+																	<td colspan="1" align="left" class="oscuro">{NOM_SUCURSAL}</td>
+																	<td colspan="4" class="oscuro" align="left">{DIRECCION} - COMUNA: {NOM_COMUNA} - CIUDAD: {NOM_CIUDAD}</td>
+																</tr>
+																<tr class="encabezado_right">
+																	<td width="166">Atencion:</td>
+																	<td width="166" class="claro" align="left" colspan="5">{NOM_PERSONA}</td>
+																	
+																</tr>
+															</table>
+															<P />
+															<table width="1000" rules="none" border="1" align="center">
+																<tr class="titulo_tabla">
+																	<td colspan="1">OBSERVACIONES</td>
+																</tr>
+																<tr class="encabezado_right">
+																	<td width="166">Observaciones:</td>
+																	<td width="833" colspan="5" align="left" class="claro">{OBS}</td>
+																</tr>
+															</table>
+														</div>
+														<!--FIN ORDEN_DESPACHO-->
+														<!--INI ITEMS-->
+														<div class="TabbedPanelsContent">
+															<table width="1000" rules="none" border="1" align="center">
+																<tr  class="titulo_tabla">
+																	<td colspan="6">DATOS GENERALES</td>
+																</tr>
+																<tr class="encabezado_right">
+																	<td width="166">Nº Orden Despacho:</td>
+																	<td width="167" class="claro" align="left">{COD_ORDEN_DESPACHO}</td>
+																	<td width="167">Fecha:</td>
+																	<td width="165" class="claro" align="left">{FECHA_ORDEN_DESPACHO_D}</td>
+																	<td width="167">Emisor:</td>
+																	<td width="166" class="claro" align="left">{NOM_USUARIO}</td>
+																</tr>
+															</table>								
+															<P />
+															<table width="1000" rules="none" border="1" align="center" class="claro"> 
+																<tr class="titulo_tabla">
+																	<td colspan="5">ÍTEMS</td>
+																</tr>
+																<tr class="encabezado_center">
+																	<th width="6%">Orden</th>
+																	<th width="6%">Item</th>
+																	<th width="14%">Modelo</th>
+																	<th width="54%">Descripción</th>
+																	<th width="10%">Cantidad</th>
+																	<th width="10%">Cantidad Recibida</th>
+																</tr>
+															</table>	
+															<div style="overflow-x:hidden; overflow-y:auto; height:385px; margin-top:-1em;">
+																<table width="1000" rules="none" border="1" align="center" class="claro" id="ITEM_ORDEN_DESPACHO">							
+																	<!-- startBlock(ITEM_ORDEN_DESPACHO) -->
+																	<tr class="{DW_TR_CSS}" id="{DW_TR_ID}">
+																		<td width="6%" align="center">{ORDEN}</td>
+																		<td width="6%" align="center">{ITEM}</td>
+																		<td width="14%" align="left">{COD_PRODUCTO}</td>
+																		<td width="54%" align="left">{NOM_PRODUCTO}</td>
+																		<td width="10%" align="right">{CANTIDAD}</td>
+																		<td width="10%" align="right">{CANTIDAD_RECIBIDA}</td>
+																	</tr>	
+																	<!-- endBlock(ITEM_ORDEN_DESPACHO) -->
+																</table>
+															</div>	
+														</div>
+														<!--FIN ITEMS-->
+													</div>
+													<!--FIN TabbedPanelsContentGroup-->
+												</div>
+											</td>
+										</tr>
+									</table>
+									<table width="1000" border="0" align="center">
+										<tr valign="middle">
+										  <td width="290" >{WI_BACK}</td>
+										  <td align="right">{WI_FIRST}{WI_PREV}</td>
+										  <td align="left">{WI_NEXT}{WI_LAST}</td>
+										  <td width="290"></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</form>
+		<script type="text/javascript">
+			var TabbedPanels1 = new Spry.Widget.TabbedPanels("TabbedPanels1");
+		</script>
+	</body>
+</html>

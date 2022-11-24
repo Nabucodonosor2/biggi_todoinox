@@ -1,0 +1,5 @@
+function agrega_factura(){
+	document.getElementById('HIZO_CLICK_0').value = 'S';
+		document.output.submit();
+   		return true;
+}

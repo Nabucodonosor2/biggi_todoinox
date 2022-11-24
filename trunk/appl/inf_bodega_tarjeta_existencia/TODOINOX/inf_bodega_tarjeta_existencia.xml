@@ -1,0 +1,60 @@
+<Report>
+	<Font name="Arial" size="7" style="" id="ArialSmall"/>
+	<Font name="Arial" size="17" style="B" id="ArialBoldBigB" red="0" green="0" blue="128"/>
+	<Font name="Arial" size="8" style="B" id="ArialBold"/>
+	<Font name="Arial" size="8" style="B" id="ArialBold_header"/>	
+	<Font name="Arial" size="10" style="" id="ArialSmallBlue" red="0" green="0" blue="128"/>
+	<Font name="Arial" size="9" style="" id="Arial"/>
+	<PageHeader>	
+		<Cell text="" height="55%" newline="1"/>		
+		<Cell text="PAG. {SectionPageNumber}/{snb}" align="R" font="ArialSmall" newline="1" />
+		<Cell text="TARJETA DE EXISTENCIA" width="100%"  align="C" newline="1" font="ArialBoldBigB"/>
+		<Cell text="" height="1" newline="1"/>
+		<Cell text="{strFECHA_INICIO} - {strFECHA_TERMINO}" width="100%" align="C" font="ArialSmallBlue" newline="1" visible="{SectionPageNumber}== 1"/>
+		<Cell text="" height="10" newline="1"/>
+		<Cell text="{strCOD_PRODUCTO}  :" width="10%" align="L" border="B" font="ArialSmallBlue" visible="{SectionPageNumber}== 1"/>
+		<Cell text="{strNOM_PRODUCTO}" width="52%" align="L" border="B" font="ArialSmallBlue" visible="{SectionPageNumber}== 1"/>
+		<Cell text="" width="6%"/>
+		<Cell text="Compra Histórica Según RI:  " width="24%" align="L"/>
+		<Cell text="{strSUM_CANT}" format="N0,." width="9%" align="L" font="ArialSmallBlue" newline="1" visible="{SectionPageNumber}== 1"/>
+		<Cell text="" height="10" newline="1"/>
+		<Cell text="" height="10" newline="1"/>
+		
+		<Cell width="53%" align="C" font="ArialSmallBlue"/>
+		<Cell text="UNIDADES" width="17%" align="C" border="LRTB" font="ArialSmallBlue"  />		
+		<Cell text="VALORES" width="30%" align="C" border="LRTB" font="ArialSmallBlue" newline="1"/>
+		<Cell text="FECHA" width="9%" align="C" border="LRTB" font="ArialSmallBlue"/>		
+		<Cell text="Nº DOC" width="7%" align="C" border="LRTB" font="ArialSmallBlue"/>
+		<Cell text="T DOC" width="6%" align="C" border="LRTB" font="ArialSmallBlue"/>
+		<Cell text="DETALLE" width="23%" align="C" border="LRTB" font="ArialSmallBlue"/>
+		<Cell text="P.UNIT" width="8%" align="C" border="LRTB" font="ArialSmallBlue"/>		
+		<Cell text="ENT." width="5%" align="C" border="LRTB" font="ArialSmallBlue"/>
+		<Cell text="SAL." width="5%" align="C" border="LRTB" font="ArialSmallBlue"/>
+		<Cell text="SALDO" width="7%" align="C" border="LRTB" font="ArialSmallBlue"/>
+		<Cell text="ENT." width="10%" align="C" border="LRTB" font="ArialSmallBlue"/>
+		<Cell text="SAL." width="10%" align="C" border="LRTB" font="ArialSmallBlue"/>
+		<Cell text="SALDO" width="10%" align="C" border="LRTB" font="ArialSmallBlue" newline="1"/>
+		
+	</PageHeader>
+	<Content font="Arial">
+		<Cell text="{FECHA_STR}" width="9%" align="L" border="LRTB" font="Arial" redb="1 ? {REDB} : 0" greenb="1 ? {GREENB} : 0" blueb="1 ? {BLUEB} : 0"/>
+		<Cell text="{COD_DOC}" width="7%" align="R" border="LRTB" font="Arial" redb="1 ? {REDB} : 0" greenb="1 ? {GREENB} : 0" blueb="1 ? {BLUEB} : 0"/>
+		<Cell text="{TIPO_DOC}" width="6%" align="C" border="LRTB" font="Arial" redb="1 ? {REDB} : 0" greenb="1 ? {GREENB} : 0" blueb="1 ? {BLUEB} : 0"/>
+		<Cell text="{REFERENCIA}" nowrap="yes" width="23%" align="L" border="LRTB" font="Arial" redb="1 ? {REDB} : 0" greenb="1 ? {GREENB} : 0" blueb="1 ? {BLUEB} : 0"/>
+		<Cell text="{PRECIO_UNITARIO}" nowrap="yes" width="8%" align="R" border="LRTB" format="N0,." font="Arial" redb="1 ? {REDB} : 0" greenb="1 ? {GREENB} : 0" blueb="1 ? {BLUEB} : 0"/>
+		<Cell text="" width="5%" align="R" border="LRTB" format="N0" font="Arial" visible="{CANTIDAD_ENTRADA_UNIDADES} == 0" redb="1 ? {REDB} : 0" greenb="1 ? {GREENB} : 0" blueb="1 ? {BLUEB} : 0"/>
+		<Cell text="{CANTIDAD_ENTRADA_UNIDADES}" width="5%" align="R" border="LRTB" format="N0" font="Arial" visible="{CANTIDAD_ENTRADA_UNIDADES} != 0" redb="1 ? {REDB} : 0" greenb="1 ? {GREENB} : 0" blueb="1 ? {BLUEB} : 0"/>
+		<Cell text="" width="5%" align="R" border="LRTB" format="N0" font="Arial" visible="{CANTIDAD_SALIDA_UNIDADES} == 0" redb="1 ? {REDB} : 0" greenb="1 ? {GREENB} : 0" blueb="1 ? {BLUEB} : 0"/>
+		<Cell text="{CANTIDAD_SALIDA_UNIDADES}" width="5%" align="R" border="LRTB" format="N0" font="Arial" visible="{CANTIDAD_SALIDA_UNIDADES} != 0" redb="1 ? {REDB} : 0" greenb="1 ? {GREENB} : 0" blueb="1 ? {BLUEB} : 0"/>
+		<Cell text="{CANTIDAD_STOCK_UNIDADES}" width="7%" align="R" border="LRTB" format="N0" font="Arial" redb="1 ? {REDB} : 0" greenb="1 ? {GREENB} : 0" blueb="1 ? {BLUEB} : 0"/>
+		<Cell text="" width="10%" align="R" border="LRTB" format="N0" font="Arial" visible="{CANTIDAD_ENTRADA_VALORES} == 0" redb="1 ? {REDB} : 0" greenb="1 ? {GREENB} : 0" blueb="1 ? {BLUEB} : 0"/>
+		<Cell text="{CANTIDAD_ENTRADA_VALORES}" width="10%" align="R" border="LRTB" format="N0,." font="Arial" visible="{CANTIDAD_ENTRADA_VALORES} != 0" redb="1 ? {REDB} : 0" greenb="1 ? {GREENB} : 0" blueb="1 ? {BLUEB} : 0"/>
+		<Cell text="" width="10%" align="R" border="LRTB" format="N0,." font="Arial" visible="{CANTIDAD_SALIDA_VALORES} == 0" redb="1 ? {REDB} : 0" greenb="1 ? {GREENB} : 0" blueb="1 ? {BLUEB} : 0"/>
+		<Cell text="{CANTIDAD_SALIDA_VALORES}" width="10%" align="R" border="LRTB" format="N0,." font="Arial" visible="{CANTIDAD_SALIDA_VALORES} != 0" redb="1 ? {REDB} : 0" greenb="1 ? {GREENB} : 0" blueb="1 ? {BLUEB} : 0"/>
+		<Cell text="{CANTIDAD_SALDO_VALORES}" width="10%" align="R" border="LRTB" format="N0,." font="Arial" newline="1" redb="1 ? {REDB} : 0" greenb="1 ? {GREENB} : 0" blueb="1 ? {BLUEB} : 0"/>
+	</Content>
+	<Group>
+		<GroupHeader>
+		</GroupHeader>
+	</Group>
+</Report>

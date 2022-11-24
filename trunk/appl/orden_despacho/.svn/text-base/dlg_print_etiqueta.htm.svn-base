@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title></title>
+<link href="{W_CSS}" rel="stylesheet" type="text/css"/>
+<script charset="iso-8859-1" src="../../../../commonlib/trunk/script_js/edit_filter.js" type="text/javascript"></script>
+<script charset="iso-8859-1" src="../../../../commonlib/trunk/script_js/general.js" type="text/javascript"></script>
+<style type="text/css">
+<!--
+body {
+	background-color: #E5E5E5;
+	--text-align:center;
+	font-size:14px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+}
+.table{
+	font-size: 11px;
+	font-weight: bold; 
+	color: #FFF;
+	margin-top:1em;
+	border:#000033 1px solid;
+	margin-left:2px;
+	background: #919191;
+}
+.titulo_tabla_wm {
+    background-color: #e5e5e5;
+    color: #000066;
+    font-size: 12px;
+    font-weight: bold;
+    margin-left: -0.6em;
+    padding-bottom: 15px;
+    padding-top: 9px;
+    text-align: left;
+    width: 1000px;
+}
+-->
+</style>
+<script type="text/javascript">
+	var prntWindow = getParentWindowWithDialog();
+	var $dlg = prntWindow && prntWindow.$dialog;
+	
+	function getParentWindowWithDialog() {
+		var p = window.parent;
+		var previousParent = p;
+		while (p != null) {
+			if ($(p.document).find('#iframeDialog').length) return p;
+
+			p = p.parent;
+
+			if (previousParent == p) return null;
+
+			// save previous parent
+
+			previousParent = p;
+		}
+		return null;
+	}
+	
+	function setWindowReturnValue(value) {
+		if ($dlg) $dlg.returnValue = value;
+		window.returnValue = value;
+	}
+	
+	function getParentWindowWithDialog() {
+		var p = window.parent;
+		var previousParent = p;
+		while (p != null) {
+			if ($(p.document).find('#iframeDialog').length) return p;
+
+			p = p.parent;
+
+			if (previousParent == p) return null;
+
+			// save previous parent
+			previousParent = p;
+		}
+		return null;
+	}
+	
+	if ($dlg) window.dialogArguments = $dlg.dialogArguments;
+	if ($dlg) window.close = function() { if ($dlg) $dlg.dialogWindow.dialog('close'); };
+	
+	function okMe(){
+		returnValue = "";
+  		var vl_aTR = get_TR('ITEM_ORDEN_DESPACHO');
+  		for(i=0 ; i < vl_aTR.length ; i++){
+  			var vl_cod_prod = get_value('COD_PRODUCTO_'+i);
+  			var vl_nom_check = get_value('NORMAL_CHECK_'+i);
+  			var vl_bulto1 = get_value('BULTO_UNO_'+i);
+  			var vl_bulto2 = get_value('BULTO_DOS_'+i);
+  			var vl_bulto3 = get_value('BULTO_TRES_'+i);
+  			var vl_bulto4 = get_value('BULTO_CUATRO_'+i);
+  			var vl_bulto5 = get_value('BULTO_CINCO_'+i);
+  			var vl_bulto6 = get_value('BULTO_SEIS_'+i);
+  		
+			ajax = nuevoAjax();
+			ajax.open("GET", "ajax_save_etiqueta.php?cod_prod="+vl_cod_prod+"&nom_check="+vl_nom_check+"&bulto1="+vl_bulto1+"&bulto2="+vl_bulto2+"&bulto3="+vl_bulto3+"&bulto4="+vl_bulto4+"&bulto5="+vl_bulto5+"&bulto6="+vl_bulto6, false);
+		    ajax.send(null);    
+		    var resp = ajax.responseText;
+		 }
+
+   		setWindowReturnValue(returnValue);
+		$dlg.dialogWindow.dialog('close');
+    }
+    
+    function closeMe() {
+        setWindowReturnValue(null);
+        $dlg.dialogWindow.dialog('close');
+    }
+    
+    function valida_cantidad(ve_control){
+    	var vl_record = get_num_rec_field(ve_control.id);
+    	var vl_cantidad = get_value('CANTIDAD_'+vl_record);
+    	var vl_bulto1 = get_value('BULTO_UNO_'+vl_record);
+    	var vl_bulto2 = get_value('BULTO_DOS_'+vl_record);
+    	var vl_bulto3 = get_value('BULTO_TRES_'+vl_record);
+    	var vl_bulto4 = get_value('BULTO_CUATRO_'+vl_record);
+    	var vl_bulto5 = get_value('BULTO_CINCO_'+vl_record);
+    	var vl_bulto6 = get_value('BULTO_SEIS_'+vl_record);
+    	
+    	var vl_suma = parseInt(vl_bulto1) + parseInt(vl_bulto2) + parseInt(vl_bulto3) + parseInt(vl_bulto4) + parseInt(vl_bulto5) + parseInt(vl_bulto6);
+    	
+    	if(vl_suma > vl_cantidad){
+    		alert('Se supera la cantidad');
+    		ve_control.value = 0;
+    		return false;
+    	}
+    	
+    	return true;
+    }
+    
+    function change_value(ve_control){
+    	var vl_record = get_num_rec_field(ve_control.id);
+    	var vl_field = get_nom_field(ve_control.id);
+    	
+    	if(vl_field == 'IMPRESION_NORMAL' || vl_field == 'OMITIR_IMPRESION'){
+    	
+    		if(vl_field == 'IMPRESION_NORMAL')
+    			document.getElementById("NORMAL_CHECK_"+vl_record).value = 'S';
+    		else
+    			document.getElementById("NORMAL_CHECK_"+vl_record).value = 'O';
+    			
+    		document.getElementById("BULTO_UNO_"+vl_record).value = 0;
+    		document.getElementById("BULTO_DOS_"+vl_record).value = 0;
+    		document.getElementById("BULTO_TRES_"+vl_record).value = 0;
+    		document.getElementById("BULTO_CUATRO_"+vl_record).value = 0;
+    		document.getElementById("BULTO_CINCO_"+vl_record).value = 0;
+    		document.getElementById("BULTO_SEIS_"+vl_record).value = 0;
+    	}else{
+    		document.getElementById("IMPRESION_NORMAL_"+vl_record).checked = false;
+   			document.getElementById("OMITIR_IMPRESION_"+vl_record).checked = false;
+   			
+   			document.getElementById("NORMAL_CHECK_"+vl_record).value = 'N';
+    	}
+    }
+</script>
+</head>
+<body>
+<div class="titulo_tabla_wm">
+	<table>
+		<tr>
+			<td width="90%">&nbsp;&nbsp;Impresion Etiqueta</td>
+		</tr>
+	</table>
+</div>
+	<form id="form1" name="form1" method="post" action="">
+		<table width="220" align="left" border="1">
+			<tr>
+				<td>
+					<table width="200">
+						<tr></tr>
+						<tr>
+							<td align="right">
+								<table width="1000" rules="none" border="1" align="center" class="claro"> 
+									<tr class="titulo_tabla">
+										<td colspan="5">ÍTEMS</td>
+									</tr>
+									<tr class="encabezado_center">
+										<th width="9%">Modelo</th>
+										<th width="40%">Descripción</th>
+										<th width="5%">CT</th>
+										<th width="8%">Imprimir Normal</th>
+										<th width="8%">No Imprimir</th>
+										<th width="5%">Bulto 1</th>
+										<th width="5%">Bulto 2</th>
+										<th width="5%">Bulto 3</th>
+										<th width="5%">Bulto 4</th>
+										<th width="5%">Bulto 5</th>
+										<th width="5%">Bulto 6</th>
+									</tr>
+								</table>	
+								<div style="overflow-x:hidden; overflow-y:auto; height:200px; margin-top:0em;">
+									<table width="1000" rules="none" border="1" align="center" class="claro" id="ITEM_ORDEN_DESPACHO">							
+										<!-- startBlock(ITEM_ORDEN_DESPACHO) -->
+										<tr class="{DW_TR_CSS}" id="{DW_TR_ID}">
+											<td width="9%" align="left">{COD_PRODUCTO}{COD_PRODUCTO_S}</td>
+											<td width="40%" align="left">{NOM_PRODUCTO}</td>
+											<td width="5%" align="right">{CANTIDAD}</td>
+											<td width="8%" align="center">{NORMAL_CHECK}{IMPRESION_NORMAL}</td>
+											<td width="8%" align="center">{OMITIR_IMPRESION}</td>
+											<td width="5%" align="right">{BULTO_UNO}</td>
+											<td width="5%" align="right">{BULTO_DOS}</td>
+											<td width="5%" align="right">{BULTO_TRES}</td>
+											<td width="5%" align="right">{BULTO_CUATRO}</td>
+											<td width="5%" align="right">{BULTO_CINCO}</td>
+											<td width="5%" align="right">{BULTO_SEIS}</td>
+										</tr>	
+										<!-- endBlock(ITEM_ORDEN_DESPACHO) -->
+									</table>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+		<table width="1016" align="left" border="1">
+			<tr align="right"> 
+				<td>
+					<input class="button" name="OK" type="button" value="Impresión x bulto"  onclick="okMe();"/>
+				</td>
+	  		</tr>
+		</table>	
+	</form>
+</body>
+</html>

@@ -1,0 +1,443 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		<title>Sistema Grupo de Empresas Biggi</title>
+		<style type="text/css">
+			<!--
+			.stock_critico_r{
+				background-color:#FF7D8F;
+				
+			}
+			-->
+		</style>
+	</head>
+	<body>
+		<br>
+		<br>
+		<b>Señores Comercial Todoinox.</b>
+		<br><br> A continuación se informa los estados de “stock crítico”, para los productos seleccionados que manejan este atributo.
+		<br>En caso de que se necesite incluír más productos en este informe, favor contactar a Integrasystem.
+		<br>
+		<br>
+		<br>
+		<table width="80%" rules="none" border="1" bgcolor="#D8D8D8" align="center" class="claro" id="MAIL_PRODUCTO_MENOR">
+			<tr><td><b>PRODUCTOS CON "MESES STOCK", EN ESTADO CRITICO (MENOR O IGUAL A CERO MESES).</b></td></tr>
+			<tr>
+				<td>
+					<table border="1">
+						<tbody>
+							<tr class="encabezado_right">
+								<td colspan="2">
+								</td>
+								<td colspan="3">
+									<div align="center"><strong>FACTURACIÓN</strong></div>
+								</td>
+								<td colspan="4">
+								</td>
+							</tr>
+							<tr class="encabezado_right">
+								<td width="11%">
+									<div align="center"><strong>Cod. Producto</strong></div>
+								</td>
+								<td width="12%">
+									<div align="center"><strong>Nom. Producto</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Últimos 30 Días</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Últimos 60 Días</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Últimos 90 Días</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Promedio</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Stock Actual</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Meses Stock</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Facturación 2013</strong></div>
+								</td>
+							</tr>
+							 <!-- startBlock(MAIL_PRODUCTO_MENOR) -->
+							<tr class="{DW_TR_CSS}" id="{DW_TR_ID}">
+								<td>
+									<div align="center">{COD_PRODUCTO}</div>
+								</td>
+								<td>
+									<div align="left">{NOM_PRODUCTO}</div>
+								</td>
+								<td>
+									<div align="center">{ULTIMO_30_DIAS}</div>
+								</td>
+								<td>
+									<div align="center">{ULTIMO_60_DIAS}</div>
+								</td>
+								<td>
+									<div align="center">{ULTIMO_90_DIAS}</div>
+								</td>
+								<td>
+									<div align="center">{PROMEDIO}</div>
+								</td>
+								<td>
+									<div align="center">{STOCK_ACTUAL}</div>
+								</td>
+								<td class="stock_critico_r">
+									<div align="center">{MESES_STOCK}</div>
+								</td>
+								<td>
+									<div align="center">{FACTURACION_2013}</div>
+								</td>
+							</tr>
+							<!-- endBlock(MAIL_PRODUCTO_MENOR) -->
+						</tbody>
+					</table>
+				</td>	
+			</tr>
+		</table>
+		<br>
+		<br>
+		<table width="80%" rules="none" border="1" bgcolor="#D8D8D8" align="center" class="claro" id="MAIL_PRODUCTO_UNO">
+			<tr><td><b>PRODUCTOS CON "MESES STOCK" PROYECTADO PARA UN MES.</b></td></tr>
+			<tr>
+				<td>
+					<table border="1">
+						<tbody>
+							<tr class="encabezado_right">
+								<td colspan="2">
+								</td>
+								<td colspan="3">
+									<div align="center"><strong>FACTURACIÓN</strong></div>
+								</td>
+								<td colspan="4">
+								</td>
+							</tr>
+							<tr class="encabezado_right">
+								<td width="11%">
+									<div align="center"><strong>Cod. Producto</strong></div>
+								</td>
+								<td width="12%">
+									<div align="center"><strong>Nom. Producto</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Últimos 30 Días</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Últimos 60 Días</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Últimos 90 Días</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Promedio</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Stock Actual</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Meses Stock</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Facturación 2013</strong></div>
+								</td>
+							</tr>
+							 <!-- startBlock(MAIL_PRODUCTO_UNO) -->
+							<tr class="{DW_TR_CSS}" id="{DW_TR_ID}">
+								<td>
+									<div align="center">{COD_PRODUCTO}</div>
+								</td>
+								<td>
+									<div align="left">{NOM_PRODUCTO}</div>
+								</td>
+								<td>
+									<div align="center">{ULTIMO_30_DIAS}</div>
+								</td>
+								<td>
+									<div align="center">{ULTIMO_60_DIAS}</div>
+								</td>
+								<td>
+									<div align="center">{ULTIMO_90_DIAS}</div>
+								</td>
+								<td>
+									<div align="center">{PROMEDIO}</div>
+								</td>
+								<td>
+									<div align="center">{STOCK_ACTUAL}</div>
+								</td>
+								<td>
+									<div align="center">{MESES_STOCK}</div>
+								</td>
+								<td>
+									<div align="center">{FACTURACION_2013}</div>
+								</td>
+							</tr>
+							<!-- endBlock(MAIL_PRODUCTO_UNO) -->
+						</tbody>
+					</table>
+				</td>	
+			</tr>
+		</table>
+		<br>
+		<br>
+		<table width="80%" rules="none" border="1" bgcolor="#D8D8D8" align="center" class="claro" id="MAIL_PRODUCTO_DOS">
+			<tr><td><b>PRODUCTOS CON "MESES STOCK" PROYECTADO PARA DOS MESES.</b></td></tr>
+			<tr>
+				<td>
+					<table border="1">
+						<tbody>
+							<tr class="encabezado_right">
+								<td colspan="2">
+								</td>
+								<td colspan="3">
+									<div align="center"><strong>FACTURACIÓN</strong></div>
+								</td>
+								<td colspan="4">
+								</td>
+							</tr>
+							<tr class="encabezado_right">
+								<td width="11%">
+									<div align="center"><strong>Cod. Producto</strong></div>
+								</td>
+								<td width="12%">
+									<div align="center"><strong>Nom. Producto</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Últimos 30 Días</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Últimos 60 Días</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Últimos 90 Días</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Promedio</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Stock Actual</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Meses Stock</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Facturación 2013</strong></div>
+								</td>
+							</tr>
+							 <!-- startBlock(MAIL_PRODUCTO_DOS) -->
+							<tr class="{DW_TR_CSS}" id="{DW_TR_ID}">
+								<td>
+									<div align="center">{COD_PRODUCTO}</div>
+								</td>
+								<td>
+									<div align="left">{NOM_PRODUCTO}</div>
+								</td>
+								<td>
+									<div align="center">{ULTIMO_30_DIAS}</div>
+								</td>
+								<td>
+									<div align="center">{ULTIMO_60_DIAS}</div>
+								</td>
+								<td>
+									<div align="center">{ULTIMO_90_DIAS}</div>
+								</td>
+								<td>
+									<div align="center">{PROMEDIO}</div>
+								</td>
+								<td>
+									<div align="center">{STOCK_ACTUAL}</div>
+								</td>
+								<td>
+									<div align="center">{MESES_STOCK}</div>
+								</td>
+								<td>
+									<div align="center">{FACTURACION_2013}</div>
+								</td>
+							</tr>
+							<!-- endBlock(MAIL_PRODUCTO_DOS) -->
+						</tbody>
+					</table>
+				</td>	
+			</tr>
+		</table>
+		<br>
+		<br>
+		<table width="80%" rules="none" border="1" bgcolor="#D8D8D8" align="center" class="claro" id="MAIL_PRODUCTO_TRES">
+			<tr><td><b>PRODUCTOS CON "MESES STOCK" PROYECTADO PARA TRES MESES.</b></td></tr>
+			<tr>
+				<td>
+					<table border="1">
+						<tbody>
+							<tr class="encabezado_right">
+								<td colspan="2">
+								</td>
+								<td colspan="3">
+									<div align="center"><strong>FACTURACIÓN</strong></div>
+								</td>
+								<td colspan="4">
+								</td>
+							</tr>
+							<tr class="encabezado_right">
+								<td width="11%">
+									<div align="center"><strong>Cod. Producto</strong></div>
+								</td>
+								<td width="12%">
+									<div align="center"><strong>Nom. Producto</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Últimos 30 Días</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Últimos 60 Días</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Últimos 90 Días</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Promedio</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Stock Actual</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Meses Stock</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Facturación 2013</strong></div>
+								</td>
+							</tr>
+							 <!-- startBlock(MAIL_PRODUCTO_TRES) -->
+							<tr class="{DW_TR_CSS}" id="{DW_TR_ID}">
+								<td>
+									<div align="center">{COD_PRODUCTO}</div>
+								</td>
+								<td>
+									<div align="left">{NOM_PRODUCTO}</div>
+								</td>
+								<td>
+									<div align="center">{ULTIMO_30_DIAS}</div>
+								</td>
+								<td>
+									<div align="center">{ULTIMO_60_DIAS}</div>
+								</td>
+								<td>
+									<div align="center">{ULTIMO_90_DIAS}</div>
+								</td>
+								<td>
+									<div align="center">{PROMEDIO}</div>
+								</td>
+								<td>
+									<div align="center">{STOCK_ACTUAL}</div>
+								</td>
+								<td>
+									<div align="center">{MESES_STOCK}</div>
+								</td>
+								<td>
+									<div align="center">{FACTURACION_2013}</div>
+								</td>
+							</tr>
+							<!-- endBlock(MAIL_PRODUCTO_TRES) -->
+						</tbody>
+					</table>
+				</td>	
+			</tr>
+		</table>
+		<br>
+		<br>
+		<table width="80%" rules="none" border="1" bgcolor="#D8D8D8" align="center" class="claro" id="MAIL_PRODUCTO_MAYOR">
+			<tr><td><b>PRODUCTOS CON "MESES STOCK" PROYECTADO PARA CUATRO, O MAS MESES.</b></td></tr>
+			<tr>
+				<td>
+					<table border="1">
+						<tbody>
+							<tr class="encabezado_right">
+								<td colspan="2">
+								</td>
+								<td colspan="3">
+									<div align="center"><strong>FACTURACIÓN</strong></div>
+								</td>
+								<td colspan="4">
+								</td>
+							</tr>
+							<tr class="encabezado_right">
+								<td width="11%">
+									<div align="center"><strong>Cod. Producto</strong></div>
+								</td>
+								<td width="12%">
+									<div align="center"><strong>Nom. Producto</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Últimos 30 Días</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Últimos 60 Días</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Últimos 90 Días</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Promedio</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Stock Actual</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Meses Stock</strong></div>
+								</td>
+								<td width="11%">
+									<div align="center"><strong>Facturación 2013</strong></div>
+								</td>
+							</tr>
+							 <!-- startBlock(MAIL_PRODUCTO_MAYOR) -->
+							<tr class="{DW_TR_CSS}" id="{DW_TR_ID}">
+								<td>
+									<div align="center">{COD_PRODUCTO}</div>
+								</td>
+								<td>
+									<div align="left">{NOM_PRODUCTO}</div>
+								</td>
+								<td>
+									<div align="center">{ULTIMO_30_DIAS}</div>
+								</td>
+								<td>
+									<div align="center">{ULTIMO_60_DIAS}</div>
+								</td>
+								<td>
+									<div align="center">{ULTIMO_90_DIAS}</div>
+								</td>
+								<td>
+									<div align="center">{PROMEDIO}</div>
+								</td>
+								<td>
+									<div align="center">{STOCK_ACTUAL}</div>
+								</td>
+								<td>
+									<div align="center">{MESES_STOCK}</div>
+								</td>
+								<td>
+									<div align="center">{FACTURACION_2013}</div>
+								</td>
+							</tr>
+							<!-- endBlock(MAIL_PRODUCTO_MAYOR) -->
+						</tbody>
+					</table>
+				</td>	
+			</tr>
+		</table>
+		<br>
+		<table width="100%">
+			<tr>
+				<td>
+					<p><b>Atte.</b></p>
+					<p><b>Comercial Biggi </b></p>
+					<p><b>Este mensaje ha sido enviado por nuestro servidor de base de datos.</b></p>
+					<p><br>
+				</td>
+			</tr>
+		</table>
+	</body>

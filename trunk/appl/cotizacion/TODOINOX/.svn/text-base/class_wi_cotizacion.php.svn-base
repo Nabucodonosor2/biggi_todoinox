@@ -1,0 +1,395 @@
+<?php
+require_once(dirname(__FILE__)."/../../../../../commonlib/trunk/php/auto_load.php");
+require_once(dirname(__FILE__)."/../../common_appl/class_w_cot_nv.php");
+require_once(dirname(__FILE__)."/../../empresa/class_dw_help_empresa.php");
+
+class wi_cotizacion extends wi_cotizacion_base {
+	
+	function wi_cotizacion($cod_item_menu) {
+		parent::w_cot_nv('cotizacion', $cod_item_menu);
+	
+		$sql = "select	 C.COD_COTIZACION
+						,convert(varchar(20), C.FECHA_COTIZACION, 103) FECHA_COTIZACION
+						,C.COD_USUARIO
+						,U.NOM_USUARIO
+						,COD_USUARIO_VENDEDOR1
+						,PORC_VENDEDOR1
+						,COD_USUARIO_VENDEDOR2
+						,PORC_VENDEDOR2
+						,IDIOMA
+						,REFERENCIA
+						,COD_MONEDA
+						,C.COD_ESTADO_COTIZACION
+						,EC.NOM_ESTADO_COTIZACION
+						,COD_ORIGEN_COTIZACION
+						,COD_COTIZACION_DESDE
+						,C.COD_EMPRESA
+						,E.ALIAS
+						,'' ETIQUETA_DESCT1
+						,'' ETIQUETA_DESCT2
+						,'none' VISIBLE
+						,0 MONTO_DSCTO1_H
+						,0 MONTO_DSCTO2_H
+						,E.RUT
+						,E.DIG_VERIF
+						,E.NOM_EMPRESA
+						,E.GIRO
+						,case E.SUJETO_A_APROBACION
+							when 'S' then 'SUJETO A APROBACION'
+							else ''
+						end SUJETO_A_APROBACION
+						,C.COD_FORMA_PAGO
+						,C.NOM_FORMA_PAGO_OTRO
+						,COD_COTIZACION_DESDE
+						,COD_SUCURSAL_FACTURA
+						,SUMAR_ITEMS
+						,SUBTOTAL SUM_TOTAL
+						,PORC_DSCTO1
+						,MONTO_DSCTO1
+						,INGRESO_USUARIO_DSCTO1
+						,PORC_DSCTO2
+						,MONTO_DSCTO2
+						,INGRESO_USUARIO_DSCTO2
+						,TOTAL_NETO
+						,PORC_IVA
+						,MONTO_IVA
+						,TOTAL_CON_IVA
+						,dbo.f_get_direccion('SUCURSAL', COD_SUCURSAL_FACTURA, '[DIRECCION]  [NOM_COMUNA] [NOM_CIUDAD] - TELEFONO: [TELEFONO] - FAX: [FAX]') DIRECCION_FACTURA						
+						,COD_SUCURSAL_DESPACHO
+						,dbo.f_get_direccion('SUCURSAL', COD_SUCURSAL_DESPACHO, '[DIRECCION]  [NOM_COMUNA] [NOM_CIUDAD] - TELEFONO: [TELEFONO] - FAX: [FAX]') DIRECCION_DESPACHO
+						,COD_PERSONA
+						,dbo.f_emp_get_mail_cargo_persona(COD_PERSONA,  '[EMAIL] - [NOM_CARGO]') MAIL_CARGO_PERSONA
+						,VALIDEZ_OFERTA
+						,ENTREGA
+						,C.COD_EMBALAJE_COTIZACION
+						,C.COD_FLETE_COTIZACION
+						,C.COD_INSTALACION_COTIZACION
+						,GARANTIA
+						,OBS
+						,POSIBILIDAD_CIERRE
+						,FECHA_POSIBLE_CIERRE
+						,dbo.f_get_parametro(".self::K_PARAM_PORC_DSCTO_MAX.") PORC_DSCTO_MAX
+						,NOM_FORMA_PAGO_OTRO
+						,FECHA_REGISTRO_COTIZACION
+				from 	COTIZACION C, USUARIO U, EMPRESA E, ESTADO_COTIZACION EC
+				where	COD_COTIZACION = {KEY1} and
+						U.COD_USUARIO = C.COD_USUARIO AND
+						E.COD_EMPRESA = C.COD_EMPRESA AND
+						EC.COD_ESTADO_COTIZACION = C.COD_ESTADO_COTIZACION";
+
+
+		////////////////////
+		// tab Cotizacion
+		// DATAWINDOWS COTIZACION
+		$this->dws['dw_cotizacion'] = new dw_help_empresa($sql);	
+			
+	// DATOS GENERALES
+		$this->dws['dw_cotizacion']->add_control(new edit_nro_doc('COD_COTIZACION','COTIZACION'));
+		$this->add_controls_cot_nv();
+		$this->dws['dw_cotizacion']->add_control($control = new drop_down_list('IDIOMA',array('E','I'),array('ESPAÑOL','INGLES'),150));
+		$this->dws['dw_cotizacion']->set_entrable('IDIOMA', false);
+		
+		$this->dws['dw_cotizacion']->add_control(new static_text('NOM_ESTADO_COTIZACION'));
+		$sql_origen  			= "select 			COD_ORIGEN_COTIZACION
+													,NOM_ORIGEN_COTIZACION,
+													ORDEN
+									from 			ORIGEN_COTIZACION
+									order by 		ORDEN";
+		$this->dws['dw_cotizacion']->add_control(new drop_down_dw('COD_ORIGEN_COTIZACION',$sql_origen,150));
+		$this->dws['dw_cotizacion']->add_control(new static_text('COD_COTIZACION_DESDE'));
+		$this->dws['dw_cotizacion']->add_control(new static_text('ETIQUETA_DESCT1'));
+		$this->dws['dw_cotizacion']->add_control(new static_text('ETIQUETA_DESCT2'));
+		
+		// asigna los mandatorys
+		$this->dws['dw_cotizacion']->set_mandatory('COD_ESTADO_COTIZACION', 'un Estado');
+		$this->dws['dw_cotizacion']->set_mandatory('COD_ORIGEN_COTIZACION', 'un Origen');
+		//$this->dws['dw_cotizacion']->add_control(new edit_porcentaje('PORC_VENDEDOR1',2,2,1));
+
+		////////////////////
+		// tab items
+		// DATAWINDOWS ITEMS COTIZACION
+		$this->dws['dw_item_cotizacion'] = new dw_item_cotizacion();
+
+		// TOTALES
+		$this->dws['dw_cotizacion']->add_control(new edit_check_box('SUMAR_ITEMS','S','N'));
+
+		////////////////////
+		// tab Condiciones generales
+		// CONDICIONES GENERALES
+		$sql_forma_pago			= "	select 			COD_FORMA_PAGO
+													,NOM_FORMA_PAGO
+													,ORDEN
+						   			from			FORMA_PAGO
+						   			order by  		ORDEN";
+		
+		$this->dws['dw_cotizacion']->add_control($control = new drop_down_dw('COD_FORMA_PAGO', $sql_forma_pago, 180));
+		$control->set_onChange('mostrarOcultar(this);');
+		$this->dws['dw_cotizacion']->add_control(new edit_text_upper('NOM_FORMA_PAGO_OTRO',132, 100));
+		
+		$this->dws['dw_cotizacion']->add_control(new edit_num('VALIDEZ_OFERTA',2,2));
+		$this->dws['dw_cotizacion']->add_control(new edit_text_upper('ENTREGA',180,100));
+		$sql_embalaje_cot 		= "	select 			COD_EMBALAJE_COTIZACION
+													,NOM_EMBALAJE_COTIZACION
+						   			from			EMBALAJE_COTIZACION
+						   			order by  		NOM_EMBALAJE_COTIZACION asc";
+		$this->dws['dw_cotizacion']->add_control(new drop_down_dw('COD_EMBALAJE_COTIZACION',$sql_embalaje_cot,740));
+		$sql_flete_cot 			= "	select 			COD_FLETE_COTIZACION
+													,NOM_FLETE_COTIZACION
+													,ORDEN
+						  			 from			FLETE_COTIZACION
+						  			order by  		ORDEN";
+		$this->dws['dw_cotizacion']->add_control(new drop_down_dw('COD_FLETE_COTIZACION',$sql_flete_cot,740));
+		$sql_ins_cot 			= "	select 			COD_INSTALACION_COTIZACION
+													,NOM_INSTALACION_COTIZACION
+													,ORDEN
+						  			from			INSTALACION_COTIZACION
+						   			order by  		ORDEN";
+		$this->dws['dw_cotizacion']->add_control(new drop_down_dw('COD_INSTALACION_COTIZACION',$sql_ins_cot,740));
+		$this->dws['dw_cotizacion']->add_control(new edit_text_upper('GARANTIA',180,100));
+		$this->dws['dw_cotizacion']->add_control(new edit_text_multiline('OBS',54,4));
+
+		//auditoria Solicitado por IS.
+		$this->add_auditoria('COD_USUARIO_VENDEDOR1');
+		$this->add_auditoria('PORC_VENDEDOR1');
+		$this->add_auditoria('COD_USUARIO_VENDEDOR2');
+		$this->add_auditoria('PORC_VENDEDOR2');
+		$this->add_auditoria('COD_ESTADO_COTIZACION');
+		$this->add_auditoria('COD_EMPRESA');
+		$this->add_auditoria('COD_SUCURSAL_FACTURA');
+		$this->add_auditoria('COD_SUCURSAL_DESPACHO');
+		$this->add_auditoria('COD_PERSONA');
+		
+		
+		// asigna los mandatorys
+		$this->dws['dw_cotizacion']->set_mandatory('COD_FORMA_PAGO', 'Forma de Pago');
+		$this->dws['dw_cotizacion']->set_mandatory('VALIDEZ_OFERTA', 'Validez Oferta');
+		$this->dws['dw_cotizacion']->set_mandatory('ENTREGA', 'Entrega');
+		$this->dws['dw_cotizacion']->set_mandatory('COD_EMBALAJE_COTIZACION', 'Embalaje');
+		$this->dws['dw_cotizacion']->set_mandatory('COD_FLETE_COTIZACION', 'Flete');
+		$this->dws['dw_cotizacion']->set_mandatory('COD_INSTALACION_COTIZACION', 'Instalación');
+		$this->dws['dw_cotizacion']->set_mandatory('GARANTIA', 'Garantía');
+
+
+		////////////////////
+		// tab STOCK
+		$this->dws['dw_item_stock'] = new dw_item_stock();
+
+	
+		$sql_estado  			= "	select 			COD_ESTADO_COTIZACION
+													,NOM_ESTADO_COTIZACION
+													,ORDEN
+									from 			ESTADO_COTIZACION
+									order by 		ORDEN";
+		$this->dws['dw_cotizacion']->add_control(new drop_down_dw('COD_ESTADO_COTIZACION',$sql_estado, 150));
+
+		$this->dws['dw_cotizacion']->set_mandatory('COD_ESTADO_COTIZACION', 'un Estado');
+
+		$this->set_first_focus('REFERENCIA');
+		
+		$this->dws['dw_cotizacion']->add_control(new edit_text('PORC_DSCTO_MAX',10, 10, 'hidden'));
+		
+		
+		
+	//	echo $sql_original;
+	//$this->dws['dw_cotizacion']->add_control(new edit_nro_doc('COD_COTIZACION','COTIZACION'));
+	}
+	function load_record(){
+		parent::load_record();
+		$os = base::get_tipo_dispositivo();
+			if($os == 'IPAD' ){
+	            $this->dws['dw_cotizacion']->set_item(0,'TIPO_DISPOSITIVO', 'IPAD');
+			}
+			
+	}
+	function load_cotizacion($cod_cotizacion) {
+		parent::load_cotizacion($cod_cotizacion);
+	}
+	function save_record($db) {
+		$db = new database(K_TIPO_BD, K_SERVER, K_BD, K_USER, K_PASS);
+		$usuario = session::get("COD_USUARIO");
+		
+		$item_menu = '990520';
+		$sql_perfil = "SELECT COD_PERFIL
+					     FROM USUARIO
+						WHERE COD_USUARIO =$usuario";
+		$result_perfil = $db->build_results($sql_perfil);
+		$perfil = 	$result_perfil[0]['COD_PERFIL'];
+		
+		$sql_autoriza = "SELECT AUTORIZA_MENU
+					FROM AUTORIZA_MENU
+					WHERE COD_PERFIL = $perfil
+					AND COD_ITEM_MENU =$item_menu";
+		$result_autoriza = $db->build_results($sql_autoriza);					
+		$autoriza_menu  = 	$result_autoriza[0]['AUTORIZA_MENU'];
+		
+		
+		$cod_cotizacion 	= $this->get_key();
+		$fecha_cotizacion	= $this->dws['dw_cotizacion']->get_item(0, 'FECHA_COTIZACION');
+		$cod_usuario 		= $this->dws['dw_cotizacion']->get_item(0, 'COD_USUARIO');
+		$cod_usuario_vend1 	= $this->dws['dw_cotizacion']->get_item(0, 'COD_USUARIO_VENDEDOR1');
+		
+		$porc_vendedor1		= $this->dws['dw_cotizacion']->get_item(0, 'PORC_VENDEDOR1');
+		$cod_usuario_vend2 	= $this->dws['dw_cotizacion']->get_item(0, 'COD_USUARIO_VENDEDOR2');
+		if ($cod_usuario_vend2 =='') {
+			$cod_usuario_vend2	= "null";
+			$porc_vendedor2		= "null";
+		}
+		else
+			$porc_vendedor2		= $this->dws['dw_cotizacion']->get_item(0, 'PORC_VENDEDOR2');	
+		
+		$cod_moneda			= $this->dws['dw_cotizacion']->get_item(0, 'COD_MONEDA');
+		$idioma			 	= $this->dws['dw_cotizacion']->get_item(0, 'IDIOMA');
+		$referencia			= $this->dws['dw_cotizacion']->get_item(0, 'REFERENCIA');
+		$referencia 		= str_replace("'", "''", $referencia);
+		$cod_est_cot		= $this->dws['dw_cotizacion']->get_item(0, 'COD_ESTADO_COTIZACION');
+		$cod_ori_cot		= $this->dws['dw_cotizacion']->get_item(0, 'COD_ORIGEN_COTIZACION');
+		$cod_cot_desde		= $this->dws['dw_cotizacion']->get_item(0, 'COD_COTIZACION_DESDE');
+		$cod_cot_desde		= ($cod_cot_desde =='') ? "null" : "$cod_cot_desde";
+		$cod_empresa		= $this->dws['dw_cotizacion']->get_item(0, 'COD_EMPRESA');
+		$cod_suc_despacho	= $this->dws['dw_cotizacion']->get_item(0, 'COD_SUCURSAL_DESPACHO');
+		$cod_suc_factura	= $this->dws['dw_cotizacion']->get_item(0, 'COD_SUCURSAL_FACTURA');
+		$cod_persona		= $this->dws['dw_cotizacion']->get_item(0, 'COD_PERSONA');
+		$cod_persona		= ($cod_persona =='') ? "null" : "$cod_persona";
+		$sumar_items		= $this->dws['dw_cotizacion']->get_item(0, 'SUMAR_ITEMS');
+
+		$sub_total			= $this->dws['dw_cotizacion']->get_item(0, 'SUM_TOTAL');
+		$sub_total      	= ($sub_total =='') ? 0 : "$sub_total";
+
+		$porc_descto1		= $this->dws['dw_cotizacion']->get_item(0, 'PORC_DSCTO1');
+		$porc_descto1		= ($porc_descto1 =='') ? "null" : "$porc_descto1";
+		if($autoriza_menu <> 'E'){
+		$monto_dscto1		= $this->dws['dw_cotizacion']->get_item(0, 'MONTO_DSCTO1_H');
+		$monto_dscto1		= ($monto_dscto1 =='') ? 0 : "$monto_dscto1";
+		
+		$monto_dscto2		= 0;////ESTE CAMPO NO SE OCUPA EN TODOINOX $this->dws['dw_cotizacion']->get_item(0, 'MONTO_DSCTO2_H');
+		$monto_dscto2		= ($monto_dscto2 =='') ? 0 : "$monto_dscto2";
+			
+		}else{
+		$monto_dscto1		= $this->dws['dw_cotizacion']->get_item(0, 'MONTO_DSCTO1');
+		$monto_dscto1		= ($monto_dscto1 =='') ? 0 : "$monto_dscto1";
+		
+		$monto_dscto2		= 0; //ESTE CAMPO NO SE OCUPA EN TODOINOX $this->dws['dw_cotizacion']->get_item(0, 'MONTO_DSCTO2');
+		$monto_dscto2		= ($monto_dscto2 =='') ? 0 : "$monto_dscto2";	
+		}
+		
+
+		$porc_descto2		= 0;//ESTE CAMPO NO SE OCUPA EN TODOINOX  $this->dws['dw_cotizacion']->get_item(0, 'PORC_DSCTO2');
+		$porc_descto2		= ($porc_descto2 =='') ? "null" : "$porc_descto2";
+
+		$total_neto			= $this->dws['dw_cotizacion']->get_item(0, 'TOTAL_NETO');
+		$total_neto			= ($total_neto =='') ? 0 : "$total_neto";
+
+		$porc_iva			= $this->dws['dw_cotizacion']->get_item(0, 'PORC_IVA');
+
+		$monto_iva			= $this->dws['dw_cotizacion']->get_item(0, 'MONTO_IVA');
+		$monto_iva			= ($monto_iva =='') ? 0 : "$monto_iva";
+
+		$total_con_iva		= $this->dws['dw_cotizacion']->get_item(0, 'TOTAL_CON_IVA');
+		$total_con_iva		= ($total_con_iva =='') ? 0 : "$total_con_iva";
+
+		$cod_forma_pago		= $this->dws['dw_cotizacion']->get_item(0, 'COD_FORMA_PAGO');
+		if ($cod_forma_pago==1){ // forma de pago = OTRO
+			$nom_forma_pago_otro= $this->dws['dw_cotizacion']->get_item(0, 'NOM_FORMA_PAGO_OTRO');
+		}else{
+			$nom_forma_pago_otro= "";
+		}
+		$nom_forma_pago_otro= ($nom_forma_pago_otro =='') ? "null" : "'$nom_forma_pago_otro'";
+		$validez_oferta		= $this->dws['dw_cotizacion']->get_item(0, 'VALIDEZ_OFERTA');
+		$entrega			= $this->dws['dw_cotizacion']->get_item(0, 'ENTREGA');
+		$entrega 			= str_replace("'", "''", $entrega);
+		$cod_embalaje_cot	= $this->dws['dw_cotizacion']->get_item(0, 'COD_EMBALAJE_COTIZACION');
+		$cod_flete_cot		= $this->dws['dw_cotizacion']->get_item(0, 'COD_FLETE_COTIZACION');
+		$cod_inst_cot		= $this->dws['dw_cotizacion']->get_item(0, 'COD_INSTALACION_COTIZACION');
+		$garantia			= $this->dws['dw_cotizacion']->get_item(0, 'GARANTIA');
+		$garantia 			= str_replace("'", "''", $garantia);
+		$obs				= $this->dws['dw_cotizacion']->get_item(0, 'OBS');
+		$obs	 			= str_replace("'", "''", $obs);
+		$obs				= ($obs =='') ? "null" : "'$obs'";
+		$posib_cierre		= 1;//$this->dws['dw_cotizacion']->get_item(0, 'POSIBILIDAD_CIERRE');
+		$fec_posib_cierre	= '01/12/2009';	// NOTA: para el manejo de fecha se debe pasar un string dd/mm/yyyy y en el sp llamar a to_date ber eje en spi_orden_trabajo
+		$ing_usuario_dscto1	= $this->dws['dw_cotizacion']->get_item(0, 'INGRESO_USUARIO_DSCTO1');
+		$ing_usuario_dscto1	= ($ing_usuario_dscto1 =='') ? "null" : "'$ing_usuario_dscto1'";
+		$ing_usuario_dscto2	= $this->dws['dw_cotizacion']->get_item(0, 'INGRESO_USUARIO_DSCTO2');
+		$ing_usuario_dscto2	= ($ing_usuario_dscto2 =='') ? "null" : "'$ing_usuario_dscto2'";
+		
+		$cod_cotizacion = ($cod_cotizacion=='') ? "null" : $cod_cotizacion;		
+    
+		$sp = 'spu_cotizacion';
+	    if ($this->is_new_record())
+	    	$operacion = 'INSERT';
+	    else
+	    	$operacion = 'UPDATE';
+	    
+		$param	= "		'$operacion'
+						,$cod_cotizacion
+						,'$fecha_cotizacion'
+						,$cod_usuario
+						,$cod_usuario_vend1
+						,$porc_vendedor1
+						,$cod_usuario_vend2
+						,$porc_vendedor2
+						,$cod_moneda
+						,'$idioma'
+						,'$referencia'
+						,$cod_est_cot
+						,$cod_ori_cot
+						,$cod_cot_desde
+						,$cod_empresa
+						,$cod_suc_despacho
+						,$cod_suc_factura
+						,$cod_persona
+						,'$sumar_items'
+						,$sub_total
+						,$porc_descto1
+						,$monto_dscto1
+						,$porc_descto2
+						,$monto_dscto2
+						,$total_neto
+						,$porc_iva
+						,$monto_iva
+						,$total_con_iva
+						,$cod_forma_pago
+						,$validez_oferta
+						,'$entrega'
+						,$cod_embalaje_cot
+						,$cod_flete_cot
+						,$cod_inst_cot
+						,'$garantia'
+						,$obs
+						,$posib_cierre
+						,'$fec_posib_cierre'
+						,$ing_usuario_dscto1
+						,$ing_usuario_dscto2
+						,$nom_forma_pago_otro
+					";
+						
+		if ($db->EXECUTE_SP($sp, $param)){
+			if ($this->is_new_record()) {
+				$cod_cotizacion = $db->GET_IDENTITY();
+				$this->dws['dw_cotizacion']->set_item(0, 'COD_COTIZACION', $cod_cotizacion);
+				/*
+				VMC, 7-01-2011
+				se elimina el envio de mail cuando se cotiza a un cliente no asignado 
+
+				$this->envia_mail_acuse();
+				*/				
+			}
+			for ($i=0; $i<$this->dws['dw_item_cotizacion']->row_count(); $i++)
+				$this->dws['dw_item_cotizacion']->set_item($i, 'COD_COTIZACION', $cod_cotizacion);
+
+			if (!$this->dws['dw_item_cotizacion']->update($db))
+				return false;
+				
+			$parametros_sp = "'item_cotizacion','cotizacion',$cod_cotizacion";
+			if (!$db->EXECUTE_SP('sp_orden_no_parametricas', $parametros_sp))
+				return false;
+				
+			$parametros_sp = "'RECALCULA',$cod_cotizacion";	
+			if (!$db->EXECUTE_SP('spu_cotizacion', $parametros_sp))
+				return false;
+			return true;			
+		}
+		return false;
+	}
+}
+?>

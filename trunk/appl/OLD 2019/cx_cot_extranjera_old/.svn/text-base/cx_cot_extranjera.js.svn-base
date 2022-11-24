@@ -1,0 +1,21 @@
+function validate() {
+
+alert('2222222222222');
+}
+
+function add_line_item(tabla_id, nom_tabla) {
+
+alert('1111111111111');
+	var row = add_line(tabla_id, nom_tabla);
+	var aTR = get_TR('ITEM_CX_COT_EXTRANJERA');
+	var item = 1;
+	var letra = '';
+	for (var i=aTR.length - 2; i >=0; i--, item++) {
+		var cod_producto_value = document.getElementById('COD_PRODUCTO_' + get_num_rec_field(aTR[i].id)).value
+		if (cod_producto_value=='T') {
+			letra = document.getElementById('ITEM_' + get_num_rec_field(aTR[i].id)).value; 
+			break;
+		}
+	}	
+	document.getElementById('ITEM_' + row).value = letra + item;
+}

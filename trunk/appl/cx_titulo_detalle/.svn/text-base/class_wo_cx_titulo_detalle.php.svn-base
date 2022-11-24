@@ -1,0 +1,19 @@
+<?php
+require_once(dirname(__FILE__)."/../../../../commonlib/trunk/php/auto_load.php");
+require_once(dirname(__FILE__)."/../common_appl/class_w_output_biggi.php");
+
+class wo_cx_titulo_detalle extends w_output_biggi {
+   function wo_cx_titulo_detalle() {   	
+      $sql = "SELECT COD_CX_TITULO_DETALLE
+					,NOM_CX_TITULO_DETALLE 
+			FROM CX_TITULO_DETALLE
+			ORDER BY COD_CX_TITULO_DETALLE";
+			
+    //  parent::w_parametrica('cx_clausula_compra', $sql, $_REQUEST['cod_item_menu'], '352005');
+      parent::w_output_biggi('cx_titulo_detalle', $sql, $_REQUEST['cod_item_menu']);
+      // headers
+      $this->add_header(new header_text('COD_CX_TITULO_DETALLE', 'COD_CX_TITULO_DETALLE', 'Código'));
+      $this->add_header(new header_text('NOM_CX_TITULO_DETALLE', 'NOM_CX_TITULO_DETALLE', 'Detalle'));
+   }
+}
+?>

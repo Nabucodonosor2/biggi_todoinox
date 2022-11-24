@@ -1,0 +1,466 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Sistema Grupo de Empresas Biggi</title>
+<link href="{W_CSS}" rel="stylesheet" type="text/css"/>
+<script src="../../../../commonlib/trunk/script_js/SpryTabbedPanels.js" type="text/javascript"></script>
+<link href="../../../../commonlib/trunk/css/SpryTabbedPanels.css" rel="stylesheet" type="text/css"/>
+<script charset="iso-8859-1" src="../../../../commonlib/trunk/script_js/edit_filter.js" type="text/javascript"></script>
+<script charset="iso-8859-1" src="../../../../commonlib/trunk/script_js/general.js" type="text/javascript"></script>
+
+<script charset="iso-8859-1" src="../cx_cot_extranjera/help_empresa.js" type="text/javascript"></script>
+<script charset="UTF-8" src="cx_oc_extranjera.js" type="text/javascript"></script>
+<script type="text/javascript">
+function entrada(objeto, url)
+{
+   objeto.style.backgroundImage = "url('"+url+"')";
+}
+function salida(objeto, url)
+{
+  objeto.style.backgroundImage = "url('"+url+"')";
+}
+function down(objeto, url)
+{
+ 	objeto.style.backgroundImage = "url('"+url+"')";
+}
+</script>
+</head>
+<body {WI_ONLOAD}>
+{IPAD_MENU}
+{WI_JAVA_SCRIPT}
+<!-- DO NOT MOVE! The following AllWebMenus linking code section must always be placed right AFTER the BODY tag-->
+<!-- ******** BEGIN ALLWEBMENUS CODE FOR menu ******** -->
+<script type="text/javascript">var MenuLinkedBy="AllWebMenus [4]",awmMenuName="menu",awmBN="740";awmAltUrl="";</script>
+<script charset="UTF-8" src="{K_ROOT_URL}menu/menu.js" type="text/javascript"></script>
+<script type="text/javascript">{W_MENU}</script>
+<style type="text/css">
+<!--
+
+.encabezado_right2{
+	background-color:#7896DC;
+	font-size: 11px;
+	font-weight:bold;	
+	color: #FFF;
+	text-align:right;
+	height:23px;
+}
+.encabezado_center2{
+	background-color:#7896DC;
+	font-size: 11px;
+	font-weight:bold;	
+	color: #FFF;
+	text-align:center;
+	height:23px;
+}
+
+.encabezado_left2{
+	background-color:#7896DC;
+	font-size: 11px;
+	font-weight:bold;	
+	color: #FFF;
+	text-align:left;
+	height:23px;
+}
+.titulo_tabla2{
+	background-color:#EAEAEA;
+	font-size: 9px;
+	font-weight:bold;	
+	color: #700112;
+	text-align:left;
+	padding-top:9px;
+}
+-->
+</style>
+<!-- ******** END ALLWEBMENUS CODE FOR menu ******** -->
+<form action="" method="post" name="input" id="input">
+	<input name="wi_hidden" id="wi_hidden" type="hidden" value="">
+	<input name="wi_current_tab_page" id="wi_current_tab_page" type="hidden" value="">
+	<table width="1050" border="0" align="center">
+		<tr bgcolor="#FFFFFF">
+			<!-- menu superior-->
+			<td width="1000" height="51" align="center" id="awmAnchor-menu" style="width: 100px; height: 50px;">
+				<div style="color:blue; text-align:right; height:29px;"></div>
+				<div style="color:blue;text-align:right; font-family: Verdana,Arial,Helvetica,sans-serif;">{K_NOMBRE}</div>
+			</td>
+		</tr>
+		<tr bgcolor="#FFFFFF">
+			<td>
+				<table width="1000" border="0">
+					<tr>
+						<td>
+							<table width="520" border="0">
+								<tr>
+									<td height="100%">
+									<div class="titulo_central">{WI_RUTA_MENU}</div>
+									</td>
+								</tr>
+								<tr>
+									<td height="0%">
+									<div class="tit_superior"><font color="#999999">{WI_FECHA_ACTUAL}</font></div>
+									</td>
+								</tr>
+								<tr>
+									<td height="0%">
+									<div class="tit_superior"><font color="#999999">{WI_FECHA_MODIF}</font></div>
+									</td>
+								</tr>
+							</table>
+						</td>
+						<td width="68"></td>
+						<td width="68">{WI_PRINT}</td>
+						<td width="68">{WI_NO_SAVE}</td>
+						<td width="68">{WI_SAVE}</td>
+						<td width="68">{WI_MODIFY}</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr bgcolor="#FFFFFF">
+			<td>
+				<table width="1000" border="0" align="center">
+					<tr>
+						<td height="95">
+							<table width="1015" border="0" align="center">
+								<tr valign="top">
+									<td>
+										<div id="TabbedPanels1" class="TabbedPanels">
+											<ul class="TabbedPanelsTabGroup">
+												<li class="TabbedPanelsTab" tabindex="0" style="display:{TAB_100505}">Purchase Order</li>
+												<li class="TabbedPanelsTab" tabindex="0" style="display:{TAB_100510}">Items Purchase</li>
+												<li class="TabbedPanelsTab" tabindex="0" style="display:{TAB_100510}">Carta Orden Pago</li>
+												<li class="TabbedPanelsTab" tabindex="0" style="display:{TAB_100510}">Carta Instrucción Cobertura</li>
+											</ul>
+											<div class="TabbedPanelsContentGroup">
+												<!--INI EMPRESA-->
+												<div class="TabbedPanelsContent" style="height:492px;">
+													<table width="1000" rules="none" border="1" align="center"	class="claro">
+														<tr class="titulo_tabla">
+															<td colspan="6">GENERAL DATA</td>
+														</tr>
+														<tr class="encabezado_right">
+															<td width="16.6%">Correlative P.O N°:</td>
+															<td width="16.7%" class="oscuro" align="left">{CORRELATIVO_OC}{COD_CX_OC_EXTRANJERA}</td>
+															<td width="16.6%">Date:</td>
+															<td width="16.7%" class="oscuro" align="left">{FECHA_CX_OC_EXTRANJERA}</td>
+															<td width="16.6%">User:</td>
+															<td width="16.7%" class="oscuro" align="left">{NOM_USUARIO}{COD_USUARIO}</td>
+														</tr>
+														<tr class="encabezado_right">
+															<td>State:</td>
+															<td class="claro" align="left">{COD_CX_ESTADO_OC_EXTRANJERA}</td>
+															<td>From Quote N°:</td>
+															<td class="claro" align="left" colspan="3">{COD_CX_COT_EXTRANJERA}</td>
+														</tr>
+													</table>
+													<table width="1000" rules="none" border="1" align="center" class="claro">
+														<tr class="titulo_tabla">
+															<td colspan="6">PROVIDER</td>
+														</tr>
+														<tr class="encabezado_right">
+															<td>Provider Alias:</td>
+															<td class="oscuro" align="left" colspan="5">{ALIAS_PROVEEDOR_EXT}</td>
+															<td style="display:none">Provider Code:</td>
+															<td style="display:none" class="oscuro" align="left" colspan="2">{COD_PROVEEDOR_EXT}</td>
+														</tr>
+														<tr class="encabezado_right">
+															<td>Provider Name:</td>
+															<td class="claro" align="left" colspan="2">{NOM_PROVEEDOR_EXT}</td>
+															<td>Address:</td>
+															<td class="claro" align="left" colspan="2">{DIRECCION}</td>
+														</tr>
+														<tr class="encabezado_right">
+															<td width="16.6%">Post Office Box:</td>
+															<td width="16.7%" class="oscuro" align="left">{POST_OFFICE_BOX}</td>
+															<td width="16.6%">City:</td>
+															<td width="16.7%" class="oscuro" align="left">{NOM_CIUDAD}</td>
+															<td width="16.6%">Country:</td>
+															<td width="16.7%" class="oscuro" align="left">{NOM_PAIS}</td>
+														</tr>
+													</table>
+													<table width="1000" rules="none" border="1" align="center"	class="claro">
+														<tr class="titulo_tabla">
+															<td colspan="6">PROVIDER CONTACT</td>
+														</tr>
+														<tr class="encabezado_right">
+															<td width="16.6%">Contact:</td>
+															<td width="16.7%" class="claro" align="left" >{COD_CX_CONTACTO_PROVEEDOR_EXT}</td>
+															<td width="16.6%">Mail Contact:</td>
+															<td width="16.7%" class="claro" align="left" >{MAIL}</td>
+															<td width="16.6%">Phone Contact:</td>
+															<td width="16.7%" class="claro" align="left">{TELEFONO}</td>
+														</tr>
+														<tr class="encabezado_right">
+															<td>Reference:</td>
+															<td class="oscuro" align="left" colspan="6">{REFERENCIA}</td>
+														</tr>
+													</table>
+													<table width="1000" rules="none" border="1" align="center"	class="claro">	
+														<tr class="titulo_tabla">
+															<td colspan="6">DELIVERY</td>
+														</tr>
+														<tr class="encabezado_right">
+															<td width="16.6%">Delivery Date:</td>
+															<td width="16.7%" class="claro" align="left">{DELIVERY_DATE}</td>
+															<td width="16.6%">Port of Loading:</td>
+															<td width="16.7%" class="claro" align="left">{COD_CX_PUERTO_SALIDA}</td>
+															<td width="16.6%">Port of Discharge:</td>
+															<td width="16.7%" class="claro" align="left">{COD_CX_PUERTO_ARRIBO}</td>
+														</tr>
+														<tr class="encabezado_right" style="display:none">
+															<td>Packing:</td>
+															<td class="oscuro" align="left" colspan="6">{PACKING}</td>
+														</tr>
+													</table>
+													<table width="1000" rules="none" border="1" align="center"	class="claro">
+														<tr class="titulo_tabla">
+															<td colspan="6">PAYMENT</td>
+														</tr>	
+														<tr class="encabezado_right">
+															<td width="16.6%">Purchase Clause:</td>
+															<td width="33.3%" class="claro" align="left">{COD_CX_CLAUSULA_COMPRA}</td>
+															<td width="16.6%">Currency:</td>
+															<td width="33.3%" class="claro" align="left">{COD_CX_MONEDA}</td>
+														</tr>
+														<tr class="encabezado_right">
+															<td>Terms of Payment:</td>
+															<td class="oscuro" align="left" colspan="3">{COD_CX_TERMINO_PAGO}</td>
+														</tr>
+													</table>
+													<table width="1000" rules="none" border="1" align="center" class="claro" height="100">
+														<tr class="titulo_tabla">
+															<td colspan="6"></td>
+														</tr>	
+														<tr class="titulo_tabla">
+															<td colspan="6"></td>
+														</tr>	
+														<tr class="encabezado_right">
+															<td width="16.6%">Comments:</td>
+															<td width="83.4%" class="claro" align="left">{OBSERVACIONES}</td>
+														</tr>
+													</table>
+													<table width="1000" rules="none" border="0" align="center">
+														<tr>
+															<td></td>
+														</tr>
+													</table>	
+												</div>
+												<!--FIN EMPRESA--> 
+												<!--INI LISTA PRECIO-->
+												<div class="TabbedPanelsContent" style="height:492px;">
+													<table width="1000" rules="none" border="1" align="center"	class="claro">
+														<tr class="titulo_tabla">
+															<td colspan="6">GENERAL DATA</td>
+														</tr>
+														<tr class="encabezado_right">
+															<td width="16.6%">Correlative P.O N°:</td>
+															<td width="16.7%" class="oscuro" align="left">{CORRELATIVO_OC_L}</td>
+															<td width="16.6%">Date:</td>
+															<td width="16.7%" class="oscuro" align="left">{FECHA_CX_OC_EXTRANJERA_L}</td>
+															<td width="16.6%">User:</td>
+															<td width="16.7%" class="oscuro" align="left">{NOM_USUARIO}</td>
+														</tr>
+														<tr class="encabezado_right">
+															<td>State:</td>
+															<td class="claro" align="left">{NOM_CX_ESTADO_OC_EXTRANJERA}</td>
+															<td>From Quote N°:</td>
+															<td class="claro" align="left" colspan="3">{COD_CX_COT_EXTRANJERA}</td>
+														</tr>
+													</table>
+													<table width="1000" rules="none" border="0" align="center">
+														<tr>
+															<td></td>
+														</tr>
+													</table>
+													<table width="1000" rules="none" border="1" align="center" class="claro">
+														<tr class="titulo_tabla">
+															<td colspan="10">PRICE LIST</td>
+														</tr>
+														<tr class="encabezado_center">
+															<th width="5%">Sec</th>
+															<th width="5%">IT</th>
+															<th width="11%">Shipping</th>
+															<th width="11%">Model/Code</th>
+															<th width="39%">Description</th>
+															<th width="6%">QTY</th>
+															<th width="7%">Unit</th>
+															<th width="11%">Total</th>
+															<th width="5%"></th>
+														</tr>
+													</table>
+													<div style="overflow-x: hidden; overflow-y: auto; height:200;">
+														<table width="1000" rules="none" border="1" align="center" class="claro" id="CX_ITEM_OC_EXTRANJERA">
+															<!-- startBlock(CX_ITEM_OC_EXTRANJERA) -->
+															<tr class="{DW_TR_CSS}" id="{DW_TR_ID}">
+																<td width="5%" align="center">{COD_CX_ITEM_OC_EXTRANJERA}{ORDEN}</td>
+																<td width="5%">{ITEM}</td>
+																<td width="11%">{COD_PRODUCTO}{NOM_PRODUCTO}</td>
+																<td width="11%">{COD_EQUIPO_OC_EX}{COD_EQUIPO_OC_EX_H}</td>
+																<td width="39%">{DESC_EQUIPO_OC_EX}{DESC_EQUIPO_OC_EX_H}</td>
+																<td width="6%" align="right">{CANTIDAD}</td>
+																<td width="7%" align="right">{PRECIO}</td>
+																<td width="11%" align="right">{TOTAL}</td>
+																<td width="5%" align="center">{ELIMINAR_CX_ITEM_OC_EXTRANJERA}</td>
+															</tr>
+															<!-- endBlock(CX_ITEM_OC_EXTRANJERA) -->
+														</table>
+													</div>
+													<table width="1000" rules="none" border="1" align="center" class="claro">
+														<tr class="claro">
+															<td align="left">{AGREGAR_CX_ITEM_OC_EXTRANJERA}</td>
+														</tr>
+													</table>
+													<table width="1000" rules="none" border="0" align="center">
+														<tr>
+															<td></td>
+														</tr>
+													</table>
+													<table width="1000" rules="none" border="0" align="center">
+														<tr class="encabezado_right">
+															<td width="21%" class="claro">
+																<input type="button" value="Usar Secuencia" class="Button" onClick="usar_secuencia('CX_ITEM_OC_EXTRANJERA');" {DISABLE_BUTTON}>
+															</td>
+															<td width="50%" class="claro"></td>
+															<td width="13%">Sub Total:</td>
+															<td width="11%" class="oscuro" align="right">{SUBTOTAL}{SUBTOTAL_H}</td>
+															<td width="5%" class="claro"></td>
+														</tr>
+														<tr class="encabezado_right">
+															<td class="claro" colspan="2"></td>
+															<td>Inland Freigt:</td>
+															<td class="claro" align="right">{MONTO_FLETE_INTERNO}</td>
+															<td class="claro"></td>
+														</tr>
+														<tr class="encabezado_right">
+															<td class="claro" colspan="2"></td>
+															<td>Packing:</td>
+															<td class="oscuro" align="right">{MONTO_EMBALAJE}</td>
+															<td class="claro"></td>
+														</tr>
+														<tr class="encabezado_right">
+															<td class="claro" colspan="2"></td>
+															<td>Discount:</td>
+															<td class="claro" align="right">{MONTO_DESCUENTO}</td>
+															<td class="claro"></td>
+														</tr>
+														<tr class="encabezado_right">
+															<td class="claro" colspan="2"></td>
+															<td>Total:</td>
+															<td class="oscuro" align="right">{MONTO_TOTAL}{MONTO_TOTAL_H}</td>
+															<td class="claro"></td>
+														</tr>
+													</table>
+													<table width="1000" rules="none" border="0" align="center">
+														<tr>
+															<td></td>
+														</tr>
+													</table>
+
+
+												</div>
+												<!--FIN LISTA PRECIO-->
+												<!--INI -->
+												<div class="TabbedPanelsContent" style="height:492px;">
+													<table width="1000" rules="none" border="1" align="center"	class="claro">
+														<tr class="titulo_tabla">
+															<td colspan="6">GENERAL DATA</td>
+														</tr>
+														<tr class="encabezado_right">
+															<td width="16.6%">Correlative P.O N°:</td>
+															<td width="16.7%" class="oscuro" align="left">{CORRELATIVO_OC_L}</td>
+															<td width="16.6%">Date:</td>
+															<td width="16.7%" class="oscuro" align="left">{FECHA_CX_OC_EXTRANJERA_L}</td>
+															<td width="16.6%">User:</td>
+															<td width="16.7%" class="oscuro" align="left">{NOM_USUARIO}</td>
+														</tr>
+														<tr class="encabezado_right">
+															<td>State:</td>
+															<td class="claro" align="left">{NOM_CX_ESTADO_OC_EXTRANJERA}</td>
+															<td>From Quote N°:</td>
+															<td class="claro" align="left" colspan="3">{COD_CX_COT_EXTRANJERA}</td>
+														</tr>
+													</table>
+													<table width="1000" rules="none" border="0" align="center">
+														<tr>
+															<td></td>
+														</tr>
+													</table>
+													<table width="1000" rules="none" border="1" align="center" class="claro">
+														<tr class="titulo_tabla">
+															<td colspan="10">CARTA ORDEN PAGO</td>
+														</tr>
+														<tr class="encabezado_center">
+															<th width="5%"></th>
+															<th width="5%"></th>
+															<th width="10%">Fecha</th>
+															<th width="10%">% Pago</th>
+															<th width="10%">Monto Pago</th>
+															<th width="10%">Nombre Atencion</th>
+															<th width="10%">Nombre Atencion CC</th>
+															<th width="10%">Referencia</th>
+															<th width="10%">Estado</th>
+															<th width="10%">Anular</th>
+															<th width="10%">Eliminar</th>
+														</tr>
+													</table>
+													<div style="overflow-x: hidden; overflow-y: auto; height:135;">
+														<table width="1000" rules="none" border="1" align="center" class="claro" id="CX_ORDEN_PAGO">
+															<!-- startBlock(CX_ORDEN_PAGO) -->
+															<tr class="{DW_TR_CSS}" id="{DW_TR_ID}">
+																<td width="5%" align="center">{DETALLE_CARTA_OP}{COD_CX_CARTA_OP}</td>
+																<td width="5%" align="center">{IMPRIMIR_CARTA_OP}</td>
+																<td width="10%" align="center">{FECHA_CX_CARTA_OP}</td>
+																<td width="10%" align="center">{PORC_PAGO}</td>
+																<td width="10%" align="center">{MONTO_PAGO}</td>
+																<td width="10%" align="left">{NOM_ATENCION}</td>
+																<td width="10%" align="left">{NOM_ATENCION_CC}</td>
+																<td width="10%" align="left">{REFERENCIA}</td>
+																<td width="10%" align="left">{COD_ESTADO_CX_CARTA_OP}{NOM_ESTADO_CX_CARTA_OP}</td>
+																<td width="10%" align="center">{ANULAR_CX_ORDEN_PAGO}</td>
+																<td width="10%" align="center">{ELIMINAR_CX_ORDEN_PAGO}</td>
+															</tr>
+															<!-- endBlock(CX_ORDEN_PAGO) -->
+														</table>
+													</div>
+													<table width="1000" rules="none" border="1" align="center" class="claro">
+														<tr class="claro">
+															<td align="left">{AGREGAR_CX_ITEM_ORDEN_PAGO}</td>
+															<td align="left"><input name="b_anula_carta_op" type="submit" value="Anular Cartas" onclick="anula_carta_op(); return false;" class="button" {DISABLE_BUTTON}/></td>
+														</tr>
+													</table>
+												</div>
+												<!--FIN -->
+												<!--INI -->
+												<div class="TabbedPanelsContent" style="height:492px;">
+													
+												</div>
+												<!--FIN -->
+											</div>
+
+										</div>
+										<!--FIN TabbedPanelsContentGroup-->
+									</td>
+								</tr>
+							</table>
+							<table width="1000" border="0" align="center">
+								<tr valign="middle">
+									<td width="290">{WI_BACK}</td>
+									<td align="right">{WI_FIRST}{WI_PREV}</td>
+									<td align="left">{WI_NEXT}{WI_LAST}</td>
+									<td width="290"></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</form>
+<script type="text/javascript">
+<!--
+var TabbedPanels1 = new Spry.Widget.TabbedPanels("TabbedPanels1");
+//-->
+</script>
+</body>
+</html>

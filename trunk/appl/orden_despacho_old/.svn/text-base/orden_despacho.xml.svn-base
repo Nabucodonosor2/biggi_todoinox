@@ -1,0 +1,75 @@
+<Report>
+	<Font name="Arial" size="11" style="" id="ArialSmall"/>
+	<Font name="Arial" size="8" style="" id="ArialSmallBlue" red="0" green="0" blue="128"/>
+	<Font name="Arial" size="17" style="B" id="ArialBoldBigB" red="0" green="0" blue="128"/>
+	<Font name="Arial" size="17" style="B" id="ArialBoldRedB" red="255" green="38" blue="38"/>
+	<Font name="Arial" size="10" style="BU" id="ArialBoldU"/>
+	<Font name="Arial" size="10" style="B" id="ArialBold"/>
+	<Font name="Arial" size="10" style="B" id="ArialBoldBlue" red="0" green="0" blue="128"/>
+	<Font name="Arial" size="12" style="B" id="ArialBoldBlueBig" red="0" green="0" blue="128"/>	
+	<Font name="Arial" size="10" style="" id="Arial"/>
+	<Font name="Arial" size="9" style="" id="ArialBlue" red="0" green="0" blue="128"/>
+	<Font name="Arial" size="8.5" style="" id="ArialItem"/>
+	<Font name="Arial" size="9" style="B" id="ArialBoldBlueItem" red="0" green="0" blue="128"/>
+	<Font name="Arial" size="9" style="BU" id="ArialBoldUItem"/>
+	
+	<PageHeader>	
+		<Cell text="" height="50%" newline="1"/>	
+		<Cell text="PAG. {SectionPageNumber}/{snb}" align="R" font="ArialSmall" newline="1" />
+		<Cell text="{strNOM_ESTADO_ORDEN_DESPACHO}" width="26%" align="C" border="LRTB" font="ArialBoldRedB" redl="255" greenl="38" bluel="38"/>
+		<Cell text="ORDEN DESPACHO Nº {strCOD_ORDEN_DESPACHO}" width="74%" align="R" newline="1" font="ArialBoldBigB"/>
+		<Cell text="" height="4" newline="1"/>		
+	</PageHeader>
+	<Content font="Arial">
+		<Cell text="{ITEM}" width="10%" align="C" border="LR" font="ArialItem"/>
+		<Cell text="{NOM_PRODUCTO}" width="52%" border="R" font="'{COD_PRODUCTO}' == null ? 'ArialBoldUItem' : 'ArialItem'"/>
+		<Cell text="{COD_PRODUCTO}" width="16%" border="R" font="ArialItem"/>
+		<Cell text="{CANTIDAD}" width="12%" border="R" align="R" font="ArialItem"/>
+		<Cell text="{CANTIDAD_RECIBIDA}" width="10%" border="R" align="R" font="ArialItem" newline="1"/>
+		<Cell text="" border="B" newline="1" height="1" redl="199" greenl="199" bluel="199"/>		
+	</Content>
+		<Group  local="OBS">
+		<GroupFooter>
+			<Cell height="1" newline="1"/>
+		</GroupFooter>
+	</Group>
+	<Group local="COD_ORDEN_DESPACHO">
+		<GroupHeader>				
+			<Cell text="" height="1" newline="1" />			
+			<Cell text="Santiago, {FECHA_ORDEN_DESPACHO}" align="L" font="ArialBoldBlue"  newline="1"/>	
+			<Cell height="15" newline="1"/>	
+			<Cell text="Razón Social:" width="14%" align="L"  font="ArialBoldBlue"/>
+			<Cell text="{NOM_EMPRESA}" width="66%" border="B" align="L" font="ArialBold" redl="192" greenl="192" bluel="192"/>
+			<Cell text="Rut:" width="6%" align="R" font="ArialBoldBlue"/>
+			<Cell text="{RUT}" width="10%" border="B" align="R" format="N0,." font="ArialBold" redl="192" greenl="192" bluel="192"/>
+			<Cell text="- {DIG_VERIF}" width="3%" border="B" align="L" font="ArialBold" redl="192" greenl="192" bluel="192" newline="1"/>
+			
+			<Cell height="4" newline="1"/>								
+			<Cell text="Dirección      :" width="14%" align="L"  font="ArialBoldBlue"/>
+			<Cell text="{DIRECCION} - COMUNA: {NOM_COMUNA} - CIUDAD: {NOM_CIUDAD}" width="85%" border="B" align="L"  font="Arial" redl="192" greenl="192" bluel="192" newline="1"/>
+			<Cell height="4" newline="1"/>
+			<Cell text="Fono:" width="20%" align="R"  font="ArialBoldBlue"/>
+			<Cell text="{TELEFONO}" width="24%" border="B" align="L"  font="Arial" redl="192" greenl="192" bluel="192"/>
+			<Cell text="Fax:" width="6%" align="R"  font="ArialBoldBlue"/>
+			<Cell text="{FAX}" width="25%" border="B" align="L"  font="Arial" redl="192" greenl="192" bluel="192" newline="1"/>
+			
+			<Cell height="4" newline="1"/>
+			<Cell text="Tipo Documento:" width="16%" align="L" font="ArialBoldBlue"/>
+			<Cell text="{TIPO_DOC_ORIGEN}" width="20%" align="L" border="B" font="Arial" redl="192" greenl="192" bluel="192"/>´
+			<Cell text="Nº Documento:" width="16%" align="R" font="ArialBoldBlue"/>
+			<Cell text="{COD_DOC_ORIGEN}" width="48%" align="L" border="B" font="Arial" redl="192" greenl="192" bluel="192" newline="1"/>
+			<Cell text="" newline="1"/>	
+			
+			<Cell text="" newline="1"/>
+			<Cell text="Item" width="10%" align="C" border="LRTB" font="ArialBoldBlueItem"/>						
+			<Cell text="Producto" width="52%" align="C" border="LRTB" font="ArialBoldBlueItem"/>
+			<Cell text="Módelo" width="16%" align="C" border="LRTB" font="ArialBoldBlueItem"/>
+			<Cell text="Cantidad" width="12%" align="C" border="LRTB" font="ArialBoldBlueItem"/>
+			<Cell text="Cantidad Entregada" width="10%" align="C" border="LRTB" font="ArialBoldBlueItem" newline="1"/>
+			
+		</GroupHeader>
+		<GroupFooter>
+			 <Cell text="" border="T" width="100%"/>
+		</GroupFooter>
+	</Group>
+</Report>

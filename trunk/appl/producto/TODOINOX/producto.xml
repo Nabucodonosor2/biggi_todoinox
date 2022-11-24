@@ -1,0 +1,30 @@
+<Report>	
+	<Font name="Arial" size="7" style="" id="ArialSmall"/>
+	<Font name="Arial" size="7" style="" id="ArialSmallBlue" red="0" green="0" blue="128"/>
+	<Font name="Arial" size="17" style="B" id="ArialBoldBigB" red="0" green="0" blue="128"/>
+	<Font name="Arial" size="10" style="B" id="ArialBold"/>
+	<Font name="Arial" size="10" style="" id="Arial"/>
+	<Font name="Arial" size="8" style="B" id="ArialBold_header"/>	
+	<Font name="Arial" size="10" style="B" id="ArialBoldBlue" red="0" green="0" blue="128"/>
+	<Font name="Arial" size="8" style="B" id="ArialBoldBluef" red="0" green="0" blue="128"/>
+	<PageHeader>
+		<Cell text="LISTADO PRODUCTOS SISTEMA WEB COMERCIAL TODOINOX" width="100%" height="30%" align="C" font="ArialBoldBigB" newline="1"/>
+		<Cell text="FECHA: {strFECHA}" width="100%" height="10%" align="R" font="ArialBoldBluef" newline="1"/>
+		<Cell text="HORA: {strTIME}" width="100%" height="20%" align="R" font="ArialBoldBluef" newline="1"/>	
+		<Cell text="Modelo" width="14%" align="C" border="LRTB" font="ArialBoldBlue"/>		
+		<Cell text="Descripción" width="52%" align="C" border="LRTB" font="ArialBoldBlue"/>
+		<Cell text="Precio" width="7%" align="C" border="LRTB" font="ArialBoldBlue"/>
+		<Cell text="Marca" width="11%" align="C" border="LRTB" font="ArialBoldBlue"/>
+		<Cell text="Tipo Producto" width="11%" align="C" border="LRTB" font="ArialBoldBlue"/>		
+		<Cell text="Stock" width="5%" align="C" border="LRTB" font="ArialBoldBlue"/>
+		<Cell text="" height="16%" newline="1"/>		
+	</PageHeader>
+	<Content font="Arial">
+		<Cell text="{COD_PRODUCTO}" width="14%" align="L" border="LRTB" font="Arial"/>	
+		<Cell text="{NOM_PRODUCTO}" width="52%" align="L" border="LRTB" font="Arial"/>	
+		<Cell text="{PRECIO_VENTA_PUBLICO}" format="N0,." width="7%" align="R" border="LRTB" font="Arial"/>	
+		<Cell text="{NOM_MARCA}" width="11%" align="L" border="LRTB" font="Arial"/>
+		<Cell text="{NOM_TIPO_PRODUCTO}" width="11%" align="L" border="LRTB" font="Arial"/>
+		<Cell text="{STOCK}" width="5%" align="R" border="LRTB" font="Arial" newline="1"/>	
+	</Content>
+</Report>
