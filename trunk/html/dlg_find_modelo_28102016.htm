@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Documento sin t&iacute;tulo</title>
+<link href="{W_CSS}" rel="stylesheet" type="text/css">
+<script charset="iso-8859-1" src="../../../commonlib/trunk/script_js/edit_filter.js" type="text/javascript"></script>
+<style type="text/css">
+<!--
+.input_text{
+	font-size: 14px;
+	text-align:left;
+}
+.button{
+	font-size: 14px;
+	text-align:center;
+}
+-->
+</style>
+<script type="text/javascript">
+function return_value() {
+	var vl_valor = document.getElementById('VALOR_0').value;  
+	if (document.getElementById('FIND_EXACTO_0').checked)
+		returnValue = vl_valor + '|' + 'S';
+	else  
+		returnValue = vl_valor + '|' + 'N';  
+
+	if (vl_valor) 
+		return true; 
+	else 
+		return false;
+}
+</script>
+</head>
+<body onLoad="window.document.find.VALOR_0.focus();" class="content_wm">
+<div class="titulo_tabla_wm">&nbsp;&nbsp;{PROMPT}</div>
+	<form name="find">
+		<table>
+			<tr>
+				<td>{VALOR}</td>
+				<td><input name="OK"  type="submit" value="OK" 
+				onclick="if (return_value()) window.close(); else return false;" class="button" />
+				</td>
+				<td><input name="Cancelar" type="button" value="Eliminar filtro" onclick="window.close(); returnValue=null;" class="button"/></td>
+			</tr>
+			<tr>
+				<td>{FIND_EXACTO}</td>
+				<td></td>
+				<td></td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>
