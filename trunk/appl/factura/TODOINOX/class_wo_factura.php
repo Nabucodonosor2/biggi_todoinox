@@ -57,6 +57,7 @@ class wo_factura extends wo_factura_base {
 	}
 	
 	function crear_desde_oc($cod_orden_compra, $sistema){
+		$bdName = '';
 		if($sistema == 'BODEGA'){
 			if($cod_orden_compra <= 55676){
 				$this->_redraw();
@@ -64,18 +65,8 @@ class wo_factura extends wo_factura_base {
 				return;
 			}
 			session::set('WS_ORIGEN', 'BODEGA');
-		
-			$db = new database(K_TIPO_BD, K_SERVER, K_BD, K_USER, K_PASS);
-			$sql = "select SISTEMA, URL_WS, USER_WS,PASSWROD_WS  from PARAMETRO_WS
-					where SISTEMA = 'BODEGA' ";
-			$result = $db->build_results($sql);
-			
-			$user_ws		= $result[0]['USER_WS'];
-			$passwrod_ws	= $result[0]['PASSWROD_WS'];
-			$url_ws			= $result[0]['URL_WS'];
-			
-			$biggi = new client_biggi("$user_ws", "$passwrod_ws", "$url_ws");
-			
+			$bdName = 'BODEGA_BIGGI';
+
 		}else if($sistema == 'COMERCIAL'){
 			if($cod_orden_compra <= 175780){
 				$this->_redraw();
@@ -83,17 +74,8 @@ class wo_factura extends wo_factura_base {
 				return;
 			}
 			session::set('WS_ORIGEN', 'COMERCIAL');
-			$db = new database(K_TIPO_BD, K_SERVER, K_BD, K_USER, K_PASS);
-			$sql = "select SISTEMA, URL_WS, USER_WS,PASSWROD_WS  from PARAMETRO_WS
-					where SISTEMA = 'COMERCIAL' ";
-			$result = $db->build_results($sql);
-			
-			$user_ws		= $result[0]['USER_WS'];
-			$passwrod_ws	= $result[0]['PASSWROD_WS'];
-			$url_ws			= $result[0]['URL_WS'];
-			
-			$biggi = new client_biggi("$user_ws", "$passwrod_ws", "$url_ws");
-			
+			$bdName = 'BIGGI';
+
 		}else{ // RENTAL
 			if($cod_orden_compra <= 65555){
 				$this->_redraw();
@@ -101,19 +83,66 @@ class wo_factura extends wo_factura_base {
 				return;
 			}
 			session::set('WS_ORIGEN', 'RENTAL');
-			$db = new database(K_TIPO_BD, K_SERVER, K_BD, K_USER, K_PASS);
-			$sql = "select SISTEMA, URL_WS, USER_WS,PASSWROD_WS  from PARAMETRO_WS
-					where SISTEMA = 'RENTAL' ";
-			$result = $db->build_results($sql);
-			
-			$user_ws		= $result[0]['USER_WS'];
-			$passwrod_ws	= $result[0]['PASSWROD_WS'];
-			$url_ws			= $result[0]['URL_WS'];
-			
-			$biggi = new client_biggi("$user_ws", "$passwrod_ws", "$url_ws");	
+			$bdName = 'RENTAL';
 		}
-		$result = $biggi->cli_orden_compra($cod_orden_compra);
+
+		$db = new database(K_TIPO_BD, K_SERVER, K_BD, K_USER, K_PASS);
+		///////////////////////////// AQUI SE EJECUTA LO QUE HACIA CON WEBSERVICE ///////////////////////////
+		$sql_ws = "SELECT COD_ORDEN_COMPRA
+						,OC.REFERENCIA
+						,CONVERT(VARCHAR,FECHA_ORDEN_COMPRA,103) FECHA_ORDEN_COMPRA
+						,OC.SUBTOTAL
+						,OC.PORC_DSCTO1
+						,OC.MONTO_DSCTO1
+						,OC.PORC_DSCTO2
+						,OC.MONTO_DSCTO2
+						,OC.TOTAL_NETO
+						,OC.TOTAL_CON_IVA
+						,OC.MONTO_IVA
+						,OC.COD_NOTA_VENTA
+						,RUT
+						,(SELECT NOM_EMPRESA FROM $bdName.dbo.EMPRESA WHERE COD_EMPRESA = NV.COD_EMPRESA) NV_NOM_EMPRESA
+						,(SELECT NOM_EMPRESA FROM $bdName.dbo.EMPRESA WHERE COD_EMPRESA = A.COD_EMPRESA) A_NOM_EMPRESA
+						,(SELECT NOM_USUARIO FROM $bdName.dbo.USUARIO WHERE COD_USUARIO = OC.COD_USUARIO_SOLICITA) OC_NOM_USUARIO
+						,(SELECT NOM_MONEDA FROM $bdName.dbo.MONEDA WHERE COD_MONEDA = OC.COD_MONEDA) OC_NOM_MONEDA
+						,(SELECT NOM_ESTADO_ORDEN_COMPRA 
+						FROM $bdName.dbo.ESTADO_ORDEN_COMPRA 
+						WHERE COD_ESTADO_ORDEN_COMPRA = OC.COD_ESTADO_ORDEN_COMPRA) ESTADO_OC
+						,OC.TIPO_ORDEN_COMPRA
+						,OC.COD_DOC
+						,E.COD_FORMA_PAGO_CLIENTE
+						,OC.OBS
+						,COD_ESTADO_ORDEN_COMPRA ";
+
+		if($sistema == 'BODEGA'){	
+			$sql_ws .= ",OC.RESPETA_PRECIO ";
+		}
+
+		$sql_ws .=	"FROM $bdName.dbo.ORDEN_COMPRA OC LEFT OUTER JOIN $bdName.dbo.NOTA_VENTA NV ON OC.COD_NOTA_VENTA = NV.COD_NOTA_VENTA
+										LEFT OUTER JOIN $bdName.dbo.ARRIENDO A ON OC.COD_DOC = A.COD_ARRIENDO
+						,$bdName.dbo.EMPRESA E
+					WHERE COD_ORDEN_COMPRA = $cod_orden_compra
+					AND OC.COD_EMPRESA = E.COD_EMPRESA";
 		
+		$result_ws = $db->build_results($sql_ws);
+		$result['ORDEN_COMPRA'] = $result_ws;		
+
+		// items OC
+		$sql_ws = "SELECT COD_ITEM_ORDEN_COMPRA
+						,ORDEN
+						,ITEM
+						,COD_PRODUCTO
+						,NOM_PRODUCTO
+						,CANTIDAD
+						,PRECIO
+				FROM $bdName.dbo.ITEM_ORDEN_COMPRA 
+				WHERE COD_ORDEN_COMPRA = $cod_orden_compra
+				AND FACTURADO_SIN_WS = 'N'";
+
+		$result_ws = $db->build_results($sql_ws);
+		$result['ITEM_ORDEN_COMPRA'] = $result_ws;
+		///////////////////////////// AQUI SE EJECUTA LO QUE HACIA CON WEBSERVICE ///////////////////////////
+
 		$index = '';
 		//Valida que exista un registro en la OC ingresada
 		if(count($result['ORDEN_COMPRA']) != 0){
