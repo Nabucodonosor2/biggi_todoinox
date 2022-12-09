@@ -772,6 +772,19 @@ class wi_factura extends wi_factura_base {
 			$this->dws['dw_docs']->set_entrable_dw(false);
 		}
 	}
+
+	function procesa_event() {		
+		if((isset($_POST['b_back_x']) && session::is_set('FACTURA_DESDE_INF_X_FAC')) 
+			|| (isset($_POST['b_no_save_x']) && session::is_set('FACTURA_DESDE_INF_X_FAC'))
+				|| (isset($_POST['b_delete_x']) && session::is_set('FACTURA_DESDE_INF_X_FAC'))) {
+			session::un_set("FACTURA_DESDE_INF_X_FAC");
+			$url = "../../../../../commonlib/trunk/php/mantenedor.php?modulo=inf_oc_por_facturar_tdnx&cod_item_menu=4095";
+			header ('Location:'.$url);
+		}else
+			parent::procesa_event();
+	}
+
+
 	function creada_desde_servindus($cod_oc) {
 		$db = new database(K_TIPO_BD, K_SERVER, K_BD, K_USER, K_PASS);
 		$sql = "SELECT  COD_ITEM_ORDEN_COMPRA
