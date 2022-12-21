@@ -30,11 +30,7 @@ function create_mail($asunto, $db){
 	$mail->Port = "$Port";
 	$mail->SMTPSecure= 'ssl'; 
 	
-/*	
-	$mail->Host 	= "mail.integrasystem.cl";
-	$mail->Username = "icampos@integrasystem.cl";
-	$mail->Password = "!.#SCI#!16";
-*/
+
 	$mail->From 	="soporte@biggi.cl";		
 	$mail->FromName = "Todoinox";
 	$mail->Timeout=30;
@@ -146,7 +142,7 @@ $mail->AddCC('sergio.pechoante@biggi.cl', 'Sergio Pechoante');
 $mail->AddBCC('mherrera@biggi.cl', 'Marcelo Herrera');	
 //$mail->AddBCC('ecastillo@biggi.cl', 'Eduardo Castillo');
 
-//$mail->AddAddress("evergara@integrasystem.cl", "XX");
+
 
 
 $mail->Body = $html;
@@ -218,7 +214,7 @@ for($i=0 ; $i < count($result) ; $i++){
 	/// Inicio MH regulariza el 24/06/2013
 	$mail = create_mail($asunto, $db);
 	$mail->AddAddress($mail_usuario, $nom_usuario);
-	//$mail->AddAddress("evergara@integrasystem.cl", "Jorge Chicahual");
+
 
 	$mail->Body = $html;
 	$mail->AltBody = "";

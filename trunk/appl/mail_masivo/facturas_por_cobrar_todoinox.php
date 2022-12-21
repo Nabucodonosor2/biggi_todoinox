@@ -87,8 +87,7 @@ $mail->AddAddress('sergio.pechoante@biggi.cl', 'Sergio Pechoante');
 //$mail->AddAddress('rescudero@biggi.cl', 'Rafael Escudero');
 
 $mail->AddBCC('mherrera@biggi.cl', 'Marcelo Herrera');	
-//$mail->AddBCC('ecastillo@biggi.cl', 'Eduardo Castillo');
-$mail->AddBCC('vmelo@integrasystem.cl', 'Victor Melo');			
+	
 
 $mail->Body = $html;
 $mail->AltBody = "";
