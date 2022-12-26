@@ -154,12 +154,21 @@ class wi_pago_faprov_comercial extends w_input{
 			else
 				$temp->setVar("WI_".strtoupper($boton), '<img src="../../images_appl/b_'.$boton.'_d.jpg"/>');
 		}
+		if ($boton=='anula') {
+			if ($habilita)
+				$temp->setVar("WI_".strtoupper($boton), '<input name="b_'.$boton.'" id="b_'.$boton.'" src="../../images_appl/b_'.$boton.'.jpg" type="image" '.
+															'onClick="return confirm_anula();"'.'style="display:"'.
+														'/>');
+			/*else
+				$temp->setVar("WI_".strtoupper($boton), '<img src="../../images_appl/b_'.$boton.'_d.jpg"/>');*/
+		}
 	}
 	
 	function habilitar(&$temp, $habilita) { 
-		parent::habilitar(&$temp, $habilita);
+		parent::habilitar($temp, $habilita);
 		
-		$this->habilita_boton($temp, 'traspaso', true);	
+		$this->habilita_boton($temp, 'traspaso', true);
+		$this->habilita_boton($temp, 'anula', true);
 	}
 	
 	function crea_ingreso_pago(){
@@ -386,10 +395,47 @@ class wi_pago_faprov_comercial extends w_input{
 		return false;
 			
 	}
+
+	function anula_ingreso_pago(){
+		$db = new database(K_TIPO_BD, K_SERVER, K_BD, K_USER, K_PASS);
+		$cod_empresa = $this->dws['dw_pago_faprov_comercial']->get_item(0, 'COD_EMPRESA');
+		$cod_pago_faprov = $this->get_key();
+		$sistema_proveedor = "";
+
+		if ($cod_empresa==1337) 
+			$sistema_proveedor = "BIGGI";
+		else if ($cod_empresa==9)
+			$sistema_proveedor = "BODEGA";
+		else if ($cod_empresa==29)
+			$sistema_proveedor = "RENTAL";
+
+		$sp = "$sistema_proveedor.dbo.spu_pago_faprov";
+		$db->BEGIN_TRANSACTION();
+		$operacion = 'TRASPASO_ANULADO';
+		
+		$param = "'$operacion'
+				  ,$cod_pago_faprov";
+	
+		if (!$db->EXECUTE_SP($sp, $param)){
+			$db->ROLLBACK_TRANSACTION();
+			return false;
+		}
+		
+		$db->COMMIT_TRANSACTION();
+		header ('Location:'.K_ROOT_URL."appl/login/presentacion_esp.php");
+		return true;
+	}
 	
 	function procesa_event() {		
 		if(isset($_POST['b_traspaso_x'])){
 			if(!$this->crea_ingreso_pago()){
+				$this->unlock_record();
+				$this->goto_record($this->current_record);
+				return;
+			}
+			$this->_load_record();
+		}else if(isset($_POST['b_anula_x'])){
+			if(!$this->anula_ingreso_pago()){
 				$this->unlock_record();
 				$this->goto_record($this->current_record);
 				return;

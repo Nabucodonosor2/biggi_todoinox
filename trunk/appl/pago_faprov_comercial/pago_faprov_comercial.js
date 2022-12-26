@@ -22,3 +22,21 @@ function confirm_cambio(){
 	else
 		return false;	
 }
+
+function confirm_anula(){
+	const vl_cod_empresa		= get_value('COD_EMPRESA_H_0');
+	const vl_cod_pago_faprov	= get_value('COD_PAGO_FAPROV_COMERCIAL_0');
+	let vl_nom_empresa_prov		= '';
+	
+	if(vl_cod_empresa == 1337)
+		vl_nom_empresa_prov = "Comercial Biggi";
+	else if(vl_cod_empresa == 9)
+		vl_nom_empresa_prov = "Bodega";
+	else if(vl_cod_empresa == 29)
+		vl_nom_empresa_prov = "Rental";	
+		
+	if(confirm("Señor usuario se realizará la anulación del PAGO FAPROV N° "+vl_cod_pago_faprov+" desde "+vl_nom_empresa_prov))
+		return true;
+	else
+		return false;	
+}
