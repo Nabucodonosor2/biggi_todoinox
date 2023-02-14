@@ -114,6 +114,10 @@ class wo_factura extends wo_factura_base {
 						,OC.OBS
 						,COD_ESTADO_ORDEN_COMPRA ";
 
+		if($sistema == 'COMERCIAL'){	
+			$sql_ws .= ",OC.RP_CLIENTE ";
+		}
+
 		if($sistema == 'BODEGA'){	
 			$sql_ws .= ",OC.RESPETA_PRECIO ";
 		}
@@ -134,10 +138,15 @@ class wo_factura extends wo_factura_base {
 						,COD_PRODUCTO
 						,NOM_PRODUCTO
 						,CANTIDAD
-						,PRECIO
-				FROM $bdName.dbo.ITEM_ORDEN_COMPRA 
-				WHERE COD_ORDEN_COMPRA = $cod_orden_compra
-				AND FACTURADO_SIN_WS = 'N'";
+						,PRECIO ";
+		
+		if($sistema == 'COMERCIAL'){	
+			$sql_ws .= ",RP_CLIENTE_IT ";
+		}
+
+		$sql_ws .=  "FROM $bdName.dbo.ITEM_ORDEN_COMPRA 
+					WHERE COD_ORDEN_COMPRA = $cod_orden_compra
+					AND FACTURADO_SIN_WS = 'N'";
 
 		$result_ws = $db->build_results($sql_ws);
 		$result['ITEM_ORDEN_COMPRA'] = $result_ws;

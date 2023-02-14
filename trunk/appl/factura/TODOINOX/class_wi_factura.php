@@ -555,38 +555,25 @@ class wi_factura extends wi_factura_base {
 			////////Manejo de precio publico e interno////////	
 			if($cod_producto != 'E' && $cod_producto != 'TE' && $cod_producto != 'I' && $cod_producto != 'F'){
 				
-				if($respeta_precio == 'N'){
-					$sql_emp = "SELECT COD_EMPRESA
-					FROM PRECIO_INT_EMP
-					WHERE COD_EMPRESA = $cod_empresa";
-			
-					$result_emp = $db->build_results($sql_emp);	
-					if(count($result_emp) != 0){
-						$sql_precio_int = "SELECT  PRECIO_VENTA_INTERNO PRECIO_INT
-										   FROM 	PRODUCTO
-										   WHERE COD_PRODUCTO = '$cod_producto'";
-							
-						$result_precio = $db->build_results($sql_precio_int);
-						$precio = $result_precio[0]['PRECIO_INT'];
-						
-						if($precio == 0.00){
-							$sql_precio_pub = "SELECT  PRECIO_VENTA_PUBLICO PRECIO_PUB
-											   FROM 	PRODUCTO
-											   WHERE COD_PRODUCTO = '$cod_producto'";
-								
-							$result_prec_pub = $db->build_results($sql_precio_pub);
-							$precio = $result_prec_pub[0]['PRECIO_PUB'];
-						}
-					}else{
-						$sql_precio_pub = "SELECT  PRECIO_VENTA_PUBLICO PRECIO_PUB
-										   FROM 	PRODUCTO
-										   WHERE COD_PRODUCTO = '$cod_producto'";
-								
-						$result_prec_pub = $db->build_results($sql_precio_pub);
-						$precio = $result_prec_pub[0]['PRECIO_PUB'];
+				if($ws_origen == 'BODEGA' && $respeta_precio == 'N'){
+
+					$precio = $this->maneja_precio($db, $cod_empresa, $cod_producto);
+
+				}else if($ws_origen == 'COMERCIAL'){
+
+					if($result['ORDEN_COMPRA'][0]['RP_CLIENTE'] == 'N')
+						$precio = $this->maneja_precio($db, $cod_empresa, $cod_producto);
+					else{
+						if($result['ITEM_ORDEN_COMPRA'][$i]['RP_CLIENTE_IT'] == 'N')
+							$precio = $this->maneja_precio($db, $cod_empresa, $cod_producto);
+						else
+							$precio = $result['ITEM_ORDEN_COMPRA'][$i]['PRECIO'];
 					}
+
 				}else{
+
 					$precio = $result['ITEM_ORDEN_COMPRA'][$i]['PRECIO'];
+					
 				}
 				
 				///////Manejo Stock/////
@@ -771,6 +758,42 @@ class wi_factura extends wi_factura_base {
 		IF($NRO_FACTURA == ''){
 			$this->dws['dw_docs']->set_entrable_dw(false);
 		}
+	}
+
+	function maneja_precio($db, $cod_empresa, $cod_producto){
+		$precio = 0;
+
+		$sql_emp = "SELECT COD_EMPRESA
+					FROM PRECIO_INT_EMP
+					WHERE COD_EMPRESA = $cod_empresa";
+			
+		$result_emp = $db->build_results($sql_emp);	
+		if(count($result_emp) != 0){
+			$sql_precio_int = "SELECT  PRECIO_VENTA_INTERNO PRECIO_INT
+								FROM 	PRODUCTO
+								WHERE COD_PRODUCTO = '$cod_producto'";
+				
+			$result_precio = $db->build_results($sql_precio_int);
+			$precio = $result_precio[0]['PRECIO_INT'];
+			
+			if($precio == 0.00){
+				$sql_precio_pub = "SELECT  PRECIO_VENTA_PUBLICO PRECIO_PUB
+									FROM 	PRODUCTO
+									WHERE COD_PRODUCTO = '$cod_producto'";
+					
+				$result_prec_pub = $db->build_results($sql_precio_pub);
+				$precio = $result_prec_pub[0]['PRECIO_PUB'];
+			}
+		}else{
+			$sql_precio_pub = "SELECT  PRECIO_VENTA_PUBLICO PRECIO_PUB
+								FROM 	PRODUCTO
+								WHERE COD_PRODUCTO = '$cod_producto'";
+					
+			$result_prec_pub = $db->build_results($sql_precio_pub);
+			$precio = $result_prec_pub[0]['PRECIO_PUB'];
+		}
+
+		return $precio;
 	}
 
 	function procesa_event() {		
