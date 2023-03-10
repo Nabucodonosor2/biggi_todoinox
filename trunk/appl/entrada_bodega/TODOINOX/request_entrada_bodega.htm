@@ -55,49 +55,48 @@ body {
 </style>
 
 <script type="text/javascript">
-function valida_valor(){
-	var nro_docto = document.getElementById('VALOR').value;
-	if(nro_docto == ''){
-		alert('Debe ingresar Nº del documento');
-		return false;
-	}
-	if (document.getElementById('desde_ri').checked){
-		var ajax = nuevoAjax();
-		ajax.open("GET", "ajax_valiada_nro_RI.php?nro_ri="+nro_docto, false);
-		ajax.send(null);
-		var vl_resp = URLDecode(ajax.responseText);
-		var vl_resp_arr = vl_resp.split('|');
-		if (vl_resp_arr[0]=='NO_EXISTE') {
-			alert('El registro ingresado no existe');
+	function valida_valor(){
+		var nro_docto = document.getElementById('VALOR').value;
+		if(nro_docto == ''){
+			alert('Debe ingresar Nº del documento');
 			return false;
 		}
-		else if (vl_resp_arr[0]=='RI_4D') {
-			alert('El registro fue importado desde 4D');
-			return false;
-		}
-		else if (vl_resp_arr[0]=='ENTRADA_YA_EXISTE') {
-			alert('El registro ya tiene entrada, Nro ' + vl_resp_arr[1]);
-			return false;
-		}
-	}
-	
-	return true;	
-}
 
-function get_returnVal() 
-{
-/* Se debe retornar 1 valor    valor1 = "desde_fa" o "desde_gr" que irá concatenado con el valor del elemento "valor" */ 
-		var res = 	"|" + document.getElementById('VALOR').value;	//valor de la NOTA DE VENTA
+		if (document.getElementById('desde_ri').checked){
+			var ajax = nuevoAjax();
+			ajax.open("GET", "ajax_valiada_nro_RI.php?nro_ri="+nro_docto, false);
+			ajax.send(null);
+			var vl_resp = URLDecode(ajax.responseText);
+			var vl_resp_arr = vl_resp.split('|');
+			if (vl_resp_arr[0]=='NO_EXISTE') {
+				alert('El registro ingresado no existe');
+				return false;
+			}
+			else if (vl_resp_arr[0]=='RI_4D') {
+				alert('El registro fue importado desde 4D');
+				return false;
+			}
+			else if (vl_resp_arr[0]=='ENTRADA_YA_EXISTE') {
+				alert('El registro ya tiene entrada, Nro ' + vl_resp_arr[1]);
+				return false;
+			}
+		}
 		
-		if (document.getElementById('desde_ri').checked)
-			res = "desde_ri"+ res ;
-		else if (document.getElementById('desde_oc').checked)
-			res = "desde_oc" + res;
-		return res;
-		
-	
-}
-// DIALOG Required Code
+		return true;	
+	}
+
+	function get_returnVal(){
+	/* Se debe retornar 1 valor    valor1 = "desde_fa" o "desde_gr" que irá concatenado con el valor del elemento "valor" */ 
+			var res = 	"|" + document.getElementById('VALOR').value;	//valor de la NOTA DE VENTA
+			
+			if (document.getElementById('desde_ri').checked)
+				res = "desde_ri"+ res ;
+			else if (document.getElementById('desde_oc').checked)
+				res = "desde_oc" + res;
+			return res;
+	}
+
+	// DIALOG Required Code
 	var prntWindow = getParentWindowWithDialog(); //$(top)[0];
 
 	var $dlg = prntWindow && prntWindow.$dialog;
@@ -139,12 +138,13 @@ function get_returnVal()
 	// END of dialog Required Code
 
     function okMe() {
-    	
-	returnValue=get_returnVal(); 
-	setWindowReturnValue(returnValue);
-	$dlg.dialogWindow.dialog('close');
-		
+		if(valida_valor()){
+			returnValue=get_returnVal(); 
+			setWindowReturnValue(returnValue);
+			$dlg.dialogWindow.dialog('close');
+		}
 	}
+
     function closeMe() {
         setWindowReturnValue(null);
         $dlg.dialogWindow.dialog('close');
@@ -174,7 +174,7 @@ function get_returnVal()
 			<tr><td colspan="2" align="left">&nbsp;</td></tr>
 			<tr>	
 				<td align="center">
-				<input name="OK" type="submit" value="    OK    " 	onMouseDown="valida_valor();" onclick="okMe();" class="button" />
+				<input name="OK" type="submit" value="    OK    " onclick="okMe();" class="button" />
 				<input name="Cancelar" type="button" value="Cancelar" onclick="closeMe();" class="button" />
 				</td>
 				
