@@ -227,21 +227,21 @@ class dw_producto_compuesto_base extends datawindow{
         $this->add_control(new edit_num('ORDEN_PC', 1));
         $this->add_control(new edit_check_box('GENERA_COMPRA','S','N'));
         $this->add_control($control = new edit_num('CANTIDAD', 1, 8));
-        $control->set_onBlur("tot_costo_base(this); calc_precio_int_pub(); redondeo_biggi();");
+        $control->set_onBlur("tot_costo_base(this); redondeo_biggi(); calc_precio_int_pub();");
         $this->add_control(new static_text('COSTO_BASE_PC', 10, 8));
 
         $this->set_computed('TOTAL_COSTO_BASE', '[CANTIDAD] * [COSTO_BASE_PC]');
         $this->accumulate('TOTAL_COSTO_BASE');
 
-		    $this->set_computed('TOTAL_COSTO_BASE_AUX', '[FACTOR_VENTA_INTERNO] * ([CANTIDAD] * [COSTO_BASE_PC])');
+		//$this->set_computed('TOTAL_COSTO_BASE_AUX', '[FACTOR_VENTA_INTERNO] * ([CANTIDAD] * [COSTO_BASE_PC])');
         //$this->accumulate('TOTAL_COSTO_BASE_AUX');
 
-        $this->add_control(new static_text('PRECIO_VENTA_INTERNO_PC', 10, 8));
+        /*$this->add_control(new static_text('PRECIO_VENTA_INTERNO_PC', 10, 8));
         $this->set_computed('TOTAL_PRECIO_INTERNO', '[CANTIDAD] * [PRECIO_VENTA_INTERNO_PC]');
         $this->accumulate('TOTAL_PRECIO_INTERNO');
         $this->add_control(new static_text('PRECIO_VENTA_PUBLICO_PC', 10, 8));
         $this->set_computed('TOTAL_PRECIO_PUBLICO', '[CANTIDAD] * [PRECIO_VENTA_PUBLICO_PC]');
-        $this->accumulate('TOTAL_PRECIO_PUBLICO');
+        $this->accumulate('TOTAL_PRECIO_PUBLICO');*/
 
         $this->add_control(new static_text('PRECIO_VENTA_PUBLICO_PC', 10, 8));
 

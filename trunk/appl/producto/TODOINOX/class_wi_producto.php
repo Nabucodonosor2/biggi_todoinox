@@ -321,7 +321,6 @@ class wi_producto extends wi_producto_base {
 							AND E.COD_SALIDA_BODEGA = I.COD_SALIDA_BODEGA)
 						end NRO_SALIDA_BODEGA
 			            ,dbo.f_redondeo_tdnx(dbo.f_prod_get_costo_base(P.COD_PRODUCTO) * FACTOR_VENTA_INTERNO) PRECIO_VENTA_INT_SUG
-                 ,dbo.f_redondeo_tdnx(dbo.f_get_costbase_aux(P.COD_PRODUCTO) * FACTOR_VENTA_INTERNO * FACTOR_VENTA_INTERNO)  PRCO_VENTA_INT_SUG_EC
 			            ,dbo.f_redondeo_tdnx(dbo.f_prod_get_costo_base(P.COD_PRODUCTO) * FACTOR_VENTA_INTERNO) PRECIO_VENTA_INT_SUG_H
 	        			,dbo.f_bodega_pmp_us(P.COD_PRODUCTO,".self::K_BODEGA_EQ_TERMINADO.",getdate()) PMP_US
 	        			,dbo.f_bodega_pmp(P.COD_PRODUCTO,".self::K_BODEGA_EQ_TERMINADO.",getdate()) PMP_PESOS
@@ -347,8 +346,12 @@ class wi_producto extends wi_producto_base {
 		                END DISPLAY_TAB_STOCK
 		                ,DATEPART(YEAR, DATEADD(YEAR, -1, GETDATE())) ANO_ANTERIOR
 		                ,dbo.f_get_tot_factura_anterior(P.COD_PRODUCTO) TOTAL_FACTURADO_ANTERIOR
-										,dbo.f_redondeo_tdnx(dbo.f_get_costbase_aux(P.COD_PRODUCTO)* FACTOR_VENTA_INTERNO) SUM_TOTAL_COSTO_BASE_AUX
-                    ,dbo.f_redondeo_tdnx(dbo.f_get_costbase_aux(P.COD_PRODUCTO)* FACTOR_VENTA_INTERNO) TOTAL_COSTO_BASE_EC
+						,dbo.f_redondeo_tdnx(dbo.f_get_costbase_aux(P.COD_PRODUCTO)* FACTOR_VENTA_INTERNO) SUM_TOTAL_COSTO_BASE_AUX
+                    	,dbo.f_get_costbase_aux(P.COD_PRODUCTO) TOTAL_COSTO_BASE_EC
+						,dbo.f_redondeo_tdnx(dbo.f_get_costbase_aux(P.COD_PRODUCTO) * FACTOR_VENTA_INTERNO)  PRCO_VENTA_INT_SUG_EC
+						,'' DISPLAY_FOOTER_PI_UNO
+						,'' DISPLAY_FOOTER_PI_DOS
+						,EQ_NO_COMPUESTO
         from   			PRODUCTO P
         				,MARCA M
         				,TIPO_PRODUCTO TP
@@ -362,9 +365,7 @@ class wi_producto extends wi_producto_base {
 		$this->dws['dw_producto']->set_sql($sql);
 		$this->dws['dw_producto']->retrieve();
 
-
 		// asigna los formatos
-
 		$this->dws['dw_producto']->add_control(new static_num('SUM_TOTAL_COSTO_BASE_AUX'));
 		$sql = "select COD_CLASIF_INVENTARIO
 						,NOM_CLASIF_INVENTARIO
@@ -439,12 +440,23 @@ class wi_producto extends wi_producto_base {
 			$this->dws['dw_producto']->set_entrable('COD_EQUIPO_OC_EX',	false);
 			$this->dws['dw_producto']->set_entrable('DESC_EQUIPO_OC_EX',	false);
 		}
+
+		$eq_no_compuesto = $this->dws['dw_producto']->get_item(0, 'EQ_NO_COMPUESTO');
+		if($this->dws['dw_producto_compuesto']->row_count() > 0 && $eq_no_compuesto == 'N'){
+			$this->dws['dw_producto']->set_item(0, 'DISPLAY_FOOTER_PI_UNO', 'none');
+			$this->dws['dw_producto']->set_item(0, 'DISPLAY_FOOTER_PI_DOS', '');
+		}else{
+			$this->dws['dw_producto']->set_item(0, 'DISPLAY_FOOTER_PI_UNO', '');
+			$this->dws['dw_producto']->set_item(0, 'DISPLAY_FOOTER_PI_DOS', 'none');
+		}
 	}
 
 
 	function new_record(){
 		parent::new_record();
 		$this->dws['dw_producto']->set_item(0, 'COD_TIPO_OBSERVACION_COMEX', 1); //Sin Observaciones
+		$this->dws['dw_producto']->set_item(0, 'DISPLAY_FOOTER_PI_UNO', '');
+		$this->dws['dw_producto']->set_item(0, 'DISPLAY_FOOTER_PI_DOS', 'none');
 	}
 
 	function save_record($db){

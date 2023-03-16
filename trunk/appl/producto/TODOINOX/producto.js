@@ -97,13 +97,13 @@ function redondeo_biggi() {
 	// si se modifica esta funcion tambien debe modificarse en f_redondeo_biggi de BD
 	var ve_base = document.getElementById('COSTO_BASE_PI_0').innerHTML;
 	var ve_fac_int = document.getElementById('FACTOR_VENTA_INTERNO_0').value;
-	var precio_vta_sugerido = document.getElementById('PRECIO_VENTA_INT_SUG_0');
+	//var precio_vta_sugerido = document.getElementById('PRECIO_VENTA_INT_SUG_0');
 	
 	ve_base = parseInt(to_num(ve_base));
 	
 	ve_fac_int = to_num(ve_fac_int);
 		
-	var precio_vta_sug = precio_vta_sugerido.innerHTML; 
+	//var precio_vta_sug = precio_vta_sugerido.innerHTML; 
 	precio_vta_sug = ve_base * ve_fac_int;
 	
 	if (precio_vta_sug < 1000)
@@ -114,9 +114,12 @@ function redondeo_biggi() {
 		precio_vta_sug = roundNumber(precio_vta_sug,-3);
 	else
 		precio_vta_sug = roundNumber((precio_vta_sug * 2),-4)/2;
-		
-	precio_vta_sugerido.innerHTML = number_format(precio_vta_sug, 0, ',', '.');
-	document.getElementById('PRECIO_VENTA_INTERNO_0').focus();				
+	
+	set_value('TOTAL_COSTO_BASE_EC_0', number_format(ve_base, 0, ',', '.'), number_format(ve_base, 0, ',', '.'));
+	set_value('SUM_TOTAL_COSTO_BASE_AUX_0', number_format(precio_vta_sug, 0, ',', '.'), number_format(precio_vta_sug, 0, ',', '.'));
+	set_value('PRCO_VENTA_INT_SUG_EC_0', number_format(precio_vta_sug, 0, ',', '.'), number_format(precio_vta_sug, 0, ',', '.'));
+	//precio_vta_sugerido.innerHTML = number_format(precio_vta_sug, 0, ',', '.');
+	//document.getElementById('PRECIO_VENTA_INTERNO_0').focus();				
 }
 function valida_precio_venta_pub(){
 	var ve_pre_vta_pub = document.getElementById('PRECIO_VENTA_PUBLICO_0').value;
