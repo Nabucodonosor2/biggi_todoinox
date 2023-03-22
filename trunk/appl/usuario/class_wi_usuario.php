@@ -31,7 +31,8 @@ class wi_usuario extends w_input {
 						U.PORC_DESCUENTO_PERMITIDO,
 						U.ACCESO_LIBRE_NV,
 						U.INI_USUARIO,
-						U.VENDEDOR_VISIBLE_FILTRO		
+						U.VENDEDOR_VISIBLE_FILTRO,
+						U.PLATAFORMA_PRINT_CHEQUE
 				from 	USUARIO U left outer join EMPRESA E on U.COD_EMPRESA = E.COD_EMPRESA, PERFIL P
 				where 	U.COD_USUARIO = {KEY1} AND
 						P.COD_PERFIL = U.COD_PERFIL";
@@ -70,6 +71,25 @@ class wi_usuario extends w_input {
 						SELECT 3 COD_VENDEDOR_VISIBLE_FILTRO,
 							   'NUNCA VISIBLE' NOM_VENDEDOR_VISIBLE_FILTRO";
 		$this->dws['dw_usuario']->add_control(new drop_down_dw('VENDEDOR_VISIBLE_FILTRO',$sql,180));
+
+		$sql = "SELECT 'WINDOWS' PLATAFORMA_PRINT_CHEQUE
+						,'WINDOWS' NOM_PLATAFORMA_PRINT_CHEQUE
+				UNION
+				SELECT 'MAC' PLATAFORMA_PRINT_CHEQUE
+						,'MAC' NOM_PLATAFORMA_PRINT_CHEQUE
+				UNION
+				SELECT 'Win1' PLATAFORMA_PRINT_CHEQUE
+						,'Win1' NOM_PLATAFORMA_PRINT_CHEQUE
+				UNION
+				SELECT 'Win2' PLATAFORMA_PRINT_CHEQUE
+						,'Win2' NOM_PLATAFORMA_PRINT_CHEQUE
+				UNION
+				SELECT 'Win3' PLATAFORMA_PRINT_CHEQUE
+						,'Win3' NOM_PLATAFORMA_PRINT_CHEQUE
+				UNION
+				SELECT 'Win4' PLATAFORMA_PRINT_CHEQUE
+						,'Win4' NOM_PLATAFORMA_PRINT_CHEQUE";
+		$this->dws['dw_usuario']->add_control(new drop_down_dw('PLATAFORMA_PRINT_CHEQUE',$sql,180));
 		
 		//auditoria
 		$this->add_auditoria('NOM_USUARIO');
@@ -98,7 +118,8 @@ class wi_usuario extends w_input {
 		$this->dws['dw_usuario']->set_mandatory('MAIL', 'Mail');
 		$this->dws['dw_usuario']->set_mandatory('PORC_PARTICIPACION', 'Porc. de Participación');
 		$this->dws['dw_usuario']->set_mandatory('INI_USUARIO', 'Siglas de Usuario');
-		$this->dws['dw_usuario']->set_mandatory('VENDEDOR_VISIBLE_FILTRO', 'Visible en Listados');		
+		$this->dws['dw_usuario']->set_mandatory('VENDEDOR_VISIBLE_FILTRO', 'Visible en Listados');
+		$this->dws['dw_usuario']->set_mandatory('PLATAFORMA_PRINT_CHEQUE', 'Plataforma print cheque');
 	}
 	
 	function new_record() {
@@ -145,6 +166,7 @@ class wi_usuario extends w_input {
 		$acceso_libre_nv			= $this->dws['dw_usuario']->get_item(0, 'ACCESO_LIBRE_NV');
 		$ini_usuario				= $this->dws['dw_usuario']->get_item(0, 'INI_USUARIO');
 		$vendedor_visible_filtro	= $this->dws['dw_usuario']->get_item(0, 'VENDEDOR_VISIBLE_FILTRO');
+		$plataforma_print_cheque	= $this->dws['dw_usuario']->get_item(0, 'PLATAFORMA_PRINT_CHEQUE');
 		
 		//EMPRESA
 		$cod_empresa		= $this->dws['dw_usuario']->get_item(0, 'COD_EMPRESA');
@@ -181,7 +203,8 @@ class wi_usuario extends w_input {
 					,'$acceso_libre_nv'
 					,'$ini_usuario'
 					,$por_descuento
-					,$vendedor_visible_filtro";
+					,$vendedor_visible_filtro
+					,'$plataforma_print_cheque'";
 
 		if ($db->EXECUTE_SP($sp, $param)){
 			if ($this->is_new_record()) {
