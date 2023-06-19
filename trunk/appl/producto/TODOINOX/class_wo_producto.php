@@ -99,22 +99,31 @@ class wo_producto extends wo_producto_base{
 		$this->dw->add_control(new static_num('PRECIO_VENTA_PUBLICO'));
 	}
 	
-	function habilita_boton(&$temp, $boton, $habilita) {
+	function habilita_boton(&$temp, $boton, $habilita){
+		parent::habilita_boton($temp, $boton, $habilita);
 		if ($boton=='print' && $habilita)
 			$temp->setVar("WO_PRINT", '<input name="b_'.$boton.'" id="b_'.$boton.'" src="../../../../commonlib/trunk/images/b_'.$boton.'.jpg" type="image" '.
 											'onMouseDown="MM_swapImage(\'b_'.$boton.'\',\'\',\'../../../../commonlib/trunk/images/b_'.$boton.'_click.jpg\',1)" '.
 											'onMouseUp="MM_swapImgRestore()" onMouseOut="MM_swapImgRestore()" '.
 											'onMouseOver="MM_swapImage(\'b_'.$boton.'\',\'\',\'../../../../commonlib/trunk/images/b_'.$boton.'_over.jpg\',1)" '.
 											'onClick="return request_crear_desde();" />');
-		else
-			parent::habilita_boton($temp, $boton, $habilita);
+		if ($boton=='print_dos' && $habilita){
+			$temp->setVar("WO_PRINT_DOS",   '<input name="b_'.$boton.'" id="b_'.$boton.'" src="../../images_appl/b_'.$boton.'.jpg" type="image" '.
+											'onMouseDown="MM_swapImage(\'b_'.$boton.'\',\'\',\'../../images_appl/b_'.$boton.'_click.jpg\',1)" '.
+											'onMouseUp="MM_swapImgRestore()" onMouseOut="MM_swapImgRestore()" '.
+											'onMouseOver="MM_swapImage(\'b_'.$boton.'\',\'\',\'../../images_appl/b_'.$boton.'_over.jpg\',1)" '.
+											' />');
+		}
 	}
 	function redraw(&$temp) {
 		parent::redraw($temp);
-		if($this->priv_impresion == 'S')
-			$this->habilita_boton($temp, 'print', true);		
-		else
-			$this->habilita_boton($temp, 'print', false);	
+		if($this->priv_impresion == 'S'){
+			$this->habilita_boton($temp, 'print', true);
+			$this->habilita_boton($temp, 'print_dos', true);
+		}else{
+			$this->habilita_boton($temp, 'print', false);
+			$this->habilita_boton($temp, 'print_dos', true);
+		}	
 	}
 	function print_producto(){
 		$this->make_filtros();
@@ -128,10 +137,19 @@ class wo_producto extends wo_producto_base{
 		$rpt = new reporte($sql, $file_name, $labels, "Productos".".pdf", 0, false, 'L');
 		$this->_redraw();
 	}
+
+	function print_producto_dos(){
+		$this->make_filtros();
+		$sql = base64_encode($this->dw->get_sql());
+		print " <script>window.open('../producto/TODOINOX/class_print_producto.php?token=$sql','')</script>";
+		$this->_redraw();
+	}
 	
 	function procesa_event() {		
 		if(isset($_POST['b_print_x']))
 			$this->print_producto();
+		else if(isset($_POST['b_print_dos_x']))
+			$this->print_producto_dos();
 		else
 			parent::procesa_event();
 	}
