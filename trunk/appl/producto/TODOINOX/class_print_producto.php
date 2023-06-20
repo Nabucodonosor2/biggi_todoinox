@@ -47,7 +47,7 @@ $pdf->SetTextColor(0, 0, 0);
 
 for ($i=0; $i < count($result); $i++){
     $nom_producto   = $result[$i]['NOM_PRODUCTO'];
-    $precio         = number_format($result[0]['PRECIO_VENTA_PUBLICO'],0,',','.');
+    $precio         = number_format($result[$i]['PRECIO_VENTA_PUBLICO'],0,',','.');
 
     if(strlen($nom_producto) > 32)
         $nom_producto = substr($nom_producto, 0, 32).'...';
