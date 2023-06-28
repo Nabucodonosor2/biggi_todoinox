@@ -9,8 +9,11 @@ $temp = new Template_appl('dlg_tipo_producto.htm');
 $db = new database(K_TIPO_BD, K_SERVER, K_BD, K_USER, K_PASS);
 $sql = "select COD_TIPO_PRODUCTO 
 				,NOM_TIPO_PRODUCTO 
-		from TIPO_PRODUCTO 
+		from TIPO_PRODUCTO
+		where COD_TIPO_PRODUCTO <> 7 --OCULTAR_SYS_TDNX
 		order by	ORDEN";
+//MSCIANCA Y ASCIANCA SOLICITAN FILTRAR PRODUCTOS PARA LLEGAR A UN LISTADO ACOTADO EJECUTA ICAMPOS Y MHERRERA EL 27/06/2023
+
 $result = $db->build_results($sql);
 if ($valor_filtro=='') {	//todos
 	for ($i=0 ; $i < count($result); $i++) {

@@ -358,27 +358,27 @@ function dlg_crea_desde_oc(){
 		});		
 }
 
-function dlg_agrega_cx_carta_op(ve_cod_cx_carta_op){
-	var vl_cx_oc_extranjera	= get_value('COD_CX_OC_EXTRANJERA_0');
-	var url = "dlg_agrega_cx_carta_op.php?cx_co_extranjera="+vl_cx_oc_extranjera+"&cod_cx_carta_op="+ve_cod_cx_carta_op;
-		$.showModalDialog({
-			 url: url,
-			 dialogArguments: '',
-			 height: 280,
-			 width: 470,
-			 scrollable: false,
-			 onClose: function(){ 
-			 	var returnVal = this.returnValue;
-			 	if (returnVal == null){		
-					return false;
-				}			
-				else {
-					document.getElementById('b_no_save').click();
-			   		return true;
-				}
+function dlg_agrega_cx_carta_op(ve_cod_cx_carta_op, ve_estado){
+	const vl_cx_oc_extranjera	= get_value('COD_CX_OC_EXTRANJERA_0');
+	const url = "dlg_agrega_cx_carta_op.php?cx_co_extranjera="+vl_cx_oc_extranjera+"&cod_cx_carta_op="+ve_cod_cx_carta_op+"&estado="+ve_estado;
+	$.showModalDialog({
+		url: url,
+		dialogArguments: '',
+		height: 280,
+		width: 470,
+		scrollable: false,
+		onClose: function(){ 
+			const returnVal = this.returnValue;
+			if(returnVal == null){		
+				return false;
+			}else{
+				document.getElementById('b_no_save').click();
+				return true;
 			}
-		});			
+		}
+	});			
 }
+
 function selecciona(){
 	vl_tabla= document.getElementById("CORRELATIVE").rows.length;
 	cod_mod_arriendo = "";

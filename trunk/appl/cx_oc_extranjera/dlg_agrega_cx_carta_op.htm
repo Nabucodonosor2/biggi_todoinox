@@ -7,24 +7,41 @@
 <script charset="iso-8859-1" src="../../../../commonlib/trunk/script_js/edit_filter.js" type="text/javascript"></script>
 <script charset="iso-8859-1" src="../../../../commonlib/trunk/script_js/general.js" type="text/javascript"></script>
 <script type="text/javascript">
-function get_returnVal(){
-	var vl_cod_cx_carta_op	= get_value('COD_CX_CARTA_OP_0');
-	var vl_cx_oc_extranjera	= get_value('COD_CX_OC_EXTRANJERA_0');
-	var vl_fecha_carta_op	= get_value('FECHA_CARTA_OP_0');
-	var vl_porc_pago		= get_value('PORC_PAGO_0');
-	var vl_monto_pago		= get_value('MONTO_PAGO_0');
-	var vl_cod_estado		= get_value('COD_ESTADO_CX_CARTA_OP_0');
-	
-	var vl_values = vl_cx_oc_extranjera+"|"+vl_fecha_carta_op+"|"+vl_porc_pago+"|"+vl_monto_pago+"|"+vl_cod_cx_carta_op+"|"+vl_cod_estado;
-	
-	var vl_ajax = nuevoAjax();
-	vl_ajax.open("GET", "opera_registro_op.php?values="+vl_values, false);
-	vl_ajax.send(null);		
-	var vl_resp = vl_ajax.responseText;
-	
-	return vl_resp;
-}
-// DIALOG Required Code
+	function valida_precio_total(){
+		const vl_cod_estado			= get_value('COD_ESTADO_CX_CARTA_OP_0');
+		
+		if(vl_cod_estado == 3){
+			const vl_sum_monto_pago		= get_value('SUM_MONTO_PAGO_0');
+			const vl_monto_total		= get_value('MONTO_TOTAL_0');
+			const vl_monto_pago			= get_value('MONTO_PAGO_0').replaceAll(',', '.');
+
+			if((parseFloat(vl_monto_pago) + parseFloat(vl_sum_monto_pago)) <= parseFloat(vl_monto_total))
+				return true;
+			else
+				return false;
+		}else
+			return true;
+	}
+
+	function get_returnVal(){
+		const vl_cod_cx_carta_op	= get_value('COD_CX_CARTA_OP_0');
+		const vl_cx_oc_extranjera	= get_value('COD_CX_OC_EXTRANJERA_0');
+		const vl_fecha_carta_op		= get_value('FECHA_CARTA_OP_0');
+		const vl_porc_pago			= get_value('PORC_PAGO_0');
+		const vl_monto_pago			= get_value('MONTO_PAGO_0');
+		const vl_cod_estado			= get_value('COD_ESTADO_CX_CARTA_OP_0');
+		
+		const vl_values = vl_cx_oc_extranjera+"|"+vl_fecha_carta_op+"|"+vl_porc_pago+"|"+vl_monto_pago+"|"+vl_cod_cx_carta_op+"|"+vl_cod_estado;
+		
+		const vl_ajax = nuevoAjax();
+		vl_ajax.open("GET", "opera_registro_op.php?values="+vl_values, false);
+		vl_ajax.send(null);		
+		const vl_resp = vl_ajax.responseText;
+		
+		return vl_resp;
+	}
+
+	// DIALOG Required Code
 	var prntWindow = getParentWindowWithDialog(); //$(top)[0];
 
 	var $dlg = prntWindow && prntWindow.$dialog;
@@ -49,7 +66,6 @@ function get_returnVal(){
 	function setWindowReturnValue(value) {
 		if ($dlg) $dlg.returnValue = value;
 		window.returnValue = value; // in case popup is called using showModalDialog
-
 	}
 
 	function getWindowReturnValue() {
@@ -65,13 +81,23 @@ function get_returnVal(){
 	if ($dlg) window.close = function() { if ($dlg) $dlg.dialogWindow.dialog('close'); };
 	// END of dialog Required Code
 
-    function okMe() {
-    	
-	returnValue=get_returnVal(); 
-	setWindowReturnValue(returnValue);
-	$dlg.dialogWindow.dialog('close');
-		
+    function okMe(){
+		if(valida_precio_total()){
+			returnValue=get_returnVal(); 
+			setWindowReturnValue(returnValue);
+			$dlg.dialogWindow.dialog('close');
+		}else{
+			const vl_cx_oc_extranjera	= get_value('COD_CX_OC_EXTRANJERA_0');
+			const vl_conf = confirm("La suma de las cartas Orden de pago confirmadas superan el valor total de la PO "+vl_cx_oc_extranjera+". Le sugerimos revisar esta situación. Desea confirmar de todas formas esta carta Orden de Pago?");
+
+			if(vl_conf){
+				returnValue=get_returnVal(); 
+				setWindowReturnValue(returnValue);
+				$dlg.dialogWindow.dialog('close');
+			}
+		}
 	}
+
     function closeMe() {
         setWindowReturnValue(null);
         $dlg.dialogWindow.dialog('close');
@@ -104,9 +130,9 @@ function get_returnVal(){
   		</tr>
   		<tr class="encabezado_right">
     		<td>Monto Pago</td>
-			<td align="left" class="oscuro">{MONTO_PAGO}</td>
+			<td align="left" class="oscuro">{MONTO_PAGO}{SUM_MONTO_PAGO}{MONTO_TOTAL}</td>
   		</tr>
-  		<tr class="encabezado_right">
+  		<tr class="encabezado_right" style="display: {ESTADO};">
     		<td>Estado:</td>
 			<td align="left" class="oscuro">{COD_ESTADO_CX_CARTA_OP}</td>
   		</tr>

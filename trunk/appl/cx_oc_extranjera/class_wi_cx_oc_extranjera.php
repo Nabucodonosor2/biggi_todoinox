@@ -2,7 +2,6 @@
 require_once(dirname(__FILE__)."/../../../../commonlib/trunk/php/auto_load.php");
 require_once(dirname(__FILE__)."/../common_appl/class_w_cot_nv.php");
 require_once(dirname(__FILE__)."/class_informe_cx_oc_extranjera.php");
-require_once(dirname(__FILE__)."/class_informe_oc_cx_pago.php");
 require_once(dirname(__FILE__)."/../cx_cot_extranjera/class_dw_help_empresa.php");
 
 class dw_cx_orden_pago extends datawindow{
@@ -31,7 +30,7 @@ class dw_cx_orden_pago extends datawindow{
         $this->add_control(new edit_text_hidden('COD_ESTADO_CX_CARTA_OP'));
         $this->add_control(new edit_text_hidden('COD_CX_CARTA_OP'));
         
-        $this->set_protect('ANULAR_CX_ORDEN_PAGO', "[COD_ESTADO_CX_CARTA_OP]==2 || [COD_ESTADO_CX_CARTA_OP]==1");
+        $this->set_protect('ANULAR_CX_ORDEN_PAGO', "[COD_ESTADO_CX_CARTA_OP]==2");
     }
     
     function fill_record(&$temp, $record) {
@@ -40,14 +39,14 @@ class dw_cx_orden_pago extends datawindow{
         $cod_cx_carta_op		= $this->get_item($record, 'COD_CX_CARTA_OP');
         
         if($this->entrable && $cod_estado == 1){
-            $detalle_lupa1 = "<input type=\"image\" id=\"b_detalle_$record\" onclick=\"dlg_agrega_cx_carta_op($cod_cx_carta_op); return false;\" src=\"../../../../commonlib/trunk/images/lupa1.jpg\" name=\"b_detalle_$record\">";
-            $detalle_lupa2 = "<input type=\"image\" id=\"b_detalle_$record\" onclick=\"dlg_agrega_cx_carta_op($cod_cx_carta_op); return false;\" src=\"../../../../commonlib/trunk/images/lupa2.jpg\" name=\"b_detalle_$record\">";
+            $detalle_lupa1 = "<input type=\"image\" id=\"b_detalle_$record\" onclick=\"dlg_agrega_cx_carta_op($cod_cx_carta_op, ''); return false;\" src=\"../../../../commonlib/trunk/images/lupa1.jpg\" name=\"b_detalle_$record\">";
+            $detalle_lupa2 = "<input type=\"image\" id=\"b_detalle_$record\" onclick=\"dlg_agrega_cx_carta_op($cod_cx_carta_op, ''); return false;\" src=\"../../../../commonlib/trunk/images/lupa2.jpg\" name=\"b_detalle_$record\">";
         }else{
             $detalle_lupa1 = "";
             $detalle_lupa2 = "";
         }
         
-        if($this->entrable && $cod_estado == 3){
+        if($cod_estado <> 2){
             $impresion1 = "<input type=\"image\" id=\"b_impresion\" onclick=\"return document.getElementById('wi_hidden').value = $cod_cx_carta_op;\" src=\"../../images_appl/impresion1.jpg\" name=\"b_impresion\">";
             $impresion2 = "<input type=\"image\" id=\"b_impresion\" onclick=\"return document.getElementById('wi_hidden').value = $cod_cx_carta_op;\" src=\"../../images_appl/impresion2.jpg\" name=\"b_impresion\">";
         }else{
@@ -219,6 +218,7 @@ class wi_cx_oc_extranjera extends w_input{
         parent::w_input('cx_oc_extranjera', $cod_item_menu);
         
         $sql = "SELECT  C.COD_CX_OC_EXTRANJERA
+                        ,C.COD_CX_OC_EXTRANJERA COD_CX_OC_EXTRANJERA_L
 						,CONVERT(VARCHAR, C.FECHA_REGISTRO, 103) FECHA_REGISTRO
 						,CONVERT(VARCHAR,(C.FECHA_CX_OC_EXTRANJERA), 103) FECHA_CX_OC_EXTRANJERA
 						,CONVERT(VARCHAR,(C.FECHA_CX_OC_EXTRANJERA), 103) FECHA_CX_OC_EXTRANJERA_L
@@ -257,6 +257,7 @@ class wi_cx_oc_extranjera extends w_input{
 						,C.MONTO_DESCUENTO
 						,C.MONTO_TOTAL
 						,C.MONTO_TOTAL MONTO_TOTAL_H
+                        ,'none' MSG_ERR_CX_CARTA_OP
 				FROM  CX_OC_EXTRANJERA C, USUARIO U, PROVEEDOR_EXT P, CX_CONTACTO_PROVEEDOR_EXT CC,
 					  CX_ESTADO_OC_EXTRANJERA CE
 				WHERE C.COD_CX_OC_EXTRANJERA		= {KEY1}
@@ -519,8 +520,31 @@ class wi_cx_oc_extranjera extends w_input{
             $this->b_save_visible 	 = false;
             $this->b_modify_visible	 = false;
         }
-        
+
+        $it_confirmado = false;
+
+        for ($i=0; $i < $this->dws['dw_cx_orden_pago']->row_count(); $i++){ 
+            if($this->dws['dw_cx_orden_pago']->get_item($i, 'COD_ESTADO_CX_CARTA_OP') == 3){
+                $it_confirmado = true;
+                break;
+            }
+        }
+
+        if($it_confirmado){
+            $monto_total = $this->dws['wi_cx_oc_extranjera']->get_item(0, 'MONTO_TOTAL');
+            $sum_monto_it = 0;
+
+            for ($j=0; $j < $this->dws['dw_cx_orden_pago']->row_count(); $j++){
+                if($this->dws['dw_cx_orden_pago']->get_item($j, 'COD_ESTADO_CX_CARTA_OP') == 3){
+                    $sum_monto_it += $this->dws['dw_cx_orden_pago']->get_item($j, 'MONTO_PAGO');
+                }
+            }
+
+            if($sum_monto_it > $monto_total)
+                $this->dws['wi_cx_oc_extranjera']->set_item(0, 'MSG_ERR_CX_CARTA_OP', '');
+        }
     }
+
     function habilita_boton_print(&$temp, $boton, $habilita) {
         if ($habilita){
             $ruta_over = "'../../../../commonlib/trunk/images/b_print_over.jpg'";
@@ -637,9 +661,9 @@ class wi_cx_oc_extranjera extends w_input{
         parent::navegacion($temp);
         
         if($this->modify && $this->is_new_record() == false)
-            $temp->setVar("AGREGAR_CX_ITEM_ORDEN_PAGO", '<img style="cursor:pointer" onclick="dlg_agrega_cx_carta_op(\'\');" src="../../../../commonlib/trunk/images/b_add_line.jpg">');
-            else
-                $temp->setVar("AGREGAR_CX_ITEM_ORDEN_PAGO", '<img src="../../../../commonlib/trunk/images/b_add_line_d.jpg">');
+            $temp->setVar("AGREGAR_CX_ITEM_ORDEN_PAGO", '<img style="cursor:pointer" onclick="dlg_agrega_cx_carta_op(\'\', \'none\');" src="../../../../commonlib/trunk/images/b_add_line.jpg">');
+        else
+            $temp->setVar("AGREGAR_CX_ITEM_ORDEN_PAGO", '<img src="../../../../commonlib/trunk/images/b_add_line_d.jpg">');
     }
     
     function print_record(){
@@ -649,8 +673,8 @@ class wi_cx_oc_extranjera extends w_input{
     function procesa_event() {
         if(isset($_POST['b_impresion_x']))
             $this->print_carta_op($_POST['wi_hidden']);
-            else
-                parent::procesa_event();
+        else
+            parent::procesa_event();
     }
     
     function print_carta_op($cod_carta_op){
@@ -668,6 +692,7 @@ class wi_cx_oc_extranjera extends w_input{
 					  ,BP_SWIFT
 					  ,MAIL
 					  ,U.NOM_USUARIO
+                      ,CCO.COD_ESTADO_CX_CARTA_OP
 			  FROM CX_CARTA_OP CCO
 				  ,CX_OC_EXTRANJERA COE
 				  ,PROVEEDOR_EXT PE
@@ -677,8 +702,9 @@ class wi_cx_oc_extranjera extends w_input{
 			  AND PE.COD_PROVEEDOR_EXT = COE.COD_PROVEEDOR_EXT
 			  AND U.COD_USUARIO = COE.COD_USUARIO";
         
-        $file_name = $this->find_file('cx_oc_extranjera', 'cx_oc_cx_pago.xml');
-        $rpt = new informe_oc_cx_pago($sql, $file_name, $labels, "Carta Orden Pago.pdf", 0);
+        $sql = base64_encode($sql);
+
+        print " <script>window.open('informe_oc_cx_pago.php?sql=$sql')</script>";	    
         $this->_load_record();
     }
     

@@ -57,10 +57,12 @@ class wo_producto extends wo_producto_base{
 						,MARCA M
 						,TIPO_OBSERVACION_COMEX TOC
 			where		P.COD_TIPO_PRODUCTO = TP.COD_TIPO_PRODUCTO
+						AND TP.COD_TIPO_PRODUCTO <> 7 --OCULTAR_SYS_TDNX
 						AND dbo.f_prod_valido (COD_PRODUCTO) = 'S'
 						AND P.COD_MARCA = M.COD_MARCA
 						AND P.COD_TIPO_OBSERVACION_COMEX = TOC.COD_TIPO_OBSERVACION_COMEX
 			order by 	COD_PRODUCTO";
+		//MSCIANCA Y ASCIANCA SOLICITAN FILTRAR PRODUCTOS PARA LLEGAR A UN LISTADO ACOTADO EJECUTA ICAMPOS Y MHERRERA EL 27/06/2023
 			
 		parent::w_output_biggi('producto', $sql, $_REQUEST['cod_item_menu']);
 
@@ -80,8 +82,11 @@ class wo_producto extends wo_producto_base{
 		$db = new database(K_TIPO_BD, K_SERVER, K_BD, K_USER, K_PASS);
 		$sql = "select COD_TIPO_PRODUCTO 
 						,NOM_TIPO_PRODUCTO 
-				from TIPO_PRODUCTO 
+				from TIPO_PRODUCTO
+				where COD_TIPO_PRODUCTO <> 7 --OCULTAR_SYS_TDNX
 				order by	ORDEN";
+		//MSCIANCA Y ASCIANCA SOLICITAN FILTRAR PRODUCTOS PARA LLEGAR A UN LISTADO ACOTADO EJECUTA ICAMPOS Y MHERRERA EL 27/06/2023
+
 		$result = $db->build_results($sql);
 		for ($i=0 ; $i < count($result); $i++) {
 			if ($result[$i]['COD_TIPO_PRODUCTO']==4)	//DESCONTINUADO
