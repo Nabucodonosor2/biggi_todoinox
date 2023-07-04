@@ -6,20 +6,22 @@
 <link href="{W_CSS}" rel="stylesheet" type="text/css"/>
 <script charset="iso-8859-1" src="../../../../commonlib/trunk/script_js/general.js" type="text/javascript"></script>
 <script type="text/javascript">
-function get_returnVal() {
-	var res = 	'';
-	
-	if (document.getElementById('ORDEN_COMPRA_0').checked)
-		res = "ORDEN_COMPRA";
-	else if (document.getElementById('ORDEN_PAGO_0').checked)
-		res = "ORDEN_PAGO";		
-	else if (document.getElementById('INS_COBERTURA_0').checked)
-		res = "INS_COBERTURA";
-	else if (document.getElementById('ORDEN_CARGA_0').checked)
-	res = "ORDEN_CARGA";
-	
-	return res;
-}
+	function get_returnVal() {
+		let res = '';
+		
+		if(document.getElementById('ORDEN_COMPRA_EN_0').checked)
+			res = "ORDEN_COMPRA_EN";
+		if(document.getElementById('ORDEN_COMPRA_ES_0').checked)
+			res = "ORDEN_COMPRA_ES";
+		else if(document.getElementById('ORDEN_PAGO_0').checked)
+			res = "ORDEN_PAGO";		
+		else if(document.getElementById('INS_COBERTURA_0').checked)
+			res = "INS_COBERTURA";
+		else if(document.getElementById('ORDEN_CARGA_0').checked)
+			res = "ORDEN_CARGA";
+		
+		return res;
+	}
 // DIALOG Required Code
 	var prntWindow = getParentWindowWithDialog(); //$(top)[0];
 
@@ -62,12 +64,11 @@ function get_returnVal() {
 	// END of dialog Required Code
 
     function okMe() {
-    	
-	returnValue=get_returnVal(); 
-	setWindowReturnValue(returnValue);
-	$dlg.dialogWindow.dialog('close');
-		
+		returnValue=get_returnVal(); 
+		setWindowReturnValue(returnValue);
+		$dlg.dialogWindow.dialog('close');	
 	}
+
     function closeMe() {
         setWindowReturnValue(null);
         $dlg.dialogWindow.dialog('close');
@@ -79,8 +80,11 @@ function get_returnVal() {
 	<form id="form1" name="form1" method="post" action="">
 		<table width="435" border="0" class="table2_wm" align="left">  
 	  		<tr>
-	  			<td align="left">{ORDEN_COMPRA}</td>
+	  			<td align="left">{ORDEN_COMPRA_EN}</td>
 	  		</tr>
+			<tr>
+				<td align="left">{ORDEN_COMPRA_ES}</td>
+			</tr>
 	  		<tr>
 	  			<td align="left" style="display:none">{ORDEN_PAGO}</td>
 	  		</tr>

@@ -1,29 +1,28 @@
 function dlg_print(){
 	var url = "dlg_print_oc_extranjera.php";
-		$.showModalDialog({
-			 url: url,
-			 dialogArguments: '',
-			 height: 250,
-			 width: 490,
-			 scrollable: false,
-			 onClose: function(){ 
-			 	var returnVal = this.returnValue;
-			 	if (returnVal == null){		
-					return false;
-				}			
-				else {
-					var input = document.createElement("input");
-					input.setAttribute("type", "hidden");
-					input.setAttribute("name", "b_print_x");
-					input.setAttribute("id", "b_print_x");
-					document.getElementById("input").appendChild(input);
-					
-					document.getElementById('wi_hidden').value = returnVal;
-					document.input.submit();
-			   		return true;
-				}
+	$.showModalDialog({
+		url: url,
+		dialogArguments: '',
+		height: 250,
+		width: 490,
+		scrollable: false,
+		onClose: function(){
+			var returnVal = this.returnValue;
+			if (returnVal == null){		
+				return false;
+			}else{
+				var input = document.createElement("input");
+				input.setAttribute("type", "hidden");
+				input.setAttribute("name", "b_print_x");
+				input.setAttribute("id", "b_print_x");
+				document.getElementById("input").appendChild(input);
+				
+				document.getElementById('wi_hidden').value = returnVal;
+				document.input.submit();
+				return true;
 			}
-		});	
+		}
+	});	
 }
 
 function subtotal(){

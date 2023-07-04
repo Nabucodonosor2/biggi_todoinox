@@ -2,6 +2,7 @@
 require_once(dirname(__FILE__)."/../../../../commonlib/trunk/php/auto_load.php");
 require_once(dirname(__FILE__)."/../common_appl/class_w_cot_nv.php");
 require_once(dirname(__FILE__)."/class_informe_cx_oc_extranjera.php");
+require_once(dirname(__FILE__)."/class_informe_cx_oc_extranjera_es.php");
 require_once(dirname(__FILE__)."/../cx_cot_extranjera/class_dw_help_empresa.php");
 
 class dw_cx_orden_pago extends datawindow{
@@ -667,7 +668,12 @@ class wi_cx_oc_extranjera extends w_input{
     }
     
     function print_record(){
-        $this->print_orden_compra();
+        $tipo_print = $_POST['wi_hidden'];
+
+        if($tipo_print == 'ORDEN_COMPRA_ES')
+            $this->print_orden_compra_es();
+        else
+            $this->print_orden_compra();
     }
     
     function procesa_event() {
@@ -773,6 +779,72 @@ class wi_cx_oc_extranjera extends w_input{
         
         $file_name = $this->find_file('cx_oc_extranjera', 'cx_oc_extranjera.xml');
         $rpt = new informe_oc_extranjera($sql, $file_name, $labels, "Purchase Order.pdf", 1);
+        $this->_load_record();
+    }
+
+    function print_orden_compra_es(){
+        $cod_cx_oc_extranjera = $this->get_key();
+        
+        $sql = "select c.COD_CX_OC_EXTRANJERA
+						,CONVERT (varchar (20),c.FECHA_CX_OC_EXTRANJERA,103)  FECHA_CX_OC_EXTRANJERA
+						,c.COD_USUARIO
+						,u.NOM_USUARIO
+						,c.CORRELATIVO_OC
+						,c.COD_CX_ESTADO_OC_EXTRANJERA
+						,dbo.f_last_mod('NOM_USUARIO', 'CX_OC_EXTRANJERA', 'COD_CX_ESTADO_OC_EXTRANJERA', c.COD_CX_OC_EXTRANJERA) NOM_USUARIO_CAMBIO
+					    ,dbo.f_last_mod('FECHA_CAMBIO', 'CX_OC_EXTRANJERA', 'COD_CX_ESTADO_OC_EXTRANJERA', c.COD_CX_OC_EXTRANJERA) FECHA_CAMBIO
+						,p.ALIAS_PROVEEDOR_EXT
+						,c.COD_PROVEEDOR_EXT
+						,c.COD_CX_COT_EXTRANJERA
+						,p.NOM_PROVEEDOR_EXT
+						,p.DIRECCION
+						,p.NOM_PAIS_4D
+						,p.NOM_CIUDAD_4D
+						,p.POST_OFFICE_BOX
+						,P.TELEFONO TELEFONO_PROVEEDOR
+						,P.FAX FAX_PROVEEDOR
+						,c.COD_CX_CONTACTO_PROVEEDOR_EXT
+						,cc.TELEFONO
+						,cc.MAIL
+						,cc.FAX
+						,c.REFERENCIA
+						,CONVERT (varchar (20),c.DELIVERY_DATE,103)  DELIVERY_DATE
+						,c.COD_CX_PUERTO_SALIDA
+						,ccom.NOM_CX_CLAUSULA_COMPRA
+						,c.COD_CX_PUERTO_ARRIBO
+						,cps.NOM_CX_PUERTO_SALIDA
+						,cm.NOM_CX_MONEDA
+						,c.PACKING
+						,c.COD_CX_TERMINO_PAGO
+						,CONVERT(TEXT,C.OBSERVACIONES) OBSERVACIONES
+						,c.MONTO_TOTAL
+						,CONVERT(TEXT,C.OBSERVACIONES) OBSERVACIONES
+						,tp.NOM_CX_TERMINO_PAGO
+						,pa.NOM_CX_PUERTO_ARRIBO
+						,c.MONTO_FLETE_INTERNO
+						,c.MONTO_EMBALAJE
+						,c.MONTO_DESCUENTO
+						,CAST(ROUND((c.MONTO_DESCUENTO * 100) / (c.MONTO_TOTAL + c.MONTO_DESCUENTO),2,1) as decimal(18,2)) PORCENTAJE_PO
+				from CX_OC_EXTRANJERA c
+					,USUARIO u, PROVEEDOR_EXT p
+					,CX_CONTACTO_PROVEEDOR_EXT cc
+					,CX_MONEDA cm
+					,CX_CLAUSULA_COMPRA ccom
+					,CX_PUERTO_SALIDA cps
+					,CX_TERMINO_PAGO tp
+					,CX_PUERTO_ARRIBO pa
+				where c.COD_CX_OC_EXTRANJERA = $cod_cx_oc_extranjera
+				  and u.COD_USUARIO = c.COD_USUARIO
+				  and p.COD_PROVEEDOR_EXT = c.COD_PROVEEDOR_EXT
+				  and cc.COD_CX_CONTACTO_PROVEEDOR_EXT= c.COD_CX_CONTACTO_PROVEEDOR_EXT
+				  and cm.COD_CX_MONEDA=c.COD_CX_MONEDA
+				  and ccom.COD_CX_CLAUSULA_COMPRA=c.COD_CX_CLAUSULA_COMPRA
+				  and cps.COD_CX_PUERTO_SALIDA=c.COD_CX_PUERTO_SALIDA
+				  and c.COD_CX_TERMINO_PAGO=tp.COD_CX_TERMINO_PAGO
+				  and c.COD_CX_PUERTO_ARRIBO=pa.COD_CX_PUERTO_ARRIBO";
+
+        $file_name = $this->find_file('cx_oc_extranjera', 'cx_oc_extranjera.xml');
+        $rpt = new informe_oc_extranjera_es($sql, $file_name, $labels, "Purchase Order ES.pdf", 1);
         $this->_load_record();
     }
 }
