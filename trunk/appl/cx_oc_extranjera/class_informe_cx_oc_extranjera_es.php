@@ -1,8 +1,8 @@
 <?php
 require_once(dirname(__FILE__)."/../../../../commonlib/trunk/php/auto_load.php");
 
-class informe_oc_extranjera extends reporte {	
-	function informe_oc_extranjera($sql, $xml, $labels=array(), $titulo, $con_logo, $vuelve_a_presentacion=false) {
+class informe_oc_extranjera_es extends reporte {	
+	function informe_oc_extranjera_es($sql, $xml, $labels=array(), $titulo, $con_logo, $vuelve_a_presentacion=false) {
 		parent::reporte($sql, $xml, $labels, $titulo, $con_logo, $vuelve_a_presentacion);			
 	}
 	

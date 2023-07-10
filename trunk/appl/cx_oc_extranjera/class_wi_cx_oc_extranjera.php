@@ -259,10 +259,21 @@ class wi_cx_oc_extranjera extends w_input{
 						,C.MONTO_TOTAL
 						,C.MONTO_TOTAL MONTO_TOTAL_H
                         ,'none' MSG_ERR_CX_CARTA_OP
-				FROM  CX_OC_EXTRANJERA C, USUARIO U, PROVEEDOR_EXT P, CX_CONTACTO_PROVEEDOR_EXT CC,
-					  CX_ESTADO_OC_EXTRANJERA CE
+                        ,CONVERT(VARCHAR, C.DELIVERY_DATE, 103) DELIVERY_DATE_L
+                        ,CPA.NOM_CX_PUERTO_ARRIBO NOM_CX_PUERTO_ARRIBO_L
+                        ,CPS.NOM_CX_PUERTO_SALIDA NOM_CX_PUERTO_SALIDA_L
+                        ,CONVERT(VARCHAR, C.ETA_DATE, 103) ETA_DATE
+				FROM  CX_OC_EXTRANJERA C
+                     ,USUARIO U
+                     ,PROVEEDOR_EXT P
+                     ,CX_CONTACTO_PROVEEDOR_EXT CC
+                     ,CX_ESTADO_OC_EXTRANJERA CE
+                     ,CX_PUERTO_SALIDA CPS
+                     ,CX_PUERTO_ARRIBO CPA
 				WHERE C.COD_CX_OC_EXTRANJERA		= {KEY1}
-				AND C.COD_USUARIO					= U.COD_USUARIO
+				AND CPA.COD_CX_PUERTO_ARRIBO		= C.COD_CX_PUERTO_ARRIBO
+                AND CPS.COD_CX_PUERTO_SALIDA		= C.COD_CX_PUERTO_SALIDA
+                AND C.COD_USUARIO					= U.COD_USUARIO
 				AND C.COD_PROVEEDOR_EXT				= P.COD_PROVEEDOR_EXT
 				AND C.COD_CX_CONTACTO_PROVEEDOR_EXT = CC.COD_CX_CONTACTO_PROVEEDOR_EXT
 				AND CE.COD_CX_ESTADO_OC_EXTRANJERA = C.COD_CX_ESTADO_OC_EXTRANJERA";
@@ -276,6 +287,7 @@ class wi_cx_oc_extranjera extends w_input{
         $this->dws['wi_cx_oc_extranjera']->add_control(new edit_text('COD_USUARIO', 80, 80, 'hidden'));
         $this->dws['wi_cx_oc_extranjera']->add_control(new edit_text_upper('REFERENCIA', 96, 500));
         $this->dws['wi_cx_oc_extranjera']->add_control(new edit_date('DELIVERY_DATE'));
+        $this->dws['wi_cx_oc_extranjera']->add_control(new edit_date('ETA_DATE'));
         $this->dws['wi_cx_oc_extranjera']->add_control(new edit_text_upper('PACKING', 27, 27));
         $this->dws['wi_cx_oc_extranjera']->add_control(new edit_text_hidden('COD_PROVEEDOR_EXT'));
         $this->dws['wi_cx_oc_extranjera']->add_control(new edit_text('CORRELATIVO_OC', 10, 100));
@@ -592,6 +604,7 @@ class wi_cx_oc_extranjera extends w_input{
         $MONTO_DESCUENTO				= $this->dws['wi_cx_oc_extranjera']->get_item(0, 'MONTO_DESCUENTO');
         $MONTO_TOTAL					= $this->dws['wi_cx_oc_extranjera']->get_item(0, 'MONTO_TOTAL_H');
         $ALIAS							= $this->dws['wi_cx_oc_extranjera']->get_item(0, 'ALIAS_PROVEEDOR_EXT');
+        $ETA_DATE                       = $this->dws['wi_cx_oc_extranjera']->get_item(0, 'ETA_DATE');
         
         $COD_CX_OC_EXTRANJERA			= ($COD_CX_OC_EXTRANJERA =='') ? "null" : "$COD_CX_OC_EXTRANJERA";
         $FECHA_CX_OC_EXTRANJERA			= ($FECHA_CX_OC_EXTRANJERA =='') ? "null" : $this->str2date($FECHA_CX_OC_EXTRANJERA);
@@ -606,6 +619,7 @@ class wi_cx_oc_extranjera extends w_input{
         $REFERENCIA						= ($REFERENCIA =='') ? "null" : "'$REFERENCIA'";
         $OBSERVACIONES					= ($OBSERVACIONES =='') ? "null" : "'$OBSERVACIONES'";
         $PACKING						= ($PACKING =='') ? "null" : "'$PACKING'";
+        $ETA_DATE					    = ($ETA_DATE =='') ? "null" : $this->str2date($ETA_DATE);
         
         $sp = 'spu_cx_oc_extranjera';
         if ($this->is_new_record())
@@ -637,7 +651,8 @@ class wi_cx_oc_extranjera extends w_input{
 				,$PORC_DESCUENTO
 				,$MONTO_DESCUENTO
 				,$MONTO_TOTAL
-				,'$ALIAS'";
+				,'$ALIAS'
+                ,$ETA_DATE";
                 
                 if ($db->EXECUTE_SP($sp, $param)){
                     if ($this->is_new_record()) {

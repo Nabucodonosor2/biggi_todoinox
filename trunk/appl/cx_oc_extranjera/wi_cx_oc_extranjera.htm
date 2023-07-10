@@ -129,6 +129,7 @@ function down(objeto, url)
 												<li class="TabbedPanelsTab" tabindex="0" style="display:{TAB_100505}">Purchase Order</li>
 												<li class="TabbedPanelsTab" tabindex="0" style="display:{TAB_100510}">Items Purchase</li>
 												<li class="TabbedPanelsTab" tabindex="0" style="display:{TAB_100510}">Carta Orden Pago</li>
+												<li class="TabbedPanelsTab" tabindex="0" style="display:{TAB_351005}">Cuadro Embarque</li>
 												<!-- <li class="TabbedPanelsTab" tabindex="0" style="display:{TAB_100510}">Carta Instrucción Cobertura</li> -->
 											</ul>
 											<div class="TabbedPanelsContentGroup">
@@ -422,13 +423,53 @@ function down(objeto, url)
 													</table>
 												</div>
 												<!--FIN -->
-												<!--INI -->
-												<div class="TabbedPanelsContent" style="height:492px;">
-													
-												</div>
-												<!--FIN -->
-											</div>
 
+												<!--INI CUADRO EMBARQUE-->
+												<div class="TabbedPanelsContent" style="height:492px;">
+													<table width="1000" rules="none" border="1" align="center"	class="claro">
+														<tr class="titulo_tabla">
+															<td colspan="6">GENERAL DATA</td>
+														</tr>
+														<tr class="encabezado_right">
+															<td width="16.6%">Correlative P.O N°:</td>
+															<td width="16.7%" class="oscuro" align="left">{CORRELATIVO_OC_L}</td>
+															<td width="16.6%">Date:</td>
+															<td width="16.7%" class="oscuro" align="left">{FECHA_CX_OC_EXTRANJERA_L}</td>
+															<td width="16.6%">User:</td>
+															<td width="16.7%" class="oscuro" align="left">{NOM_USUARIO}</td>
+														</tr>
+														<tr class="encabezado_right">
+															<td>State:</td>
+															<td class="claro" align="left">{NOM_CX_ESTADO_OC_EXTRANJERA}</td>
+															<td>From Quote N°:</td>
+															<td class="claro" align="left" colspan="3">{COD_CX_COT_EXTRANJERA}</td>
+														</tr>
+													</table>
+													<table width="1000" rules="none" border="0" align="center">
+														<tr>
+															<td></td>
+														</tr>
+													</table>
+													<table width="1000" rules="none" border="1" align="center"	class="claro">	
+														<tr class="titulo_tabla">
+															<td colspan="6">DELIVERY</td>
+														</tr>
+														<tr class="encabezado_right">
+															<td width="16.6%">Delivery Date:</td>
+															<td width="16.7%" class="oscuro" align="left">{DELIVERY_DATE_L}</td>
+															<td width="16.6%">Port of Loading:</td>
+															<td width="50%" class="oscuro" align="left">{NOM_CX_PUERTO_SALIDA_L}</td>
+														</tr>
+														<tr class="encabezado_right">
+															<td>ETA Date:</td>
+															<td class="claro" align="left">{ETA_DATE}</td>
+															<td >Port of Discharge:</td>
+															<td class="claro" align="left">{NOM_CX_PUERTO_ARRIBO_L}</td>
+														</tr>
+													</table>
+												</div>
+												<!--FIN CUADRO EMBARQUE-->
+											</div>
 										</div>
 										<!--FIN TabbedPanelsContentGroup-->
 									</td>
