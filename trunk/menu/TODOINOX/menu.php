@@ -72,8 +72,8 @@ $comex = array( new item_menu('Quote', '3505', "../../../commonlib/trunk/php/man
     new item_menu('-'),
     new item_menu('Dolar', '3565', "../../../commonlib/trunk/php/mantenedor.php?modulo=dolar&cod_item_menu=3565"),
     new item_menu('-'),
-    new item_menu('Cuadro de Embarque', '3570', "../appl/cx_archivo_excel/descarga_cuadro_embarque.php"),
-    new item_menu('Cuadro de Pago', '3575', "../appl/cx_archivo_excel/descarga_cuadro_pago.php")
+    new item_menu('Cuadro de Embarque', '3570', "../../../commonlib/trunk/php/mantenedor.php?modulo=cx_cuadro_embarque&cod_item_menu=3570"),
+    new item_menu('Cuadro de Pago', '3575', "../appl/cx_archivo_excel/descarga_cuadro_pago.php") 
 );
 
 $informes = array(new item_menu('Facturas por Equipo', '4005', "../appl/inf_ventas_por_equipo/inf_ventas_por_equipo.php"),

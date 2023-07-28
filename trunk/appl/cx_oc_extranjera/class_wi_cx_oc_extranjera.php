@@ -5,6 +5,81 @@ require_once(dirname(__FILE__)."/class_informe_cx_oc_extranjera.php");
 require_once(dirname(__FILE__)."/class_informe_cx_oc_extranjera_es.php");
 require_once(dirname(__FILE__)."/../cx_cot_extranjera/class_dw_help_empresa.php");
 
+class dw_item_packing_oc extends datawindow {
+    function dw_item_packing_oc() {
+        $sql = "SELECT COD_CX_PACKING_OC_EXTRANJERA
+					  ,COD_CX_OC_EXTRANJERA
+					  ,NOM_CONTAINER
+					  ,CANT
+				FROM CX_PACKING_OC_EXTRANJERA
+				WHERE COD_CX_OC_EXTRANJERA = {KEY1}";
+        
+        parent::datawindow($sql, 'ITEM_PACKING_OC', true, true);
+        
+        $sql = "SELECT '40 ST' NOM_CONTAINER
+					  ,'40 ST' NOM_CONTAINER_LBL
+				UNION
+				SELECT '40 HQ' NOM_CONTAINER
+					  ,'40 HQ' NOM_CONTAINER_LBL
+				UNION
+				SELECT '20 ST' NOM_CONTAINER
+					  ,'20 ST' NOM_CONTAINER_LBL
+				UNION
+				SELECT 'LCL' NOM_CONTAINER
+					  ,'LCL' NOM_CONTAINER_LBL";
+        $this->add_control(new drop_down_dw('NOM_CONTAINER', $sql, 100));
+        $this->add_control(new edit_num('CANT',10, 10));
+    }
+    
+    function update($db){
+        $sp = 'spu_cx_packing_oc_extranjera';
+        for ($i = 0; $i < $this->row_count(); $i++){
+            $statuts = $this->get_status_row($i);
+            if ($statuts == K_ROW_NOT_MODIFIED || $statuts == K_ROW_NEW)
+                continue;
+                
+            $COD_CX_PACKING_OC_EXTRANJERA	= $this->get_item($i, 'COD_CX_PACKING_OC_EXTRANJERA');
+            $COD_CX_OC_EXTRANJERA			= $this->get_item($i, 'COD_CX_OC_EXTRANJERA');
+            $NOM_CONTAINER					= $this->get_item($i, 'NOM_CONTAINER');
+            $CANT							= $this->get_item($i, 'CANT');
+            
+            $COD_CX_PACKING_OC_EXTRANJERA	= ($COD_CX_PACKING_OC_EXTRANJERA =='') ? "null" : $COD_CX_PACKING_OC_EXTRANJERA;
+                
+            if ($statuts == K_ROW_NEW_MODIFIED)
+                $operacion = 'INSERT';
+            elseif ($statuts == K_ROW_MODIFIED)
+                $operacion = 'UPDATE';
+                    
+            $param = "'$operacion'
+                    ,$COD_CX_PACKING_OC_EXTRANJERA
+                    ,$COD_CX_OC_EXTRANJERA
+                    ,'$NOM_CONTAINER'
+                    ,$CANT";
+                    
+            if(!$db->EXECUTE_SP($sp, $param))
+                return false;
+            else{
+                if ($statuts == K_ROW_NEW_MODIFIED){
+                    $COD_CX_PACKING_OC_EXTRANJERA = $db->GET_IDENTITY();
+                    $this->set_item($i, 'COD_CX_PACKING_OC_EXTRANJERA', $COD_CX_PACKING_OC_EXTRANJERA);
+                }
+            }
+        }
+        
+        for ($i = 0; $i < $this->row_count('delete'); $i++) {
+            $statuts = $this->get_status_row($i, 'delete');
+            if ($statuts == K_ROW_NEW || $statuts == K_ROW_NEW_MODIFIED)
+                continue;
+                
+            $COD_CX_PACKING_OC_EXTRANJERA = $this->get_item($i, 'COD_CX_PACKING_OC_EXTRANJERA', 'delete');
+            if (!$db->EXECUTE_SP($sp, "'DELETE', $COD_CX_PACKING_OC_EXTRANJERA")){
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
 class dw_cx_orden_pago extends datawindow{
     function dw_cx_orden_pago(){
         $sql = "SELECT COD_CX_CARTA_OP
@@ -263,6 +338,7 @@ class wi_cx_oc_extranjera extends w_input{
                         ,CPA.NOM_CX_PUERTO_ARRIBO NOM_CX_PUERTO_ARRIBO_L
                         ,CPS.NOM_CX_PUERTO_SALIDA NOM_CX_PUERTO_SALIDA_L
                         ,CONVERT(VARCHAR, C.ETA_DATE, 103) ETA_DATE
+                        ,CONVERT(VARCHAR, C.FECHA_ZARPE, 103) FECHA_ZARPE
 				FROM  CX_OC_EXTRANJERA C
                      ,USUARIO U
                      ,PROVEEDOR_EXT P
@@ -281,6 +357,7 @@ class wi_cx_oc_extranjera extends w_input{
         $this->dws['wi_cx_oc_extranjera'] = new dw_help_empresa($sql);
         $this->dws['dw_cx_item_oc_extranjera'] = new dw_cx_item_oc_extranjera();
         $this->dws['dw_cx_orden_pago'] = new dw_cx_orden_pago();
+        $this->dws['dw_item_packing_oc'] = new dw_item_packing_oc();
         
         //controles
         $this->dws['wi_cx_oc_extranjera']->add_control(new edit_text_hidden('COD_CX_OC_EXTRANJERA'));
@@ -288,6 +365,7 @@ class wi_cx_oc_extranjera extends w_input{
         $this->dws['wi_cx_oc_extranjera']->add_control(new edit_text_upper('REFERENCIA', 96, 500));
         $this->dws['wi_cx_oc_extranjera']->add_control(new edit_date('DELIVERY_DATE'));
         $this->dws['wi_cx_oc_extranjera']->add_control(new edit_date('ETA_DATE'));
+        $this->dws['wi_cx_oc_extranjera']->add_control(new edit_date('FECHA_ZARPE'));
         $this->dws['wi_cx_oc_extranjera']->add_control(new edit_text_upper('PACKING', 27, 27));
         $this->dws['wi_cx_oc_extranjera']->add_control(new edit_text_hidden('COD_PROVEEDOR_EXT'));
         $this->dws['wi_cx_oc_extranjera']->add_control(new edit_text('CORRELATIVO_OC', 10, 100));
@@ -520,6 +598,7 @@ class wi_cx_oc_extranjera extends w_input{
         $this->dws['dw_cx_item_oc_extranjera']->retrieve($cod_cx_oc_extranjera);
         $this->dws['dw_cx_orden_pago']->retrieve($cod_cx_oc_extranjera);
         $this->dws['wi_cx_oc_extranjera']->set_entrable('COD_CX_ESTADO_OC_EXTRANJERA',true);
+        $this->dws['dw_item_packing_oc']->retrieve($cod_cx_oc_extranjera);
         $COD_CX_ESTADO_OC_EXTRANJERA = $this->dws['wi_cx_oc_extranjera']->get_item(0, 'COD_CX_ESTADO_OC_EXTRANJERA');
         
         $this->b_print_visible 	 = true;
@@ -605,6 +684,7 @@ class wi_cx_oc_extranjera extends w_input{
         $MONTO_TOTAL					= $this->dws['wi_cx_oc_extranjera']->get_item(0, 'MONTO_TOTAL_H');
         $ALIAS							= $this->dws['wi_cx_oc_extranjera']->get_item(0, 'ALIAS_PROVEEDOR_EXT');
         $ETA_DATE                       = $this->dws['wi_cx_oc_extranjera']->get_item(0, 'ETA_DATE');
+        $FECHA_ZARPE                    = $this->dws['wi_cx_oc_extranjera']->get_item(0, 'FECHA_ZARPE');
         
         $COD_CX_OC_EXTRANJERA			= ($COD_CX_OC_EXTRANJERA =='') ? "null" : "$COD_CX_OC_EXTRANJERA";
         $FECHA_CX_OC_EXTRANJERA			= ($FECHA_CX_OC_EXTRANJERA =='') ? "null" : $this->str2date($FECHA_CX_OC_EXTRANJERA);
@@ -620,6 +700,7 @@ class wi_cx_oc_extranjera extends w_input{
         $OBSERVACIONES					= ($OBSERVACIONES =='') ? "null" : "'$OBSERVACIONES'";
         $PACKING						= ($PACKING =='') ? "null" : "'$PACKING'";
         $ETA_DATE					    = ($ETA_DATE =='') ? "null" : $this->str2date($ETA_DATE);
+        $FECHA_ZARPE					= ($FECHA_ZARPE =='') ? "null" : $this->str2date($FECHA_ZARPE);
         
         $sp = 'spu_cx_oc_extranjera';
         if ($this->is_new_record())
@@ -652,7 +733,8 @@ class wi_cx_oc_extranjera extends w_input{
 				,$MONTO_DESCUENTO
 				,$MONTO_TOTAL
 				,'$ALIAS'
-                ,$ETA_DATE";
+                ,$ETA_DATE
+                ,$FECHA_ZARPE";
                 
                 if ($db->EXECUTE_SP($sp, $param)){
                     if ($this->is_new_record()) {
@@ -662,13 +744,19 @@ class wi_cx_oc_extranjera extends w_input{
                     if (!$this->dws['dw_cx_item_oc_extranjera']->update($db, $COD_CX_OC_EXTRANJERA))
                         return false;
                         
-                        for($i=0 ; $i < $this->dws['dw_cx_orden_pago']->row_count() ; $i++)
-                            $this->dws['dw_cx_orden_pago']->set_item($i, 'COD_CX_OC_EXTRANJERA', $COD_CX_OC_EXTRANJERA);
+                    for($i=0 ; $i < $this->dws['dw_cx_orden_pago']->row_count() ; $i++)
+                        $this->dws['dw_cx_orden_pago']->set_item($i, 'COD_CX_OC_EXTRANJERA', $COD_CX_OC_EXTRANJERA);
+                        
+                    for ($j=0; $j < $this->dws['dw_item_packing_oc']->row_count(); $j++)
+                        $this->dws['dw_item_packing_oc']->set_item($j, 'COD_CX_OC_EXTRANJERA', $COD_CX_OC_EXTRANJERA);
+                                    
+                    if (!$this->dws['dw_item_packing_oc']->update($db))
+                        return false;
                             
-                            if (!$this->dws['dw_cx_orden_pago']->update($db))
-                                return false;
+                    if (!$this->dws['dw_cx_orden_pago']->update($db))
+                        return false;
                                 
-                                return true;
+                    return true;
                 }
                 return false;
     }

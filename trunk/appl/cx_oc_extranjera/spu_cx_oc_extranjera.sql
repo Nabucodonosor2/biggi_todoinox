@@ -23,7 +23,8 @@ ALTER PROCEDURE [dbo].[spu_cx_oc_extranjera](@ve_operacion						VARCHAR(20),
 											  @ve_monto_descuento				NUMERIC(15,2)=NULL,
 											  @ve_monto_total					NUMERIC(15,2)=NULL,
 											  @ve_alias							VARCHAR(100)=NULL,
-											  @ve_eta_date						DATETIME=NULL)			
+											  @ve_eta_date						DATETIME=NULL,
+											  @ve_fecha_zarpe					DATETIME=NULL)			
 AS
 BEGIN
 	DECLARE
@@ -63,7 +64,8 @@ BEGIN
 									 ,MONTO_TOTAL
 									 ,CORRELATIVO_OC_NUMERO
 									 ,CORRELATIVO_OC_LETRA
-									 ,ETA_DATE)
+									 ,ETA_DATE
+									 ,FECHA_ZARPE)
 							   VALUES(GETDATE()
 									  ,@ve_fecha_cx_oc_extranjera
 									  ,@ve_cod_cx_estado_oc_extranjera
@@ -89,7 +91,8 @@ BEGIN
 									  ,@ve_monto_total
 									  ,@vl_max_numero
 									  ,''
-									  ,@ve_eta_date)		  
+									  ,@ve_eta_date
+									  ,@ve_fecha_zarpe)		  
 	END 
 	
 	ELSE IF (@ve_operacion='UPDATE') BEGIN
@@ -116,7 +119,8 @@ BEGIN
 			PORC_DESCUENTO					= @ve_porc_descuento,
 			MONTO_DESCUENTO					= @ve_monto_descuento,
 			MONTO_TOTAL						= @ve_monto_total,
-			ETA_DATE						= @ve_eta_date
+			ETA_DATE						= @ve_eta_date,
+			FECHA_ZARPE						= @ve_fecha_zarpe
 		WHERE COD_CX_OC_EXTRANJERA = @ve_cod_cx_oc_extranjera
 	END			      
 	ELSE IF (@ve_operacion='DUPLICAR') BEGIN
@@ -156,7 +160,8 @@ BEGIN
 										 ,MONTO_TOTAL
 										 ,CORRELATIVO_OC_NUMERO
 										 ,CORRELATIVO_OC_LETRA
-										 ,ETA_DATE)
+										 ,ETA_DATE
+										 ,FECHA_ZARPE)
 								 
 								 SELECT  FECHA_REGISTRO
 										 ,FECHA_CX_OC_EXTRANJERA
@@ -184,6 +189,7 @@ BEGIN
 										 ,CORRELATIVO_OC_NUMERO
 										 ,@vl_letra
 										 ,ETA_DATE
+										 ,FECHA_ZARPE
 								 FROM CX_OC_EXTRANJERA
 								 WHERE COD_CX_OC_EXTRANJERA = @ve_cod_cx_oc_extranjera
 		

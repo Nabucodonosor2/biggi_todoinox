@@ -466,7 +466,53 @@ function down(objeto, url)
 															<td >Port of Discharge:</td>
 															<td class="claro" align="left">{NOM_CX_PUERTO_ARRIBO_L}</td>
 														</tr>
+														<tr class="encabezado_right">
+															<td>Fecha Zarpe *:</td>
+															<td class="oscuro" align="left" colspan="3">{FECHA_ZARPE}</td>
+														</tr>
 													</table>
+													<table width="1000" rules="none" border="0" align="center">
+														<tr>
+															<td></td>
+														</tr>
+													</table>
+													<table width="1000" rules="none" border="1" align="center"	class="claro">
+														<tr height="170">
+															<td class="encabezado_center" width="17%">Packing</td>
+															<td valign="top" width="83%">
+																<table width="100%" rules="none" border="0" align="center" class="claro">
+																	<tr>
+																		<td>
+																			<table width="100%" rules="none" border="1" align="center" class="claro">
+																				<tr class="encabezado_center">
+																					<th width="34%">Container</th>
+																					<th width="33%">Quantity</th>
+																					<th width="33%">Delete</th>
+																				</tr>
+																			</table>
+																			<div style="overflow-x: hidden; overflow-y: auto; height:110px;">
+																				<table width="814" rules="none" border="1" align="center" class="claro" id="ITEM_PACKING_OC">
+																					<!-- startBlock(ITEM_PACKING_OC) -->
+																					<tr class="{DW_TR_CSS}" id="{DW_TR_ID}">
+																						<td width="34%" align="center">{NOM_CONTAINER}</td>
+																						<td width="33%" align="center">{CANT}</td>
+																						<td width="33%" align="center">{ELIMINAR_ITEM_PACKING_OC}</td>
+																					</tr>
+																					<!-- endBlock(ITEM_PACKING_OC) -->
+																				</table>
+																			</div>
+																			<table width="100%" rules="none" border="1" align="center" class="claro">
+																				<tr class="claro">
+																					<td align="left">{AGREGAR_ITEM_PACKING_OC}</td>
+																				</tr>
+																			</table>
+																		</td>
+																	</tr>
+																</table>			
+															</td>
+														</tr>
+													</table>
+
 												</div>
 												<!--FIN CUADRO EMBARQUE-->
 											</div>
