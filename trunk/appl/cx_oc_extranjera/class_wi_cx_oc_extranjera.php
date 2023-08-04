@@ -339,6 +339,8 @@ class wi_cx_oc_extranjera extends w_input{
                         ,CPS.NOM_CX_PUERTO_SALIDA NOM_CX_PUERTO_SALIDA_L
                         ,CONVERT(VARCHAR, C.ETA_DATE, 103) ETA_DATE
                         ,CONVERT(VARCHAR, C.FECHA_ZARPE, 103) FECHA_ZARPE
+                        ,INCLUIR_CUADRO_EMBARQUE
+                        ,INCLUIR_CUADRO_EMBARQUE INCLUIR_CUADRO_EMBARQUE_L
 				FROM  CX_OC_EXTRANJERA C
                      ,USUARIO U
                      ,PROVEEDOR_EXT P
@@ -370,6 +372,9 @@ class wi_cx_oc_extranjera extends w_input{
         $this->dws['wi_cx_oc_extranjera']->add_control(new edit_text_hidden('COD_PROVEEDOR_EXT'));
         $this->dws['wi_cx_oc_extranjera']->add_control(new edit_text('CORRELATIVO_OC', 10, 100));
         $this->dws['wi_cx_oc_extranjera']->controls['NOM_PROVEEDOR_EXT']->size = 59;
+        $this->dws['wi_cx_oc_extranjera']->add_control(new edit_check_box('INCLUIR_CUADRO_EMBARQUE','S','N'));
+        $this->dws['wi_cx_oc_extranjera']->add_control(new edit_check_box('INCLUIR_CUADRO_EMBARQUE_L','S','N'));
+        $this->dws['wi_cx_oc_extranjera']->set_entrable('INCLUIR_CUADRO_EMBARQUE_L', false);
         
         $sql="SELECT COD_CX_ESTADO_OC_EXTRANJERA
 					,NOM_CX_ESTADO_OC_EXTRANJERA
@@ -685,6 +690,7 @@ class wi_cx_oc_extranjera extends w_input{
         $ALIAS							= $this->dws['wi_cx_oc_extranjera']->get_item(0, 'ALIAS_PROVEEDOR_EXT');
         $ETA_DATE                       = $this->dws['wi_cx_oc_extranjera']->get_item(0, 'ETA_DATE');
         $FECHA_ZARPE                    = $this->dws['wi_cx_oc_extranjera']->get_item(0, 'FECHA_ZARPE');
+        $INCLUIR_CUADRO_EMBARQUE        = $this->dws['wi_cx_oc_extranjera']->get_item(0, 'INCLUIR_CUADRO_EMBARQUE');
         
         $COD_CX_OC_EXTRANJERA			= ($COD_CX_OC_EXTRANJERA =='') ? "null" : "$COD_CX_OC_EXTRANJERA";
         $FECHA_CX_OC_EXTRANJERA			= ($FECHA_CX_OC_EXTRANJERA =='') ? "null" : $this->str2date($FECHA_CX_OC_EXTRANJERA);
@@ -701,6 +707,7 @@ class wi_cx_oc_extranjera extends w_input{
         $PACKING						= ($PACKING =='') ? "null" : "'$PACKING'";
         $ETA_DATE					    = ($ETA_DATE =='') ? "null" : $this->str2date($ETA_DATE);
         $FECHA_ZARPE					= ($FECHA_ZARPE =='') ? "null" : $this->str2date($FECHA_ZARPE);
+        $INCLUIR_CUADRO_EMBARQUE		= ($INCLUIR_CUADRO_EMBARQUE =='') ? "null" : "'$INCLUIR_CUADRO_EMBARQUE'";
         
         $sp = 'spu_cx_oc_extranjera';
         if ($this->is_new_record())
@@ -734,7 +741,8 @@ class wi_cx_oc_extranjera extends w_input{
 				,$MONTO_TOTAL
 				,'$ALIAS'
                 ,$ETA_DATE
-                ,$FECHA_ZARPE";
+                ,$FECHA_ZARPE
+                ,$INCLUIR_CUADRO_EMBARQUE";
                 
                 if ($db->EXECUTE_SP($sp, $param)){
                     if ($this->is_new_record()) {

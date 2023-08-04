@@ -5,6 +5,21 @@
         <title>Sistema Grupo de Empresas Biggi</title>
         <link href="{W_CSS}" rel="stylesheet" type="text/css">
         <script charset="iso-8859-1" src="../../../../commonlib/trunk/script_js/general.js" type="text/javascript"></script>
+        <script charset="iso-8859-1" src="cx_cuadro_embarque.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            function entrada(objeto, url)
+            {
+                objeto.style.backgroundImage = "url('"+url+"')";
+            }
+            function salida(objeto, url)
+            {
+                objeto.style.backgroundImage = "url('"+url+"')";
+            }
+            function down(objeto, url)
+            {
+                objeto.style.backgroundImage = "url('"+url+"')";
+            }
+        </script>
         {WO_JAVA_SCRIPT}
     </head>
     <body {WO_ONLOAD}>
@@ -41,7 +56,6 @@
                                         </tr>
                                     </table>
                                 </td> 
-                                <td>{WO_ADD}</td>
                                 <td></td>					
                             </tr>
                         </table>
@@ -67,7 +81,7 @@
                                 <div style="overflow-x:hidden; overflow-y:auto; height:476;">						
                                     <table width="1000" border="0" align="center">
                                         <!-- startBlock(wo_registro) -->
-                                        <tr class="{WO_TR_CSS}">
+                                        <tr class="{WO_TR_CSS}" style="background-color:{CSS_COLOR_MES}">
                                             <td width="3%" align="center">{WO_DETALLE}</td>
                                             <td width="6%" align="center">{COD_CX_OC_EXTRANJERA}</td>
                                             <td width="12%" align="left">{CORRELATIVO_OC}</td>
