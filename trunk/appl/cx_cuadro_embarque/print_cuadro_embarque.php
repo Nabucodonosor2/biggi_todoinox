@@ -20,6 +20,7 @@ for ($j=0; $j < count($result); $j++){
                         ,CANTIDAD
                 FROM CX_ITEM_OC_EXTRANJERA
                 WHERE COD_CX_OC_EXTRANJERA = ".$result[$j]['COD_CX_OC_EXTRANJERA'];
+
     $result_item = $db->build_results($sql_item);
 
     if($posY_inicial > 470){
@@ -32,27 +33,55 @@ for ($j=0; $j < count($result); $j++){
     $pdf->SetFont('Arial','', 8);
     $pdf->SetTextColor(0, 0, 0);
 
+    $arr_fecha_actual  = explode('/', $result[$j]['ACTUAL_DATE']);
+    $arr_fecha_eta     = explode('/', $result[$j]['ETA_DATE']);
+
+    if($arr_fecha_actual[1] == $arr_fecha_eta[1] && $arr_fecha_actual[2] == $arr_fecha_eta[2])
+        $pdf->SetFillColor(255, 255, 204);
+    else
+        $pdf->SetFillColor(255, 255, 255);
+
     $count = 0;
     $count2 = 0;
     for ($i=0; $i < count($result_item); $i++){
         if($count == 0){
-            $pdf->SetXY(180, $posY_it);
-            $pdf->Cell(100, 20, $result_item[$i]['COD_PRODUCTO'], 1, 0, 'L');
             $pdf->SetXY(250, $posY_it);
-            $pdf->Cell(30, 20, $result_item[$i]['CANTIDAD'], 0, 0, 'R');
+            $pdf->Cell(30, 20, $result_item[$i]['CANTIDAD'], 0, 0, 'R', true);
+            $pdf->SetXY(180, $posY_it);
+            $pdf->Cell(100, 20, $result_item[$i]['COD_PRODUCTO'], 1, 0, 'L', true);
             $count++;
             $count2 += 1;
+
+            if($i+1 == count($result_item)){//Si termina el for aqui, rellena los 2 campos siguientes en blanco
+                $pdf->SetXY(350, $posY_it);
+                $pdf->Cell(30, 20, '', 0, 0, 'R', true);
+                $pdf->SetXY(280, $posY_it);
+                $pdf->Cell(100, 20, '', 1, 0, 'L', true);
+                $pdf->SetXY(450, $posY_it);
+                $pdf->Cell(30, 20, '', 0, 0, 'R', true);
+                $pdf->SetXY(380, $posY_it);
+                $pdf->Cell(100, 20, '', 1, 0, 'L', true);
+            }
+
         }else if($count == 1){
-            $pdf->SetXY(280, $posY_it);
-            $pdf->Cell(100, 20, $result_item[$i]['COD_PRODUCTO'], 1, 0, 'L');
             $pdf->SetXY(350, $posY_it);
-            $pdf->Cell(30, 20, $result_item[$i]['CANTIDAD'], 0, 0, 'R');
+            $pdf->Cell(30, 20, $result_item[$i]['CANTIDAD'], 0, 0, 'R', true);
+            $pdf->SetXY(280, $posY_it);
+            $pdf->Cell(100, 20, $result_item[$i]['COD_PRODUCTO'], 1, 0, 'L', true);
             $count++;
+
+            if($i+1 == count($result_item)){//Si termina el for aqui, rellena el siguiente campo en blanco
+                $pdf->SetXY(450, $posY_it);
+                $pdf->Cell(30, 20, '', 0, 0, 'R', true);
+                $pdf->SetXY(380, $posY_it);
+                $pdf->Cell(100, 20, '', 1, 0, 'L', true);
+            }
+
         }else if($count == 2){
-            $pdf->SetXY(380, $posY_it);
-            $pdf->Cell(100, 20, $result_item[$i]['COD_PRODUCTO'], 1, 0, 'L');
             $pdf->SetXY(450, $posY_it);
-            $pdf->Cell(30, 20, $result_item[$i]['CANTIDAD'], 0, 0, 'R');
+            $pdf->Cell(30, 20, $result_item[$i]['CANTIDAD'], 0, 0, 'R', true);
+            $pdf->SetXY(380, $posY_it);
+            $pdf->Cell(100, 20, $result_item[$i]['COD_PRODUCTO'], 1, 0, 'L', true);
             $count = 0;
 
             if($i+1 <> count($result_item))
@@ -61,7 +90,6 @@ for ($j=0; $j < count($result); $j++){
 
         if($i+1 == count($result_item))
             $posY_it += 20;
-        
     } 
 
     $sql_container =   "SELECT CONVERT(VARCHAR, CANT) + 'x' + NOM_CONTAINER CONTAINER
@@ -70,22 +98,22 @@ for ($j=0; $j < count($result); $j++){
     $result_container = $db->build_results($sql_container);
     
     $pdf->SetXY(40, $posY_inicial);
-    $pdf->Cell(90, $count2*20, $result[$j]['CORRELATIVO_OC'], 1, 0, 'C');
+    $pdf->Cell(90, $count2*20, $result[$j]['CORRELATIVO_OC'], 1, 0, 'C', true);
     $pdf->SetXY(130, $posY_inicial);
-    $pdf->Multicell(50, $count2*20, $result_container[0]['CONTAINER'], 1, 'C');
+    $pdf->Multicell(50, $count2*20, $result_container[0]['CONTAINER'], 1, 'C', true);
 
     $pdf->SetXY(480, $posY_inicial);
-    $pdf->Cell(26, $count2*20,  $result[$j]['CURRENCY'], 1, 0, 'C');
+    $pdf->Cell(26, $count2*20,  $result[$j]['CURRENCY'], 1, 0, 'C', true);
     $pdf->SetXY(506, $posY_inicial);
-    $pdf->Cell(61, $count2*20, number_format($result[$j]['MONTO_TOTAL'], 2, ',', '.'), 1, 0, 'C');
+    $pdf->Cell(61, $count2*20, number_format($result[$j]['MONTO_TOTAL'], 2, ',', '.'), 1, 0, 'C', true);
     $pdf->SetXY(567, $posY_inicial);
-    $pdf->Cell(61, $count2*20, $result[$j]['DELIVERY_DATE'], 1, 0, 'C');
+    $pdf->Cell(61, $count2*20, $result[$j]['DELIVERY_DATE'], 1, 0, 'C', true);
     $pdf->SetXY(628, $posY_inicial);
-    $pdf->Cell(61, $count2*20, $fecha_zarpe, 1, 0, 'C');
+    $pdf->Cell(61, $count2*20, $fecha_zarpe, 1, 0, 'C', true);
     $pdf->SetXY(689, $posY_inicial);
-    $pdf->Cell(61, $count2*20, $fecha_llegada, 1, 0, 'C');
+    $pdf->Cell(61, $count2*20, $fecha_llegada, 1, 0, 'C', true);
 
-    $pdf->Line(40, $posY_it, 689, $posY_it);//linea rellena para que no deje espacios en blanco
+    $pdf->Line(40, $posY_it, 689, $posY_it);//linea rellena para que no deje espacios en blanco al final
 }
 
 $pdf->Output('Cuadro de embarque', 'I');

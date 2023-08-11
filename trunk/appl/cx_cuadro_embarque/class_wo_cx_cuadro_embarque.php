@@ -22,6 +22,7 @@ class wo_cx_cuadro_embarque extends w_output_biggi{
                         WHEN COD_CX_MONEDA = 1 THEN 'USD'
                         WHEN COD_CX_MONEDA = 2 THEN 'EUR'
                      END CURRENCY
+                     ,CONVERT(VARCHAR, GETDATE(), 103) ACTUAL_DATE
                FROM CX_OC_EXTRANJERA
                WHERE INCLUIR_CUADRO_EMBARQUE = 'S'
                ORDER BY FIELD_ORDER ASC";
