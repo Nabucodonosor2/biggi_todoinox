@@ -18,6 +18,10 @@ class wo_cx_cuadro_embarque extends w_output_biggi{
                      ,SUBSTRING(CORRELATIVO_OC, CHARINDEX('/', CORRELATIVO_OC)+1, 4) +
                      SUBSTRING(REPLACE(CORRELATIVO_OC, ' ', ''), 0, LEN(REPLACE(CORRELATIVO_OC, ' ', ''))-5) +
                      SUBSTRING(CORRELATIVO_OC, CHARINDEX('/', CORRELATIVO_OC)-1, 1) FIELD_ORDER
+                     ,CASE	
+                        WHEN COD_CX_MONEDA = 1 THEN 'USD'
+                        WHEN COD_CX_MONEDA = 2 THEN 'EUR'
+                     END CURRENCY
                FROM CX_OC_EXTRANJERA
                WHERE INCLUIR_CUADRO_EMBARQUE = 'S'
                ORDER BY FIELD_ORDER ASC";
