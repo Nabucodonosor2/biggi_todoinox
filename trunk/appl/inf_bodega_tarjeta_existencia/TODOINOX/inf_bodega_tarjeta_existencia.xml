@@ -13,7 +13,7 @@
 		<Cell text="{strFECHA_INICIO} - {strFECHA_TERMINO}" width="100%" align="C" font="ArialSmallBlue" newline="1" visible="{SectionPageNumber}== 1"/>
 		<Cell text="" height="10" newline="1"/>
 		<Cell text="{strCOD_PRODUCTO}  :" width="10%" align="L" border="B" font="ArialSmallBlue" visible="{SectionPageNumber}== 1"/>
-		<Cell text="{strNOM_PRODUCTO}" width="52%" align="L" border="B" font="ArialSmallBlue" visible="{SectionPageNumber}== 1"/>
+		<Cell text="{strNOM_PRODUCTO}" width="55%" align="L" border="B" font="ArialSmallBlue" visible="{SectionPageNumber}== 1"/>
 		<Cell text="" width="6%"/>
 		<Cell text="Compra Histórica Según RI:  " width="24%" align="L"/>
 		<Cell text="{strSUM_CANT}" format="N0,." width="9%" align="L" font="ArialSmallBlue" newline="1" visible="{SectionPageNumber}== 1"/>
