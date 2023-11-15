@@ -30,14 +30,16 @@ class wi_inf_bodega_tarjeta_existencia extends wi_inf_bodega_tarjeta_existencia_
 				and i.COD_PRODUCTO = '$cod_producto'";
 		$result2 = $db->build_results($sql2);
 		
-		
+		$sql3="SELECT NOM_PRODUCTO 
+				FROM PRODUCTO WHERE COD_PRODUCTO = '$cod_producto'";
+		$result3 = $db->build_results($sql3);
 		
 		$labels = array();
 		$labels['strSUM_CANT'] =$result2[0]['SUM_CANT'];
 		$labels['strFECHA_INICIO'] = $result[0]['FECHA_INICIO'];
 		$labels['strFECHA_TERMINO'] = $result[0]['FECHA_TERMINO'];
 		$labels['strCOD_PRODUCTO'] = $result[0]['COD_PRODUCTO'];
-		$labels['strNOM_PRODUCTO'] = $result[1]['NOM_PRODUCTO'];
+		$labels['strNOM_PRODUCTO'] = $result3[0]['NOM_PRODUCTO'];
 		$rpt = new reporte($sql, $this->xml, $labels, $this->nom_informe, 1, true);
 		$this->_load_record();
 		
