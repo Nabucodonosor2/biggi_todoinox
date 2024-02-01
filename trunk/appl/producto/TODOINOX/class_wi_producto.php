@@ -348,10 +348,15 @@ class wi_producto extends wi_producto_base {
 		                ,dbo.f_get_tot_factura_anterior(P.COD_PRODUCTO) TOTAL_FACTURADO_ANTERIOR
 						,dbo.f_redondeo_tdnx(dbo.f_get_costbase_aux(P.COD_PRODUCTO)* FACTOR_VENTA_INTERNO) SUM_TOTAL_COSTO_BASE_AUX
                     	,dbo.f_get_costbase_aux(P.COD_PRODUCTO) TOTAL_COSTO_BASE_EC
-						,dbo.f_redondeo_tdnx(dbo.f_get_costbase_aux(P.COD_PRODUCTO) * FACTOR_VENTA_INTERNO)  PRCO_VENTA_INT_SUG_EC
+						,dbo.f_redondeo_tdnx(dbo.f_get_costbase_aux(P.COD_PRODUCTO) * FACTOR_VENTA_INTERNO) + ISNULL(PRECIO_ADICIONAL, 0) PRCO_VENTA_INT_SUG_EC
 						,'' DISPLAY_FOOTER_PI_UNO
 						,'' DISPLAY_FOOTER_PI_DOS
 						,EQ_NO_COMPUESTO
+						,CASE
+							WHEN PRECIO_ADICIONAL IS NULL THEN 0
+							ELSE PRECIO_ADICIONAL
+						END PRECIO_ADICIONAL	
+						,(dbo.f_redondeo_tdnx(dbo.f_get_costbase_aux(P.COD_PRODUCTO)* FACTOR_VENTA_INTERNO) + ISNULL(PRECIO_ADICIONAL, 0)) PRECIO_TOTAL_SUG
         from   			PRODUCTO P
         				,MARCA M
         				,TIPO_PRODUCTO TP
@@ -366,6 +371,10 @@ class wi_producto extends wi_producto_base {
 		$this->dws['dw_producto']->retrieve();
 
 		// asigna los formatos
+		$this->dws['dw_producto']->add_control($control = new edit_num('PRECIO_ADICIONAL', 10, 16));
+		$control->set_onChange("tot_costo_base_dos();redondeo_biggi(); calc_precio_int_pub();");
+		$this->dws['dw_producto']->add_control(new static_num('PRECIO_TOTAL_SUG'));
+
 		$this->dws['dw_producto']->add_control(new static_num('SUM_TOTAL_COSTO_BASE_AUX'));
 		$sql = "select COD_CLASIF_INVENTARIO
 						,NOM_CLASIF_INVENTARIO
@@ -520,6 +529,8 @@ class wi_producto extends wi_producto_base {
 
 		$cod_equipo_oc_ex 			= $this->dws['dw_producto']->get_item(0, 'COD_EQUIPO_OC_EX');
 		$desc_equipo_oc_ex			= $this->dws['dw_producto']->get_item(0, 'DESC_EQUIPO_OC_EX');
+		$precio_venta_int_sug		= $this->dws['dw_producto']->get_item(0, 'SUM_TOTAL_COSTO_BASE_AUX');
+		$precio_adicional			= $this->dws['dw_producto']->get_item(0, 'PRECIO_ADICIONAL');
 
 		$nom_producto_ingles 		= ($nom_producto_ingles == '') ? "null" : "'$nom_producto_ingles'";
 		$cod_familia_producto 		= ($cod_familia_producto == '') ? "null" : $cod_familia_producto;
@@ -553,13 +564,19 @@ class wi_producto extends wi_producto_base {
 
 		$cod_equipo_oc_ex			= ($cod_equipo_oc_ex == '') ? "null" : "'$cod_equipo_oc_ex'";
 		$desc_equipo_oc_ex			= ($desc_equipo_oc_ex == '') ? "null" : "'$desc_equipo_oc_ex'";
+		$precio_venta_int_sug		= ($precio_venta_int_sug == '') ? "null" : str_replace('.', '', "$precio_venta_int_sug");
+		$precio_adicional			= ($precio_adicional == '') ? "null" : $precio_adicional;
 
 		//se actualiza el precio del producto si tiene cambios
-		$this->update_costo_producto($cod_producto,$precio_venta_interno,"RENTAL");
-		$this->update_costo_producto($cod_producto,$precio_venta_interno,"COMERCIAL");
-		$this->update_costo_producto($cod_producto,$precio_venta_interno,"BODEGA");
+		$db->query("exec RENTAL.dbo.sp_update_costo_producto 'TODOINOX','$cod_producto',$precio_venta_interno");
+		$db->query("exec BIGGI.dbo.sp_update_costo_producto 'TODOINOX','$cod_producto',$precio_venta_interno");
 
+		$tot_precio_sugerido = $precio_venta_int_sug+$precio_adicional;
 
+		if((int)$precio_venta_interno > (int)$tot_precio_sugerido)
+			$db->query("exec BODEGA_BIGGI.dbo.sp_update_costo_producto 'TODOINOX','$cod_producto',$precio_venta_interno");
+		else
+			$db->query("exec BODEGA_BIGGI.dbo.sp_update_costo_producto 'TODOINOX','$cod_producto',$tot_precio_sugerido");
 
 		$sp = 'spu_producto';
 
@@ -594,7 +611,7 @@ class wi_producto extends wi_producto_base {
 		$presion_vapor,'$usa_agua_fria','$usa_agua_caliente',$caudal,$presion_agua,$diametro_caneria,
 		'$usa_ventilacion',$volumen,$caida_presion,$diametro_ducto,$nro_filtros,'$usa_desague',
 		$diametro_desague,'$maneja_inventario',$stock_critico,$tiempo_reposicion,'$precio_libre', '$es_despachable', '$sistema_valido',$potencia_kw,$cod_clasif_inventario
-		,$cod_tipo_observacion_comex,$cod_equipo_oc_ex,$desc_equipo_oc_ex";
+		,$cod_tipo_observacion_comex,$cod_equipo_oc_ex,$desc_equipo_oc_ex,$precio_adicional";
 
 
 		if ($db->EXECUTE_SP($sp, $param)) {

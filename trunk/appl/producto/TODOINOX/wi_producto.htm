@@ -384,7 +384,7 @@
 														</div>
 														<!--FIN INGRESO-->
 														<!-- INI EQ .COMPUESTO -->
-														<div class="TabbedPanelsContent" style="height:492px;">
+														<div class="TabbedPanelsContent" style="height:510px;">
 															<!--<table width="1000" rules="none" border="1" align="center" class="claro">
 																<tr class="titulo_tabla">
 																	<td colspan="6">DATOS GENERALES</td>
@@ -437,30 +437,29 @@
 																	<td style="display:none" class="claro" align="left" style="width: 173px">{PRECIO_LIBRE}</td>
 																</tr>
 															</table> -->
-															<p>
 															<!--<div id="pc" style="display:{TABLE_PRODUCTO_COMPUESTO}">-->
 															<div>
-															<table width="1000" rules="none" border="1" align="center" class="claro">
-																<tr class="titulo_tabla">
-																	<td colspan="5" width="80">PRODUCTOS COMPUESTOS</td>
-																</tr>
-																<tr class="encabezado_center">
-																	<th width="25"></th>
-																	<th width="50" style="display:none">Armador</th>
-																	<th width="50" style="display:none">Genera Compra</th>
-																	<th width="95">Modelo</th>
-																	<th width="320">Descripción</th>
-																	<th width="30">CT</th>
-																	<th width="75">Costo Base</th>
-																	<th width="75">Tot Costo Base</th>
-																	<th width="75">Precio Interno</th>
-																	<th width="160"></th>
-																	<!-- <th width="75">Tot Precio Interno</th>
-																	<th width="75">Precio Publico</th>
-																	<th width="75">Tot Precio Publico</th> -->
-																	<th width="45">E</th>
-																</tr>
-															</table>
+																<table width="1000" rules="none" border="1" align="center" class="claro">
+																	<tr class="titulo_tabla">
+																		<td colspan="5" width="80">PRODUCTOS COMPUESTOS</td>
+																	</tr>
+																	<tr class="encabezado_center">
+																		<th width="25"></th>
+																		<th width="50" style="display:none">Armador</th>
+																		<th width="50" style="display:none">Genera Compra</th>
+																		<th width="95">Modelo</th>
+																		<th width="320">Descripción</th>
+																		<th width="30">CT</th>
+																		<th width="75">Costo Base</th>
+																		<th width="75">Tot Costo Base</th>
+																		<th width="75">Precio Interno</th>
+																		<th width="160"></th>
+																		<!-- <th width="75">Tot Precio Interno</th>
+																		<th width="75">Precio Publico</th>
+																		<th width="75">Tot Precio Publico</th> -->
+																		<th width="45">E</th>
+																	</tr>
+																</table>
 															</div>
 															<div style="overflow-x:hidden; overflow-y:auto; height:210;">
 															<table width="1000" rules="none" border="1" align="center" class="claro" id="PRODUCTO_COMPUESTO">
@@ -491,18 +490,23 @@
 															</table>
 															<table width="1000" rules="none" border="1" align="center" class="claro">
 																<tr class="titulo_2_tabla_right">
-																	  <td width="614" class="Estilo4">TOTALES $:</td>
-																	  <td width="82" class="Estilo4" style="color: #993300;"><b>{SUM_TOTAL_COSTO_BASE}</b></td>
-																	  <td width="80" class="Estilo4"><b>X {FACTOR_VENTA_INTERNO_AUX} =</b></td>
-																	  <td width="80" class="Estilo4" style="color: #993300;"><b>{SUM_TOTAL_COSTO_BASE_AUX}</b></td>
-																	   <!-- <td width="68"></td>
-																	  <td width="78">{SUM_TOTAL_PRECIO_INTERNO}</td>
-																	  <td width="66"></td>
-																	  <td width="80">{SUM_TOTAL_PRECIO_PUBLICO}</td> -->
-																	  <td width="144" class="Estilo5"><b>PRECIO INT SUG</b></td>
+																	<td width="314" class="Estilo4">TOTALES $:</td>
+																	<td width="82" class="Estilo4" style="color: #993300;"><b>{SUM_TOTAL_COSTO_BASE}</b></td>
+																	<td width="80" class="Estilo4"><b>X {FACTOR_VENTA_INTERNO_AUX} =</b></td>
+																	<td width="80" class="Estilo4" style="color: #993300;"><b>{SUM_TOTAL_COSTO_BASE_AUX}</b></td>
+																	<td width="40" class="Estilo4" align="center"><b> + </b></td>
+																	<td width="90" class="Estilo4" style="color: #993300;"><b>{PRECIO_ADICIONAL}</b></td>
+																	<td width="40" class="Estilo4" align="center"><b> = </b></td>
+																	<td width="90" class="Estilo4" style="color: #993300;"><b>{PRECIO_TOTAL_SUG}</b></td>
+
+
+																	<!-- <td width="68"></td>
+																	<td width="78">{SUM_TOTAL_PRECIO_INTERNO}</td>
+																	<td width="66"></td>
+																	<td width="80">{SUM_TOTAL_PRECIO_PUBLICO}</td> -->
 																</tr>
 															</table>
-															<br/>
+															<br />
 															<table width="1000" rules="none" border="1" align="center" class="claro" style="display:{DISPLAY_FOOTER_PI_DOS}">
 																<tr class="titulo_tabla">
 																	<td colspan="2">PRECIO INTERNO</td>

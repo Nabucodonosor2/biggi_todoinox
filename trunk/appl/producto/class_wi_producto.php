@@ -982,14 +982,6 @@ class wi_producto_base extends w_input{
         $cod_producto_local			= ($cod_producto_local == '') ? "null" : $cod_producto_local;
         $cod_marca					= ($cod_marca == 0) ? "null" : $cod_marca;
 
-        if(K_CLIENTE == "BODEGA")
-        {
-            //se actualiza el precio del producto si tiene cambios
-            $this->update_costo_producto($cod_producto,$precio_venta_interno,"RENTAL");
-            $this->update_costo_producto($cod_producto,$precio_venta_interno,"COMERCIAL");
-            $this->update_costo_producto($cod_producto,$precio_venta_interno,"TODOINOX");
-        }
-
         $sp = 'spu_producto';
 
         if ($this->is_new_record()){
@@ -1108,22 +1100,6 @@ class wi_producto_base extends w_input{
 		                         return true;
 		}
 		return false;
-    }
-
-    function update_costo_producto($cod_producto,$precio,$origen)
-    {
-        $db = new database(K_TIPO_BD, K_SERVER, K_BD, K_USER, K_PASS);
-        $sql = "select SISTEMA, URL_WS, USER_WS,PASSWROD_WS  from PARAMETRO_WS
-					where SISTEMA = '".$origen."' ";
-        $result = $db->build_results($sql);
-
-        $user_ws		= $result[0]['USER_WS'];
-        $passwrod_ws	= $result[0]['PASSWROD_WS'];
-        $url_ws			= $result[0]['URL_WS'];
-
-        $biggi = new client_biggi("$user_ws", "$passwrod_ws", "$url_ws");
-
-        $res = $biggi->cli_update_costo_producto(K_CLIENTE,$cod_producto,$precio);
     }
 
     function subir_imagen($db, $cod_producto){

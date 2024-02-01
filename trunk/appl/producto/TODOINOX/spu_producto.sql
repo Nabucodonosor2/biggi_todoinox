@@ -1,57 +1,61 @@
 ALTER PROCEDURE [dbo].[spu_producto]
 			(@ve_operacion					varchar(20)
 			,@ve_cod_producto				varchar(30) 
-			,@ve_nom_producto				varchar(100)
-			,@ve_cod_tipo_producto			numeric
-			,@ve_cod_marca					numeric
-			,@ve_nom_producto_ingles		varchar(100)
-			,@ve_cod_familia_producto		numeric
-			,@ve_largo						numeric
-			,@ve_ancho						numeric
-			,@ve_alto						numeric
-			,@ve_peso						numeric
-			,@ve_largo_embalado				numeric
-			,@ve_ancho_embalado				numeric
-			,@ve_alto_embalado				numeric
-			,@ve_peso_embalado				numeric
-			,@ve_factor_venta_interno		T_PORCENTAJE
-			,@ve_precio_venta_interno		T_PRECIO
-			,@ve_factor_venta_publico		T_PORCENTAJE
-			,@ve_precio_venta_publico		T_PRECIO
-			,@ve_usa_electricidad			varchar(1)
-			,@ve_nro_fases					varchar(1)
-			,@ve_consumo_electricidad		numeric(10,2)
-			,@ve_rango_temperatura			varchar(100)
-			,@ve_voltaje					numeric
-			,@ve_frecuencia					numeric
-			,@ve_nro_certificado_electrico 	varchar(100)
-			,@ve_usa_gas					varchar(1)
-			,@ve_potencia					numeric(10,2)
-			,@ve_consumo_gas				numeric
-			,@ve_nro_certificado_gas 		varchar(100)
-			,@ve_usa_vapor					varchar(1)
-			,@ve_consumo_vapor				numeric
-			,@ve_presion_vapor				numeric
-			,@ve_usa_agua_fria				varchar(1)
-			,@ve_usa_agua_caliente			varchar(1)
-			,@ve_caudal						numeric
-			,@ve_presion_agua				numeric
-			,@ve_diametro_caneria			varchar(10)
-			,@ve_usa_ventilacion			varchar(1)
-			,@ve_volumen					numeric
-			,@ve_caida_presion				numeric
-			,@ve_diametro_ducto				numeric
-			,@ve_nro_filtros				numeric
-			,@ve_usa_desague				varchar(1)
-			,@ve_diametro_desague			varchar(10)
-			,@ve_maneja_inventario			varchar(1)
-			,@ve_stock_critico				numeric
-			,@ve_tiempo_reposicion			numeric
-			,@ve_precio_libre				varchar(1)
-			,@ve_es_despachable				varchar(1)
-			,@ve_sistema_valido			varchar(10)
-			,@ve_potencia_kw			numeric(10,2) 
-			,@ve_cod_clasif_inventario		numeric(10))
+			,@ve_nom_producto				varchar(100)	=null
+			,@ve_cod_tipo_producto			numeric			=null
+			,@ve_cod_marca					numeric			=null
+			,@ve_nom_producto_ingles		varchar(100)	=null
+			,@ve_cod_familia_producto		numeric			=null
+			,@ve_largo						numeric			=null
+			,@ve_ancho						numeric			=null
+			,@ve_alto						numeric			=null
+			,@ve_peso						numeric			=null
+			,@ve_largo_embalado				numeric			=null
+			,@ve_ancho_embalado				numeric			=null
+			,@ve_alto_embalado				numeric			=null
+			,@ve_peso_embalado				numeric			=null
+			,@ve_factor_venta_interno		T_PORCENTAJE	=null
+			,@ve_precio_venta_interno		T_PRECIO		=null
+			,@ve_factor_venta_publico		T_PORCENTAJE	=null
+			,@ve_precio_venta_publico		T_PRECIO		=null
+			,@ve_usa_electricidad			varchar(1)		=null
+			,@ve_nro_fases					varchar(1)		=null
+			,@ve_consumo_electricidad		numeric(10,2)	=null
+			,@ve_rango_temperatura			varchar(100)	=null
+			,@ve_voltaje					numeric			=null
+			,@ve_frecuencia					numeric			=null
+			,@ve_nro_certificado_electrico 	varchar(100)	=null
+			,@ve_usa_gas					varchar(1)		=null
+			,@ve_potencia					numeric(10,2)	=null
+			,@ve_consumo_gas				numeric			=null
+			,@ve_nro_certificado_gas 		varchar(100)	=null
+			,@ve_usa_vapor					varchar(1)		=null
+			,@ve_consumo_vapor				numeric			=null
+			,@ve_presion_vapor				numeric			=null
+			,@ve_usa_agua_fria				varchar(1)		=null
+			,@ve_usa_agua_caliente			varchar(1)		=null
+			,@ve_caudal						numeric			=null
+			,@ve_presion_agua				numeric			=null
+			,@ve_diametro_caneria			varchar(10)		=null
+			,@ve_usa_ventilacion			varchar(1)		=null
+			,@ve_volumen					numeric			=null
+			,@ve_caida_presion				numeric			=null
+			,@ve_diametro_ducto				numeric			=null
+			,@ve_nro_filtros				numeric			=null
+			,@ve_usa_desague				varchar(1)		=null
+			,@ve_diametro_desague			varchar(10)		=null
+			,@ve_maneja_inventario			varchar(1)		=null
+			,@ve_stock_critico				numeric			=null
+			,@ve_tiempo_reposicion			numeric			=null
+			,@ve_precio_libre				varchar(1)		=null
+			,@ve_es_despachable				varchar(1)		=null
+			,@ve_sistema_valido			varchar(10)			=null
+			,@ve_potencia_kw			numeric(10,2) 		=null
+			,@ve_cod_clasif_inventario		numeric(10)		=null
+			,@ve_cod_tipo_observacion_comex	numeric(10)		=null
+			,@ve_cod_equipo_oc_ex		varchar(100)		=null
+			,@ve_desc_equipo_oc_ex		varchar(100)		=null
+			,@ve_precio_adicional		numeric(10)			=null)
 AS
 BEGIN
 		if (@ve_operacion='UPDATE') 
@@ -107,7 +111,14 @@ BEGIN
 						,es_despachable				= @ve_es_despachable
 						,potencia_kw				= @ve_potencia_kw
 						,cod_clasif_inventario		= @ve_cod_clasif_inventario
+						,sistema_valido				= @ve_sistema_valido
+						,cod_tipo_observacion_comex = @ve_cod_tipo_observacion_comex
+						,COD_EQUIPO_OC_EX			= @ve_cod_equipo_oc_ex
+						,DESC_EQUIPO_OC_EX			= @ve_desc_equipo_oc_ex
+						,precio_adicional			= @ve_precio_adicional
 				where	cod_producto				= @ve_cod_producto
+				
+				exec spu_producto 'PRODUCTO_BUSQUEDA', @ve_cod_producto
 			end
 		else if (@ve_operacion='INSERT') 
 			begin
@@ -162,7 +173,11 @@ BEGIN
 							,es_despachable
 							,sistema_valido
 							,potencia_kw
-							,cod_clasif_inventario)
+							,cod_clasif_inventario
+							,cod_tipo_observacion_comex
+							,COD_EQUIPO_OC_EX
+							,DESC_EQUIPO_OC_EX
+							,precio_adicional)
 				values (
 						@ve_cod_producto 
 						,@ve_nom_producto
@@ -215,6 +230,88 @@ BEGIN
 						,@ve_es_despachable
 						,@ve_sistema_valido
 						,@ve_potencia_kw
-						,@ve_cod_clasif_inventario)			
-			end 
+						,@ve_cod_clasif_inventario
+						,@ve_cod_tipo_observacion_comex
+						,@ve_cod_equipo_oc_ex
+						,@ve_desc_equipo_oc_ex
+						,@ve_precio_adicional)			
+						
+				exec spu_producto 'PRODUCTO_BUSQUEDA', @ve_cod_producto		
+			end
+		else if (@ve_operacion='PRODUCTO_BUSQUEDA') begin
+			--borra lo del producto
+			delete producto_busqueda
+			where COD_PRODUCTO = @ve_cod_producto
+
+			declare 
+				@vl_nom_producto				varchar(100)
+				,@vc_nom_atributo_producto		varchar(1000)
+				,@vc_cod_atributo_producto		numeric
+				,@vl_prod_web					varchar(100)
+
+			select @vl_prod_web = dbo.f_prod_web (@ve_cod_producto)
+
+			--si no publica en la web no hace nada			
+			if (@vl_prod_web <> 'S')
+				return
+
+				
+			--se inserta como palabra el cod_producto
+			insert into producto_busqueda
+				(COD_PRODUCTO
+				,PALABRA
+				,CAMPO_UBICACION
+				,COD_ATRIBUTO_PRODUCTO
+				)
+			values
+				(@ve_cod_producto
+				,@ve_cod_producto
+				,'COD_PRODUCTO'
+				,null
+				)
+	
+			--buscamos las pabras en el nom_producto
+			select @vl_nom_producto = NOM_PRODUCTO
+			from PRODUCTO
+			where COD_PRODUCTO = @ve_cod_producto
+
+			insert into producto_busqueda
+				(COD_PRODUCTO
+				,PALABRA
+				,CAMPO_UBICACION
+				,COD_ATRIBUTO_PRODUCTO
+				)
+			select @ve_cod_producto
+					,item
+					,'NOM_PRODUCTO'
+					,null
+			from dbo.f_prod_busq_palabra(@vl_nom_producto)
+
+			--ATRIBUTOS
+			DECLARE C_ATRIB CURSOR FOR 
+			SELECT nom_atributo_producto
+					,cod_atributo_producto
+			FROM atributo_producto
+			where cod_producto = @ve_cod_producto
+
+			OPEN C_ATRIB
+			FETCH C_ATRIB INTO @vc_nom_atributo_producto, @vc_cod_atributo_producto
+			WHILE @@FETCH_STATUS = 0 BEGIN
+				insert into producto_busqueda
+					(COD_PRODUCTO
+					,PALABRA
+					,CAMPO_UBICACION
+					,COD_ATRIBUTO_PRODUCTO
+					)
+				select @ve_cod_producto
+						,item
+						,'NOM_ATRIBUTO'
+						,@vc_cod_atributo_producto
+				from dbo.f_prod_busq_palabra(@vc_nom_atributo_producto)
+
+				FETCH C_ATRIB INTO @vc_nom_atributo_producto, @vc_cod_atributo_producto
+			END
+			CLOSE C_ATRIB
+			DEALLOCATE C_ATRIB
+		end	
 END
