@@ -40,6 +40,7 @@ class wo_producto extends wo_producto_base{
 		// Es igual al BASE, solo cambia elk sql donde se agrega stock
 		$sql = "select	P.COD_PRODUCTO
 						,NOM_PRODUCTO
+						,PRECIO_VENTA_INTERNO
 						,PRECIO_VENTA_PUBLICO
 						,NOM_TIPO_PRODUCTO
 						,case 
@@ -70,7 +71,9 @@ class wo_producto extends wo_producto_base{
 		$this->add_header(new header_modelo('COD_PRODUCTO', 'COD_PRODUCTO', 'Modelo'));
 		$this->add_header(new header_text('NOM_PRODUCTO', 'NOM_PRODUCTO', 'Descripción'));
 		$this->dw->add_control(new edit_precio('PRECIO_VENTA_PUBLICO'));
-		$this->add_header(new header_num('PRECIO_VENTA_PUBLICO', 'PRECIO_VENTA_PUBLICO', 'Precio'));
+		$this->add_header(new header_num('PRECIO_VENTA_PUBLICO', 'PRECIO_VENTA_PUBLICO', 'P. PUBLICO'));
+		$this->dw->add_control(new edit_precio('PRECIO_VENTA_INTERNO'));
+		$this->add_header(new header_num('PRECIO_VENTA_INTERNO', 'PRECIO_VENTA_INTERNO', 'P. INTERNO'));
 		
 		$sql = "select COD_MARCA ,NOM_MARCA from MARCA order by	NOM_MARCA";		
 		$this->add_header(new header_drop_down('NOM_MARCA', 'P.COD_MARCA', 'Marca', $sql));
@@ -99,6 +102,11 @@ class wo_producto extends wo_producto_base{
 		$control->field_bd_order = 'STOCK';
 		// formatos de columnas
 		$this->dw->add_control(new static_num('PRECIO_VENTA_PUBLICO'));
+
+		//
+		// Filtro inicial MH 01-01-2023
+		$h->valor_filtro = '1,2,3';
+		$this->make_filtros();
 	}
 	
 	function habilita_boton(&$temp, $boton, $habilita){
@@ -155,5 +163,11 @@ class wo_producto extends wo_producto_base{
 		else
 			parent::procesa_event();
 	}
+   	function make_menu(&$temp) {
+   	    $menu = session::get('menu_appl');
+   	    $menu->ancho_completa_menu = 310;
+   	    $menu->draw($temp);
+   	    $menu->ancho_completa_menu = 205;    // volver a setear el tamaño original
+   	}
 }
 ?>

@@ -29,7 +29,7 @@
 	</tr>
 	<tr bgcolor="#FFFFFF">
 		<td>
-			<table width="1000" border="0">
+			<table width="1150" border="0">
 				<tr>
 					<td>
 						<table width="592" border="0">
@@ -54,33 +54,36 @@
 	</tr>
 	<tr bgcolor="#FFFFFF">
 		<td>	  
-			<table width="1000" border="0" align="center" height="570">
+			<table width="1150" border="0" align="center" height="570">
 				<tr bgcolor="#FFFFFF" height="520">
 					<td valign="top">
-						<table width="1000" border="0" align="center">
+						<table width="1100" border="0" align="center">
 							<tr class="encabezado_center">
 								<th width="4%"></th>
-								<th width="10%">{H_COD_PRODUCTO}</th>
+								<th width="13%">{H_COD_PRODUCTO}</th>
 								<th width="34%">{H_NOM_PRODUCTO}</th>
-								<th width="12%">{H_NOM_TIPO_OBSERVACION_COMEX}</th>
+								<!-- <th width="12%">{H_NOM_TIPO_OBSERVACION_COMEX}</th> -->
+								<th width="10%">{H_PRECIO_VENTA_INTERNO}</th>
 								<th width="10%">{H_PRECIO_VENTA_PUBLICO}</th>
+								<th width="9%">{H_STOCK}</th>
 								<th width="10%">{H_NOM_MARCA}</th>
 								<th width="10%">{H_NOM_TIPO_PRODUCTO}</th>
-								<th width="10%">{H_STOCK}</th>
+
 							</tr>
 						</table>
 						<div style="overflow-x:hidden; overflow-y:auto; height:476; width=746";>
-						<table width="1000" border="0" align="center">
+						<table width="1100" border="0" align="center">
 							<!-- startBlock(wo_registro) -->
 							<tr class="{WO_TR_CSS}">
 								<td width="4%" align="center">{WO_DETALLE}</td>
-								<td width="10%" align="left">{COD_PRODUCTO}</td>
+								<td width="13%" align="left">{COD_PRODUCTO}</td>
 								<td width="34">{NOM_PRODUCTO}</td>
-								<td width="12%">{NOM_TIPO_OBSERVACION_COMEX}</td>
-								<td width="10%" align="right">{PRECIO_VENTA_PUBLICO}</td>
-								<td width="10%">{NOM_MARCA}</td>
-								<td width="10%">{NOM_TIPO_PRODUCTO}</td>
-								<td width="10%" align="center">{STOCK}</td>
+								<!-- <td width="12%">{NOM_TIPO_OBSERVACION_COMEX}</td> -->
+								<td width="10%" align="right"><div style="padding-right:5px;">{PRECIO_VENTA_INTERNO}</td>
+								<td width="10%" align="right"><div style="padding-right:5px;">{PRECIO_VENTA_PUBLICO}</td>
+								<td width="9%" align="right"><div style="padding-right:5px;">{STOCK}</td> 
+								<td width="10%" align="center">{NOM_MARCA}</td>
+								<td width="10%" align="center">{NOM_TIPO_PRODUCTO}</td>
 							</tr>
 							<!-- endBlock(wo_registro) -->
 						</table>
