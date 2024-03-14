@@ -75,7 +75,11 @@ class wo_producto extends wo_producto_base{
 		$this->dw->add_control(new edit_precio('PRECIO_VENTA_INTERNO'));
 		$this->add_header(new header_num('PRECIO_VENTA_INTERNO', 'PRECIO_VENTA_INTERNO', 'P. INTERNO'));
 		
-		$sql = "select COD_MARCA ,NOM_MARCA from MARCA order by	NOM_MARCA";		
+		$sql = "select COD_MARCA
+					  ,NOM_MARCA
+				from MARCA
+				where MOSTRAR_OUTPUT_TDNX = 'S'
+				order by NOM_MARCA";		
 		$this->add_header(new header_drop_down('NOM_MARCA', 'P.COD_MARCA', 'Marca', $sql));
 		
 		$sql = "select COD_TIPO_OBSERVACION_COMEX ,NOM_TIPO_OBSERVACION_COMEX from TIPO_OBSERVACION_COMEX order by ORDEN";		
