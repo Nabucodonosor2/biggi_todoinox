@@ -23,11 +23,26 @@ function set_values_empresa(valores, record) {
 	set_value('NOM_PROVEEDOR_EXT_' + record, valores[3], valores[3]);
 	set_value('NOM_CIUDAD_' + record, valores[4], valores[4]);
 	set_value('NOM_PAIS_' + record, valores[5], valores[5]);
-	set_value('TELEFONO_' + record, valores[6], valores[6]);
+	//set_value('TELEFONO_' + record, valores[6], valores[6]);
 	set_value('DIRECCION_' + record, valores[9], valores[9]);
 	set_value('POST_OFFICE_BOX_' + record, valores[10], valores[10]);
 	set_drop_down('COD_CX_CONTACTO_PROVEEDOR_EXT_' + record, valores[11]);
 }
+
+function registro_help_empresa(){
+	const cod_prov			= get_value('COD_PROVEEDOR_EXT_0');
+	const cod_cx_contacto	= get_value('COD_CX_CONTACTO_PROVEEDOR_EXT_0');
+	const ajax = nuevoAjax();
+	ajax.open("GET", "ajax_cx_cot_extranjera.php?fx=get_provedor&variable1="+cod_prov+"&variable2="+cod_cx_contacto,false);
+    ajax.send(null);
+    const resp = ajax.responseText.split('|');
+	
+	if(resp[0] != 'NULL'){
+		set_value('TELEFONO_0', resp[0], resp[0]);
+		set_value('MAIL_0', resp[1], resp[1]);
+	}
+}
+
 function select_1_empresa(valores, record) {
 
 /* Esta funcion se llama cuando el usuario selecciono una empresa de la lista o el dato

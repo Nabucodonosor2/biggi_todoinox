@@ -27,6 +27,7 @@ class help_empresa {
 		
 		$cod_contacto = new drop_down_dw('COD_CX_CONTACTO_PROVEEDOR_EXT', $sql, 165);
 		$cod_contacto->retrieve();
+		$cod_contacto->set_onChange('registro_help_empresa();');
 		
 		$resp .= $cod_contacto->draw_entrable($cod_proveedor_ext, 0)."|";
 		

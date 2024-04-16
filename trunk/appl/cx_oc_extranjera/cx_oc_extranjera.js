@@ -545,9 +545,79 @@ function set_values_empresa(valores, record) {
 	set_value('NOM_PROVEEDOR_EXT_' + record, valores[3], valores[3]);
 	set_value('NOM_CIUDAD_' + record, valores[4], valores[4]);
 	set_value('NOM_PAIS_' + record, valores[5], valores[5]);
-	set_value('TELEFONO_' + record, valores[6], valores[6]);
+	//set_value('TELEFONO_' + record, valores[6], valores[6]);
 	set_value('DIRECCION_' + record, valores[9], valores[9]);
 	set_value('POST_OFFICE_BOX_' + record, valores[10], valores[10]);
 	set_drop_down('COD_CX_CONTACTO_PROVEEDOR_EXT_' + record, valores[11]);
 	calculaCorrelativo();
+}
+
+function registro_help_empresa(){
+	const cod_prov			= get_value('COD_PROVEEDOR_EXT_0');
+	const cod_cx_contacto	= get_value('COD_CX_CONTACTO_PROVEEDOR_EXT_0');
+	const ajax = nuevoAjax();
+	ajax.open("GET", "../cx_cot_extranjera/ajax_cx_cot_extranjera.php?fx=get_provedor&variable1="+cod_prov+"&variable2="+cod_cx_contacto,false);
+    ajax.send(null);
+    const resp = ajax.responseText.split('|');
+	
+	if(resp[0] != 'NULL'){
+		set_value('TELEFONO_0', resp[0], resp[0]);
+		set_value('MAIL_0', resp[1], resp[1]);
+	}
+}
+
+function help_empresa(campo, tipo_empresa) {
+	var campo_id = campo.id;
+	
+	var field = get_nom_field(campo_id);
+	
+	var record = get_num_rec_field(campo_id);
+	var cod_proveedor_value = alias_proveedor_value = nom_proveedor_value = '';
+	switch (field) {
+	   case 'COD_PROVEEDOR_EXT':	cod_proveedor_value = campo.value;    break;
+	   case 'ALIAS_PROVEEDOR_EXT': 	alias_proveedor_value = campo.value;	break;
+	   case 'NOM_PROVEEDOR_EXT': 	nom_proveedor_value = campo.value;	break;
+	}
+	var ajax = nuevoAjax();
+	var php = "../cx_cot_extranjera/help_empresa.php?cod_proveedor_ext_4d="+cod_proveedor_value+"&alias_proveedor_ext="+alias_proveedor_value+"&nom_proveedor_ext="+nom_proveedor_value;
+	
+	ajax.open("GET", php, true);
+	ajax.onreadystatechange=function() { 
+		if (ajax.readyState==4) {
+			var resp = URLDecode(ajax.responseText);
+
+			var lista = resp.split('|');
+			switch (lista[0]) {
+		  	case '0':	
+	 				alert('La empresa no existe, favor ingrese nuevamente');
+	 				set_empresa_vacio(campo);
+			   	break;
+		  	case '1':
+		  		select_1_empresa(lista, record);
+			   	break;
+		  	default:
+				var url = "../cx_cot_extranjera/help_lista_empresa.php?sql="+URLEncode(lista[1]);
+				$.showModalDialog({
+					 url: url,
+					 dialogArguments: '',
+					 height: 470,
+					 width: 650,
+					 scrollable: false,
+					 onClose: function(){ 
+					 	var returnVal = this.returnValue;
+					 	if (returnVal == null){		
+							set_empresa_vacio(campo);
+						}			
+						else {
+							returnVal = URLDecode(returnVal);
+						   	var valores = returnVal.split('|');
+					  		select_1_empresa(valores, record);
+						}
+					}
+				});		
+				break;
+			}
+		} 
+	}
+	ajax.send(null);	
 }

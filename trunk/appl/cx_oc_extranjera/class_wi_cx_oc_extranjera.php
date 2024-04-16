@@ -387,7 +387,9 @@ class wi_cx_oc_extranjera extends w_input{
 				FROM CX_CONTACTO_PROVEEDOR_EXT
 				WHERE COD_PROVEEDOR_EXT = {KEY1}
 				ORDER BY COD_CX_CONTACTO_PROVEEDOR_EXT";
-        $this->dws['wi_cx_oc_extranjera']->add_control(new drop_down_dw('COD_CX_CONTACTO_PROVEEDOR_EXT', $sql, 165));
+        $this->dws['wi_cx_oc_extranjera']->add_control($control = new drop_down_dw('COD_CX_CONTACTO_PROVEEDOR_EXT', $sql, 165));
+        $control->set_onChange('registro_help_empresa();');
+        $this->dws['wi_cx_oc_extranjera']->add_control(new static_text('MAIL'));
         
         $sql="SELECT COD_CX_PUERTO_SALIDA
 					,NOM_CX_PUERTO_SALIDA
