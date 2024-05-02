@@ -322,10 +322,10 @@ function equipo_oc_ex(ve_control){
 	var vl_result = eval("(" + vl_resp + ")");
 	
 	document.getElementById('COD_EQUIPO_OC_EX_' + record).innerHTML = vl_result[0]['COD_EQUIPO_OC_EX'];
-	document.getElementById('DESC_EQUIPO_OC_EX_' + record).innerHTML = vl_result[0]['DESC_EQUIPO_OC_EX'];
+	document.getElementById('DESC_EQUIPO_OC_EX_' + record).innerHTML = URLDecode(vl_result[0]['DESC_EQUIPO_OC_EX']);
 	
 	document.getElementById('COD_EQUIPO_OC_EX_H_' + record).value = vl_result[0]['COD_EQUIPO_OC_EX'];
-	document.getElementById('DESC_EQUIPO_OC_EX_H_' + record).value = vl_result[0]['DESC_EQUIPO_OC_EX'];
+	document.getElementById('DESC_EQUIPO_OC_EX_H_' + record).value = URLDecode(vl_result[0]['DESC_EQUIPO_OC_EX']);
 }
 
 
