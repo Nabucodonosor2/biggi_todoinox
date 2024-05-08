@@ -60,18 +60,22 @@ $mail->Username = "$Username";
 $mail->Password = "$Password";
 $mail->Port = "$Port";
 $mail->SMTPSecure= 'ssl'; 
-$mail->From 	= "sergio.pechoante@biggi.cl";		
-$mail->FromName = "Sergio Pechoante";
+//$mail->From 	= "sergio.pechoante@biggi.cl";		
+//$mail->FromName = "Sergio Pechoante";
+$mail->From         = "modulo_alertas@biggi.cl";		
+$mail->FromName     = "Módulo Alertas Grupo BIGGI";
 $mail->Timeout=30;
 $mail->Subject = $asunto;
 
 $mail->ClearAddresses();
 
-$mail->AddAddress('ascianca@biggi.cl', 'Angel Scianca');
+/*$mail->AddAddress('ascianca@biggi.cl', 'Angel Scianca');
 $mail->AddAddress('mscianca@todoinox.cl', 'Margarita Scianca');
-$mail->AddAddress('sergio.pechoante@biggi.cl', 'Sergio Pechoante');
+$mail->AddAddress('sergio.pechoante@biggi.cl', 'Sergio Pechoante');*/
 //$mail->AddAddress('rescudero@biggi.cl', 'Rafael Escudero');
-$mail->AddBCC('mherrera@biggi.cl', 'Marcelo Herrera');	
+$mail->AddAddress('isra.campos.o@gmail.com', 'PRUEBA');
+$mail->AddAddress('mherrera@biggi.cl', 'Marcelo Herrera');
+//$mail->AddBCC('mherrera@biggi.cl', 'Marcelo Herrera');	
 	
 
 $mail->Body = $html;
