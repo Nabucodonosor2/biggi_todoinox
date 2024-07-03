@@ -261,7 +261,7 @@ class wi_producto extends wi_producto_base {
 		                ,FOTO_GRANDE
 		                ,FOTO_CHICA
 		                ,'' FOTO_CON_CAMBIO
-		                ,PL.ES_COMPUESTO
+		                ,ISNULL(PL.ES_COMPUESTO, 'N') ES_COMPUESTO
 		                ,P.COD_CLASIF_INVENTARIO
 		                ,PRECIO_LIBRE
 		                ,ES_DESPACHABLE
@@ -357,15 +357,13 @@ class wi_producto extends wi_producto_base {
 							ELSE PRECIO_ADICIONAL
 						END PRECIO_ADICIONAL	
 						,(dbo.f_redondeo_tdnx(dbo.f_get_costbase_aux(P.COD_PRODUCTO)* FACTOR_VENTA_INTERNO) + ISNULL(PRECIO_ADICIONAL, 0)) PRECIO_TOTAL_SUG
-        from   			PRODUCTO P
+        from   			PRODUCTO P LEFT OUTER JOIN PRODUCTO_LOCAL PL ON PL.COD_PRODUCTO = P.COD_PRODUCTO
         				,MARCA M
         				,TIPO_PRODUCTO TP
-        				,PRODUCTO_LOCAL PL
         				,TIPO_OBSERVACION_COMEX TOC
         where			P.COD_PRODUCTO = '{KEY1}'
         				AND P.COD_TIPO_OBSERVACION_COMEX = TOC.COD_TIPO_OBSERVACION_COMEX
         				AND P.COD_MARCA = M.COD_MARCA
-        				AND PL.COD_PRODUCTO = P.COD_PRODUCTO
         				AND P.COD_TIPO_PRODUCTO = TP.COD_TIPO_PRODUCTO";
 		$this->dws['dw_producto']->set_sql($sql);
 		$this->dws['dw_producto']->retrieve();
