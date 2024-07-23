@@ -256,6 +256,7 @@ class wi_producto extends wi_producto_base {
 			            ,P.POTENCIA_KW
 			            ,DIAMETRO_DESAGUE
 			            ,MANEJA_INVENTARIO
+						,MANEJA_INVENTARIO MANEJA_INVENTARIO_S
 			            ,STOCK_CRITICO
 			            ,TIEMPO_REPOSICION
 		                ,FOTO_GRANDE
@@ -425,6 +426,15 @@ class wi_producto extends wi_producto_base {
 		$this->dws['dw_log_cambio'] = new dw_log_cambio();
 
 		$this->dws['dw_producto']->set_mandatory('COD_TIPO_OBSERVACION_COMEX', 'Observación Comex');
+
+		if($cod_usuario == 1 || $cod_usuario == 7 || $cod_usuario == 20){
+			$sql = "SELECT 'S' MANEJA_INVENTARIO
+					,'S' NOM_MANEJA_INVENTARIO
+				UNION
+				SELECT 'N' MANEJA_INVENTARIO
+					,'N' NOM_MANEJA_INVENTARIO";
+        	$this->dws['dw_producto']->add_control(new drop_down_dw('MANEJA_INVENTARIO', $sql, 100, '', false));
+		}
 	}
 
 	function load_record(){
@@ -464,10 +474,10 @@ class wi_producto extends wi_producto_base {
 		$this->dws['dw_producto']->set_item(0, 'COD_TIPO_OBSERVACION_COMEX', 1); //Sin Observaciones
 		$this->dws['dw_producto']->set_item(0, 'DISPLAY_FOOTER_PI_UNO', '');
 		$this->dws['dw_producto']->set_item(0, 'DISPLAY_FOOTER_PI_DOS', 'none');
+		$this->dws['dw_producto']->set_item(0, 'MANEJA_INVENTARIO','S');
 	}
 
 	function save_record($db){
-		//parent::save_record();
 		$cod_producto 				= $this->dws['dw_producto']->get_item(0, 'COD_PRODUCTO_PRINCIPAL');
 		$nom_producto 				= $this->dws['dw_producto']->get_item(0, 'NOM_PRODUCTO_PRINCIPAL');
 		$cod_tipo_producto 			= $this->dws['dw_producto']->get_item(0, 'COD_TIPO_PRODUCTO');
@@ -512,7 +522,7 @@ class wi_producto extends wi_producto_base {
 		$nro_filtros 				= $this->dws['dw_producto']->get_item(0, 'NRO_FILTROS');
 		$usa_desague 				= $this->dws['dw_producto']->get_item(0, 'USA_DESAGUE');
 		$diametro_desague			= $this->dws['dw_producto']->get_item(0, 'DIAMETRO_DESAGUE');
-		$maneja_inventario 			= 'N';
+		$maneja_inventario			= $this->dws['dw_producto']->get_item(0, 'MANEJA_INVENTARIO');
 		$stock_critico 				= 0;
 		$tiempo_reposicion			= 0;
 		$foto_grande 				= $this->dws['dw_producto']->get_item(0, 'FOTO_GRANDE');
@@ -610,7 +620,6 @@ class wi_producto extends wi_producto_base {
 		'$usa_ventilacion',$volumen,$caida_presion,$diametro_ducto,$nro_filtros,'$usa_desague',
 		$diametro_desague,'$maneja_inventario',$stock_critico,$tiempo_reposicion,'$precio_libre', '$es_despachable', '$sistema_valido',$potencia_kw,$cod_clasif_inventario
 		,$cod_tipo_observacion_comex,$cod_equipo_oc_ex,$desc_equipo_oc_ex,$precio_adicional";
-
 
 		if ($db->EXECUTE_SP($sp, $param)) {
 			for ($i = 0; $i < $this->dws['dw_producto_proveedor']->row_count(); $i++){
