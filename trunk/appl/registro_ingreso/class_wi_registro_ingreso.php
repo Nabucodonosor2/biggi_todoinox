@@ -722,7 +722,9 @@ class wi_registro_ingreso extends w_input {
 
 			if ($db->EXECUTE_SP($sp, $param)){
 				if ($this->is_new_record()) {
-					$sql ="SELECT MAX(NUMERO_REGISTRO_INGRESO) NUMERO_REGISTRO_INGRESO FROM REGISTRO_INGRESO_4D";
+					// MH 27122023 SE AGREGA UN WHERE NUMERO_REGISTRO_INGRESO < 40000 PARA QUE CUANDO SEA UN NUEVO RI NO LE AGREGUE LOS ITEMS
+					// MH 27122023 AL RIGISTRO INGRESO 40000 EL CUAL SE USA PARA PRUEBAS
+					$sql ="SELECT MAX(NUMERO_REGISTRO_INGRESO) NUMERO_REGISTRO_INGRESO FROM REGISTRO_INGRESO_4D WHERE NUMERO_REGISTRO_INGRESO < 40000";
 					$result = $db->build_results($sql);
 					$NRO_REGISTRO_INGRESO = $result[0]['NUMERO_REGISTRO_INGRESO'];
 					$this->dws['wi_registro_ingreso']->set_item(0, 'NUMERO_REGISTRO_INGRESO', $NRO_REGISTRO_INGRESO);
@@ -782,6 +784,7 @@ class wi_registro_ingreso extends w_input {
 						   ,AD_VALOREM_PORC
 						   ,AGENTE_ADUANA_POR
 						   ,REFERENCIA
+						   ,NUMERO_OC
 					FROM REGISTRO_INGRESO_4D
 					WHERE NUMERO_REGISTRO_INGRESO = $cod_registro_ingreso";
 			//// reporte
@@ -838,7 +841,7 @@ class wi_registro_ingreso extends w_input {
         if($COD_ESTADO_DOC_SII == self::K_ESTADO_SII_EMITIDA){
             if($RESP_EMITIR_DTE == '' && $TRACK_ID_DTE == ''){ //ingresa por primera vez
                 if($this->tiene_privilegio_opcion(self::K_AUTORIZA_ENVIAR_DTE)== 'S')*/
-                  if($this->cod_usuario == 1) 
+                  if(($this->cod_usuario == 1) OR ($this->cod_usuario == 20) OR ($this->cod_usuario == 7) OR ($this->cod_usuario == 31))
                     $this->habilita_boton($temp, 'referencia', true);
                     else
                     $this->habilita_boton($temp, 'referencia', false);
@@ -893,41 +896,42 @@ class print_registro_ingreso extends reporte {
 		$result = $db->build_results($this->sql);
 		
 		
-		$nro_registro_ingreso = $result[0]['NUMERO_REGISTRO_INGRESO'];
-		$cod_prov = $result[0]['COD_PROV'];
-		$dolar_aduanero = $result[0]['VALOR_DOLAR'];
-		$nro_factura = $result[0]['NRO_PROFORMA'];
-		$fecha_factura = $result[0]['FECHA_PROF'];
-		$nro_embarque = $result[0]['NRO_EMBARQUE'];
-		$tota_exfca = $result[0]['TOTAL_EX_FCA'];
-		$flete_interno = $result[0]['FLETE_INTERNO'];
-		$embalaje = $result[0]['EMBALAJE'];
-		$otros1 = $result[0]['OTROS1'];
-		$total_fob = $result[0]['TOTAL_FOB'];
-		$flete = $result[0]['FLETE'];
-		$seguro = $result[0]['SEGURO'];
-		$flete_scl = $result[0]['FLETE_SCL'];
-		$total_cif = $result[0]['TOTAL_CIF'];
-		$total_cif_pesos = $result[0]['TOTAL_CIF_PESOS'];
-		$ad_valorem = $result[0]['AD_VALOREM'];
-		$agente_aduana = $result[0]['AGENTE_ADUANA'];
-		$flete_chile = $result[0]['FLETE_CHILE'];
-		$total_otros = $result[0]['TOTAL_OTROS'];
-		$total_gasto = $result[0]['TOTAL_GASTOS'];
-		$obs = $result[0]['OBS'];
-		$obs = eregi_replace("[\n|\r|\n\r]", ' ', $obs);
-		$total_gasto_us = $result[0]['TOTAL_GASTOS_US'];
-		$factor_imp = $result[0]['FACTOR_IMP'];
-		$grua = $result[0]['GRUA'];
-		$permiso_muni = $result[0]['PERMISO_MUNI'];
-		$desconsolidacion = $result[0]['DESCONSOLIDACION'];
-		$gato_orden_pago = $result[0]['GASTO_ORDEN_PAGO'];
-		$gasto_l_c = $result[0]['CARTA_CREDITO'];
-		$almacenaje = $result[0]['ALMACENAJE'];
-		$otros = $result[0]['OTROS'];
-		$ad_valorem_porc = $result[0]['AD_VALOREM_PORC'];
-		$agente_aduana_porc = $result[0]['AGENTE_ADUANA_POR'];
-		$referencia = $result[0]['REFERENCIA'];
+		$nro_registro_ingreso 	= $result[0]['NUMERO_REGISTRO_INGRESO'];
+		$cod_prov 				= $result[0]['COD_PROV'];
+		$dolar_aduanero 		= $result[0]['VALOR_DOLAR'];
+		$nro_factura 			= $result[0]['NRO_PROFORMA'];
+		$fecha_factura 			= $result[0]['FECHA_PROF'];
+		$nro_embarque 			= $result[0]['NRO_EMBARQUE'];
+		$tota_exfca 			= $result[0]['TOTAL_EX_FCA'];
+		$flete_interno 			= $result[0]['FLETE_INTERNO'];
+		$embalaje 				= $result[0]['EMBALAJE'];
+		$otros1 				= $result[0]['OTROS1'];
+		$total_fob 				= $result[0]['TOTAL_FOB'];
+		$flete 					= $result[0]['FLETE'];
+		$seguro 				= $result[0]['SEGURO'];
+		$flete_scl 				= $result[0]['FLETE_SCL'];
+		$total_cif 				= $result[0]['TOTAL_CIF'];
+		$total_cif_pesos 		= $result[0]['TOTAL_CIF_PESOS'];
+		$ad_valorem 			= $result[0]['AD_VALOREM'];
+		$agente_aduana 			= $result[0]['AGENTE_ADUANA'];
+		$flete_chile 			= $result[0]['FLETE_CHILE'];
+		$total_otros 			= $result[0]['TOTAL_OTROS'];
+		$total_gasto 			= $result[0]['TOTAL_GASTOS'];
+		$obs 					= $result[0]['OBS'];
+		$obs 					= eregi_replace("[\n|\r|\n\r]", ' ', $obs);
+		$total_gasto_us 		= $result[0]['TOTAL_GASTOS_US'];
+		$factor_imp 			= $result[0]['FACTOR_IMP'];
+		$grua 					= $result[0]['GRUA'];
+		$permiso_muni 			= $result[0]['PERMISO_MUNI'];
+		$desconsolidacion 		= $result[0]['DESCONSOLIDACION'];
+		$gato_orden_pago 		= $result[0]['GASTO_ORDEN_PAGO'];
+		$gasto_l_c 				= $result[0]['CARTA_CREDITO'];
+		$almacenaje 			= $result[0]['ALMACENAJE'];
+		$otros 					= $result[0]['OTROS'];
+		$ad_valorem_porc 		= $result[0]['AD_VALOREM_PORC'];
+		$agente_aduana_porc 	= $result[0]['AGENTE_ADUANA_POR'];
+		$referencia 			= $result[0]['REFERENCIA'];
+		$nro_oc_1				= $result[0]['NUMERO_OC'];
 
 		$sql_prov = "SELECT COD_PROVEEDOR_EXT,
 						   COD_PROVEEDOR_EXT_4D,
@@ -940,7 +944,7 @@ class print_registro_ingreso extends reporte {
 					FROM PROVEEDOR_EXT
 					WHERE COD_PROVEEDOR_EXT_4D =  '$cod_prov'";
 					
-		$result_prov = $db->build_results($sql_prov);
+		$result_prov   = $db->build_results($sql_prov);
 		$cod_proveedor = $result_prov[0]['COD_PROVEEDOR_EXT_4D'];
 		$nom_proveedor = $result_prov[0]['NOM_PROVEEDOR_EXT'];
 		$direccion 	   = $result_prov[0]['DIRECCION'];
@@ -949,61 +953,74 @@ class print_registro_ingreso extends reporte {
 		$fono    	   = $result_prov[0]['TELEFONO'];
 		$fax    	   = $result_prov[0]['FAX'];
 
-		 $fecha=strftime( "%d/%m/%Y", time() );
-		 $hora=strftime( "%H:%M", time() );
+		$fecha=strftime( "%d/%m/%Y", time() );
+		$hora=strftime( "%H:%M", time() );
 
-		 $pdf->SetFont('Arial','',9);
-		$pdf->Text(30, 50,'Fecha   '.$fecha);
-		$pdf->Text(30, 62,'Hora    '.$hora);
-		$pdf->Text(547, 85,'PAG:  '.$pdf->PageNo());
-		
-		 $pdf->SetFont('Arial','B',12);
+		$pdf->SetFont('Arial','B',12);
 		$pdf->Text(15, 35,'COMERCIAL TODOINOX LTDA');
-		
-		$pdf->Text(390, 110,'REGISTRO DE INGRESO N°');
-		$pdf->Text(552, 110,$nro_registro_ingreso);
-		$pdf->SetFont('Arial','B',10);		
-		$pdf->SetXY(15, 115);
-		$pdf->MultiCell(570, 120,'',1);
-		$pdf->Text(440, 130,'DOLAR ADUANERO : ');
-		$pdf->Text(545, 130,$dolar_aduanero);
+
+		$pdf->SetFont('Arial','',8);
+		$pdf->Text(15, 50,'Fecha impresión:   '.$fecha);
+		$pdf->Text(15, 62,'Hora impresión:     '.$hora);
+
+		$pdf->Text(547, 48,'PAG:  '.$pdf->PageNo());
+
+		$pdf->SetFont('Arial','B',12);	
+		$pdf->Text(390, 62,'REGISTRO DE INGRESO N°');
+		$pdf->Text(552, 62,$nro_registro_ingreso);
+
+		$pdf->SetXY(15, 70);
+		$pdf->MultiCell(570, 80,'',1);
+
+		$pdf->SetFont('Arial','B',10);	
+		$pdf->Text(440, 80,'DOLAR ADUANERO : ');
+		$pdf->Text(545, 80,$dolar_aduanero);
+
 		//PROVEEDOR
-		$pdf->Text(35, 150,'PROVEEDOR:');
-		$pdf->Text(125, 150,$cod_prov);	
-		$pdf->Text(125, 150,'____________');	
-		$pdf->Text(250, 150,'FACT. N° : ');
-		$pdf->Text(300, 150,$nro_factura);	
-		$pdf->Text(300, 150,'____________');
-		$pdf->Text(460, 150,'FECHA : ');
-		$pdf->Text(510, 150,$fecha_factura);	
-		$pdf->Text(510, 150,'____________');
+		$pdf->Text(20, 	85,'PROVEEDOR:');
+		$pdf->Text(90, 	85,$cod_prov);	
+		$pdf->Text(90, 	87,'____________');	
+		$pdf->Text(250, 85,'FACT. N°: ');
+		$pdf->Text(300, 85,$nro_factura);	
+		$pdf->Text(300, 87,'____________');
+		$pdf->Text(470, 100,'FECHA: ');
+		$pdf->Text(525, 100,$fecha_factura);	
+		$pdf->Text(510, 102,'____________');
+
+
 		//ENBARQUE
 		$pdf->SetFont('Arial','',9);
-		$pdf->Text(35, 167,'EMBARQUE N°:');
-		$pdf->Text(125, 167,$nro_embarque);	
-		$pdf->Text(125, 167,'________________________________');	
-		$pdf->Text(321, 167,'MERCADERIA : ');
-		$pdf->Text(399, 167,substr($referencia,0,40));	
-		$pdf->Text(399, 167,'________________________________');
+		$pdf->Text(20, 105,'EMBARQUE N°:');
+		$pdf->Text(90, 105,$nro_embarque);	
+		$pdf->Text(90, 107,'______________________________________________________________________');	
+		$pdf->Text(20, 125,'MERCADERIA : ');
+		$pdf->Text(90, 125,substr($referencia,0,40));	
+		$pdf->Text(90, 127,'______________________________________________________________________');
+		$pdf->Text(20, 145,'Nº OC : ');
+		$pdf->Text(90, 145,substr($nro_oc_1,0,40));	
+		//$pdf->Text(90, 147,'______________________________________________________________________');
+
+
+
 		//RAZON SOCIAL
-		$pdf->Text(35, 187,'RAZON SOLCIAL:');
-		$pdf->Text(125, 187,$nom_proveedor);	
-		$pdf->Text(125, 187,'________________________________________________________');	
+		//$pdf->Text(35, 187,'RAZON SOLCIAL:');
+		//$pdf->Text(125, 187,$nom_proveedor);	
+		//$pdf->Text(125, 187,'________________________________________________________');	
 		//DIRECCION
-		$pdf->Text(35, 207,'DIRECCION:');
-		$pdf->Text(125, 207,substr($direccion,0,36));	
-		$pdf->Text(125, 207,'____________________________________________');	
-		$pdf->Text(380, 207,$nom_ciudad);	
-		$pdf->Text(380, 207,'____________');
-		$pdf->Text(458, 207,$nom_pais);	
-		$pdf->Text(458, 207,'____________');
+		//$pdf->Text(35, 207,'DIRECCION:');
+		//$pdf->Text(125, 207,substr($direccion,0,36));	
+		//$pdf->Text(125, 207,'____________________________________________');	
+		//$pdf->Text(380, 207,$nom_ciudad);	
+		//$pdf->Text(380, 207,'____________');
+		//$pdf->Text(458, 207,$nom_pais);	
+		//$pdf->Text(458, 207,'____________');
 		//FONO
-		$pdf->Text(35, 227,'FONO:');
-		$pdf->Text(125, 227,$fono);	
-		$pdf->Text(125, 227,'_____________');	
-		$pdf->Text(220, 227,'FAX:');
-		$pdf->Text(260, 227,$fax);	
-		$pdf->Text(260, 227,'_____________');
+		//$pdf->Text(35, 227,'FONO:');
+		//$pdf->Text(125, 227,$fono);	
+		//$pdf->Text(125, 227,'_____________');	
+		//$pdf->Text(220, 227,'FAX:');
+		//$pdf->Text(260, 227,$fax);	
+		//$pdf->Text(260, 227,'_____________');
 		
 		$sql_prod= "SELECT ITEM
 						,MODELO
@@ -1020,49 +1037,57 @@ class print_registro_ingreso extends reporte {
 						,P.FACTOR_VENTA_PUBLICO
 						,IR4.PRECIO_VTA_SUG
 					FROM ITEM_REGISTRO_4D  IR4 LEFT OUTER JOIN BIGGI.DBO.PRODUCTO P ON IR4.MODELO = P.COD_PRODUCTO
-				WHERE NUMERO_REGISTRO_INGRESO = $nro_registro_ingreso";
+				WHERE NUMERO_REGISTRO_INGRESO = $nro_registro_ingreso ORDER BY ITEM";
 		$result_prod = $db->build_results($sql_prod);
 		$count = count($result_prod);	
 		
 		if($count != 0){
-		$Y = $pdf->gety();
-		//////Tabla Encabezado//////
-		$pdf->SetFont('Arial','',8);
-		$pdf->SetXY(15, $Y+15);
-		$pdf->MultiCell(20, 15, 'Ít', 1, 'L');
-		$pdf->SetXY(35, $Y+15);
-		$pdf->MultiCell(84, 15, 'CODIGO', 1, 'L');
-		$pdf->SetXY(119, $Y+15);
-		$pdf->MultiCell(205, 15, 'PRODUCTO', 1, 'L');
-		$pdf->SetXY(324, $Y+15);
-		$pdf->MultiCell(31, 15, 'CT', 1, 'R');
-		$pdf->SetXY(355, $Y+15);
-		$pdf->MultiCell(56, 15, 'Precio US$', 1, 'R');		
-		$pdf->SetXY(411.4, $Y+15);
-		$pdf->MultiCell(56, 15, 'TOT. US$', 1, 'R');
-		$pdf->SetXY(467.7, $Y+15);
-		$pdf->MultiCell(57, 15, 'C.U US$', 1, 'R');
-		$pdf->SetXY(525, $Y+15);
-		$pdf->MultiCell(58, 15, 'C.U $', 1, 'R');
+			$Y = $pdf->gety();
+			//////Tabla Encabezado//////
+			$pdf->SetFont('Arial','',8);
+
+			$pdf->SetXY(15, $Y+10);
+			$pdf->MultiCell(20, 15, 'IT', 1, 'L');
+
+			$pdf->SetXY(35, $Y+10);
+			$pdf->MultiCell(84, 15, 'CODIGO', 1, 'L');
+
+			$pdf->SetXY(119, $Y+10);
+			$pdf->MultiCell(205, 15, 'PRODUCTO', 1, 'L');
+
+			$pdf->SetXY(324, $Y+10);
+			$pdf->MultiCell(31, 15, 'CT', 1, 'R');
+
+			$pdf->SetXY(355, $Y+10);
+			$pdf->MultiCell(56, 15, 'Precio US$', 1, 'R');	
+
+			$pdf->SetXY(411.4, $Y+10);
+			$pdf->MultiCell(56, 15, 'TOT. US$', 1, 'R');
+
+			$pdf->SetXY(467.7, $Y+10);
+			$pdf->MultiCell(57, 15, 'C.U US$', 1, 'R');
+
+			$pdf->SetXY(525, $Y+10);
+			$pdf->MultiCell(58, 15, 'C.U $', 1, 'R');
 		}
 		
 		$e= 1;
 		for ($i=0; $i< $count; $i++){
-		$Y = $pdf->gety();
-		if($i < 11){
-			$ITEM 		= $result_prod[$i]['ITEM'];
-			$PRODUCTO 	= $result_prod[$i]['NOM_PRODUCTO'];
-			$MODELO 	= $result_prod[$i]['MODELO'];
-			$CANTIDAD 	= $result_prod[$i]['CANTIDAD'];
-			$PRECIO 	= $result_prod[$i]['PRECIO'];
-			$TOTAL 		= $result_prod[$i]['TOTAL'];
-			$CU_PESOS 	= $result_prod[$i]['CU_PESOS'];
-			$CU_US 		= $result_prod[$i]['CU_US'];
-			//////Limita caracteres de productos//////
-			while ($pdf->GetStringWidth($PRODUCTO) > 35 AND $pdf->GetStringWidth($MODELO) > 20) {
-					$PRODUCTO = substr($PRODUCTO, 0, 35);
-					$MODELO = substr($MODELO, 0, 20);
-          			break;
+			$Y = $pdf->gety();
+			if($i < 11){
+				$ITEM 		= $result_prod[$i]['ITEM'];
+				$PRODUCTO 	= $result_prod[$i]['NOM_PRODUCTO'];
+				$MODELO 	= $result_prod[$i]['MODELO'];
+				$CANTIDAD 	= $result_prod[$i]['CANTIDAD'];
+				$PRECIO 	= $result_prod[$i]['PRECIO'];
+				$TOTAL 		= $result_prod[$i]['TOTAL'];
+				$CU_PESOS 	= $result_prod[$i]['CU_PESOS'];
+				$CU_US 		= $result_prod[$i]['CU_US'];
+				//////Limita caracteres de productos//////
+				while ($pdf->GetStringWidth($PRODUCTO) > 35 AND $pdf->GetStringWidth($MODELO) > 20) {
+						$PRODUCTO = substr($PRODUCTO, 0, 35);
+						$MODELO = substr($MODELO, 0, 20);
+	          			break;
             }
             
             $pdf->SetFont('Helvetica','',8);
@@ -1086,36 +1111,37 @@ class print_registro_ingreso extends reporte {
 			}
 		}
 		if($count != 0){
-			if($count > 11){	
+			if($count > 13){	
 				$largo = 166;
 			}else{
 				$largo = $count * 14.8;	
 			}
-			$pdf->SetXY(15, 265 );
+			//DIBUJA LA GRILLA DE LOS ITEMS DE LA PRIMERA PAGINA
+			$pdf->SetXY(15, 175 );
 			$pdf->MultiCell(20, $largo, '' ,1); // it
-			$pdf->SetXY(35, 265 );
+			$pdf->SetXY(35, 175 );
 			$pdf->MultiCell(84, $largo, '' ,1); // modelo
-			$pdf->SetXY(119, 265 );
+			$pdf->SetXY(119, 175 );
 			$pdf->MultiCell(205, $largo, '' ,1); // producto
-			$pdf->SetXY(324, 265 );
+			$pdf->SetXY(324, 175 );
 			$pdf->MultiCell(31, $largo, '' ,1); // ct
-			$pdf->SetXY(355, 265 );
+			$pdf->SetXY(355, 175 );
 			$pdf->MultiCell(56, $largo, '' ,1); // Precio US$
-			$pdf->SetXY(411.3, 265 );
+			$pdf->SetXY(411.3, 175 );
 			$pdf->MultiCell(56, $largo, '' ,1); // TOT. US$
-			$pdf->SetXY(467.9, 265 );
+			$pdf->SetXY(467.9, 175 );
 			$pdf->MultiCell(57, $largo, '' ,1); // C.U US$
-			$pdf->SetXY(525, 265 );
+			$pdf->SetXY(525, 175 );
 			$pdf->MultiCell(58, $largo, '' ,1); // C.U $
 		}else{
 			$Y = 250;
 		}
 		$pdf->SetFont('Arial','',9);
-		$pdf->Text(30, 50,'Fecha   '.$fecha);
-		$pdf->Text(30, 62,'Hora    '.$hora);
-		$pdf->Text(547, 85,'PAG:  '.$pdf->PageNo());
+		//$pdf->Text(30, 50,'1Fecha   '.$fecha);
+		//$pdf->Text(30, 62,'1Hora    '.$hora);
+		//$pdf->Text(547, 85,'PAG:  '.$pdf->PageNo());
 		
-		 $pdf->SetFont('Arial','B',12);
+		$pdf->SetFont('Arial','B',12);
 		$pdf->Text(15, 35,'COMERCIAL TODOINOX LTDA');
 		$pdf->SetFont('Helvetica','',8);
 		$pdf->Text(35, $Y + 30,'TOTAL EXFCA                                US$');
@@ -1224,7 +1250,7 @@ class print_registro_ingreso extends reporte {
 		$pdf->SetXY(478, $Y + 280);
 		$pdf->MultiCell(57, 12,number_format($total_otros, 0, ',', '.') ,1,'R');
 		
-		if($count > 11){
+		if($count > 13){
 				$pdf->AddPage();	
 					$Y = 91;
 				$fecha=strftime( "%d/%m/%Y", time() );
