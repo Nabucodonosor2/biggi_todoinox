@@ -514,6 +514,7 @@ class wi_cx_oc_extranjera extends w_input{
         $this->dws['wi_cx_oc_extranjera']->set_item(0, 'COD_CX_CONTACTO_PROVEEDOR_EXT',	$result[0]['COD_CX_CONTACTO_PROVEEDOR_EXT']);
         $this->dws['wi_cx_oc_extranjera']->set_item(0, 'REFERENCIA',					$result[0]['REFERENCIA']);
         $this->dws['wi_cx_oc_extranjera']->set_item(0, 'DELIVERY_DATE',					$result[0]['DELIVERY_DATE']);
+        $this->dws['wi_cx_oc_extranjera']->set_item(0, 'DELIVERY_DATE_L',				$result[0]['DELIVERY_DATE']);
         $this->dws['wi_cx_oc_extranjera']->set_item(0, 'COD_CX_COT_EXTRANJERA',			$result[0]['COD_CX_COT_EXTRANJERA']);
         $this->dws['wi_cx_oc_extranjera']->set_item(0, 'COD_CX_PUERTO_SALIDA',			$result[0]['COD_CX_PUERTO_SALIDA']);
         $this->dws['wi_cx_oc_extranjera']->set_item(0, 'COD_CX_MONEDA',					$result[0]['COD_CX_MONEDA']);
@@ -595,6 +596,19 @@ class wi_cx_oc_extranjera extends w_input{
         $this->dws['wi_cx_oc_extranjera']->set_item(0, 'MONTO_TOTAL_H',	$vl_subtotal);
         $this->dws['wi_cx_oc_extranjera']->set_item(0, 'MONTO_TOTAL',	$vl_subtotal);
         
+        //dw_item_packing_oc
+        $sql = "SELECT NOM_CONTAINER
+                      ,CANT
+                FROM CX_PACKING_COT_EXTRANJERA
+                WHERE COD_CX_COT_EXTRANJERA = $cod_cotizacion_ext";
+        $result = $db->build_results($sql);
+
+        for($i=0 ; $i < count($result) ; $i++){
+            $this->dws['dw_item_packing_oc']->insert_row();
+            
+            $this->dws['dw_item_packing_oc']->set_item($i, 'NOM_CONTAINER', $result[$i]['NOM_CONTAINER']);
+            $this->dws['dw_item_packing_oc']->set_item($i, 'CANT',          $result[$i]['CANT']);
+        }
     }
     
     function load_record() {
