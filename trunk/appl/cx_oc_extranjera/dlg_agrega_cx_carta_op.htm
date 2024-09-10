@@ -30,8 +30,9 @@
 		const vl_porc_pago			= get_value('PORC_PAGO_0');
 		const vl_monto_pago			= get_value('MONTO_PAGO_0');
 		const vl_cod_estado			= get_value('COD_ESTADO_CX_CARTA_OP_0');
+		const vl_atencion_carta		= get_value('ATENCION_CARTA_0');
 		
-		const vl_values = vl_cx_oc_extranjera+"|"+vl_fecha_carta_op+"|"+vl_porc_pago+"|"+vl_monto_pago+"|"+vl_cod_cx_carta_op+"|"+vl_cod_estado;
+		const vl_values = vl_cx_oc_extranjera+"|"+vl_fecha_carta_op+"|"+vl_porc_pago+"|"+vl_monto_pago+"|"+vl_cod_cx_carta_op+"|"+vl_cod_estado+"|"+vl_atencion_carta;
 		
 		const vl_ajax = nuevoAjax();
 		vl_ajax.open("GET", "opera_registro_op.php?values="+vl_values, false);
@@ -83,7 +84,7 @@
 
     function okMe(){
 		if(valida_precio_total()){
-			returnValue=get_returnVal(); 
+			returnValue=get_returnVal();
 			setWindowReturnValue(returnValue);
 			$dlg.dialogWindow.dialog('close');
 		}else{
@@ -131,6 +132,10 @@
   		<tr class="encabezado_right">
     		<td>Monto Pago</td>
 			<td align="left" class="oscuro">{MONTO_PAGO}{SUM_MONTO_PAGO}{MONTO_TOTAL}</td>
+  		</tr>
+		<tr class="encabezado_right">
+    		<td>Atención Carta:</td>
+			<td align="left" class="oscuro">{ATENCION_CARTA}</td>
   		</tr>
   		<tr class="encabezado_right" style="display: {ESTADO};">
     		<td>Estado:</td>

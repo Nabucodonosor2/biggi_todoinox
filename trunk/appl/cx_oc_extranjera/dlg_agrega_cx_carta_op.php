@@ -29,7 +29,8 @@ if($cod_cx_carta_op == '')
 				  ,1 COD_ESTADO_CX_CARTA_OP
 				  ,'$estado' ESTADO
 				  ,$sum_monto_pago SUM_MONTO_PAGO
-				  ,$monto_total MONTO_TOTAL";
+				  ,$monto_total MONTO_TOTAL
+				  ,dbo.f_get_parametro(76) ATENCION_CARTA";
 else
 	$sql = "SELECT CONVERT(VARCHAR, GETDATE(), 103) FECHA_CARTA_OP
 				  ,PORC_PAGO
@@ -40,6 +41,7 @@ else
 				  ,'$estado' ESTADO
 				  ,$sum_monto_pago SUM_MONTO_PAGO
 				  ,$monto_total MONTO_TOTAL
+				  ,ATENCION_CARTA
 			FROM CX_CARTA_OP
 			WHERE COD_CX_CARTA_OP =	$cod_cx_carta_op";	  
 
@@ -51,6 +53,7 @@ $dw->add_control(new edit_text_hidden('MONTO_TOTAL'));
 $dw->add_control(new edit_date('FECHA_CARTA_OP'));
 $dw->add_control(new edit_porcentaje('PORC_PAGO'));
 $dw->add_control(new edit_num('MONTO_PAGO', 10, 10, 2));
+$dw->add_control(new edit_text('ATENCION_CARTA', 30, 100));
 $sql="SELECT COD_ESTADO_CX_CARTA_OP
 			,NOM_ESTADO_CX_CARTA_OP
 	  FROM ESTADO_CX_CARTA_OP

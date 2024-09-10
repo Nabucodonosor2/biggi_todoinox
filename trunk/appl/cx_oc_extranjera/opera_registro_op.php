@@ -20,6 +20,7 @@ $porc_pago				= str_replace(",", ".", $vl_values[2]);
 $monto_pago				= str_replace(",", ".", $vl_values[3]);
 $cod_cx_carta_op		= $vl_values[4];
 $cod_estado_carta_op	= $vl_values[5];
+$atencion_carta			= $vl_values[6];
 
 $sp = "spu_cx_orden_pago";
 
@@ -28,7 +29,8 @@ if($cod_cx_carta_op == "")
 else
 	$operacion = "'UPDATE'";
 
-$cod_cx_carta_op		= ($cod_cx_carta_op =='') ? "null" : "$cod_cx_carta_op";	
+$cod_cx_carta_op	= ($cod_cx_carta_op =='') ? "null" : "$cod_cx_carta_op";
+$atencion_carta		= ($atencion_carta =='') ? "null" : "'$atencion_carta'";	
 	
 $param = "$operacion
 		 ,$cod_cx_carta_op
@@ -36,7 +38,11 @@ $param = "$operacion
 		 ,$fecha_carta_op
 		 ,$porc_pago
 		 ,$monto_pago
-		 ,$cod_estado_carta_op";
+		 ,$cod_estado_carta_op
+		 ,null
+		 ,null
+		 ,null
+		 ,$atencion_carta";
 
 if($db->EXECUTE_SP($sp, $param))
 	print 'exito';

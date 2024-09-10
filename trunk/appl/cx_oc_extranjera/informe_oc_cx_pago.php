@@ -31,10 +31,10 @@ $pdf->SetXY(52, $y+100+15);
 $pdf->Cell(70, 15, 'ITAU', 0, 0, 'L');
 $pdf->SetXY(52, $y+114+15);
 $pdf->Cell(70, 15, 'PRESENTE', 0, 0, 'L');
-$pdf->Line(55,128,110,128);
+$pdf->Line(55,128,120,128);
 
 $pdf->SetXY(52, $y+155+10);
-$pdf->Cell(158, 15, 'At.: Srita. Yasmina Guajardo ', 0, 0, 'L');
+$pdf->Cell(158, 15, 'At.: '.$result[0]['ATENCION_CARTA'], 0, 0, 'L');
 
 $pdf->SetXY(52, $y+219);
 $pdf->MultiCell(450, 14, 'Por la presente autorizo debitar de cta. cte. US$ N°1200-2122-57, COMERCIAL TODOINOX LTDA., (Rut: 89.257.000-0) la suma de US$'.$result[0]['MONTO_PAGO'].' y enviar transferencia por pago anticipado de importación a:', 0, 'J', false);
@@ -81,8 +81,8 @@ $pdf->Line(55,690,230,690);
 $pdf->SetXY(52, $y+710);
 $pdf->Cell(180, 15, 'COMERCIAL TODOINOX LTDA.', 0, 0, 'L');
 
-if($result[0]['COD_ESTADO_CX_CARTA_OP'] == 1)
-    $pdf->Image(session::get('K_ROOT_DIR').'/images_appl/cx_po_emitida.png', 0, 400, 612, 250);
+/*if($result[0]['COD_ESTADO_CX_CARTA_OP'] == 1)
+    $pdf->Image(session::get('K_ROOT_DIR').'/images_appl/cx_po_emitida.png', 0, 400, 612, 250);*/
 
 $pdf->Output("Carta Orden Pago.pdf", 'I');
 ?>

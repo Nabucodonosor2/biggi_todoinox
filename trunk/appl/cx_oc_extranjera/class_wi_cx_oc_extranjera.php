@@ -826,6 +826,7 @@ class wi_cx_oc_extranjera extends w_input{
 					  ,MAIL
 					  ,U.NOM_USUARIO
                       ,CCO.COD_ESTADO_CX_CARTA_OP
+                      ,ATENCION_CARTA
 			  FROM CX_CARTA_OP CCO
 				  ,CX_OC_EXTRANJERA COE
 				  ,PROVEEDOR_EXT PE
