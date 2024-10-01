@@ -5,7 +5,8 @@ require_once(dirname(__FILE__)."/../common_appl/class_w_output_biggi.php");
 class wo_cx_proveedor_ext_marca extends w_output_biggi{
 	function wo_cx_proveedor_ext_marca(){
 		
-		$sql=  "SELECT PE.COD_PROVEEDOR_EXT
+		$sql=  "SELECT CPE.COD_CX_PROVEEDOR_EXT_MARCA 
+                    ,PE.COD_PROVEEDOR_EXT
                     ,ALIAS_PROVEEDOR_EXT
                     ,NOM_PROVEEDOR_EXT
                     ,M.NOM_MARCA
