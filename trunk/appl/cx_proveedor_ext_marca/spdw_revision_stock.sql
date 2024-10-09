@@ -9,7 +9,8 @@ BEGIN
 		VENTAS_TRES				NUMERIC,
 		VENTAS_DOS				NUMERIC,
 		VENTAS_UNO				NUMERIC,
-		VENTAS_HOY				NUMERIC
+		VENTAS_HOY				NUMERIC,
+		CANTIDAD				NUMERIC
 	)
 
 	DECLARE 
@@ -24,7 +25,8 @@ BEGIN
 		@vl_nc_ventas_2			numeric,
 		@vl_nc_ventas_3			numeric,
 		@vl_ventas_hoy			numeric,
-		@vl_nc_ventas_hoy		numeric
+		@vl_nc_ventas_hoy		numeric,
+		@vl_cantidad			numeric
 	
 	-- declara cursor
 	DECLARE C_CURSOR CURSOR FOR
@@ -41,7 +43,8 @@ BEGIN
 	OPEN C_CURSOR
 	FETCH C_CURSOR INTO @vc_cod_producto, @vc_stock	
 	WHILE @@FETCH_STATUS = 0 BEGIN
-		
+		SET @vl_cantidad = 0
+
 		SELECT @vl_next_correlativo = ISNULL(SUM(CANTIDAD), 0)
 		FROM CX_OC_EXTRANJERA COE
 			,CX_ITEM_OC_EXTRANJERA COC
@@ -124,8 +127,13 @@ BEGIN
 
 		SET @vl_ventas_hoy = @vl_ventas_hoy - @vl_nc_ventas_hoy
 
-		INSERT INTO @TEMPO (COD_PRODUCTO,		STOCK,		NEXT_CORRELATIVO,		STOCK_NOMINAL,		VENTAS_TRES,	VENTAS_DOS,		VENTAS_UNO,		VENTAS_HOY) 
-					VALUES (@vc_cod_producto,	@vc_stock,	@vl_next_correlativo,	@vl_stock_nominal,	@vl_ventas_3,	@vl_ventas_2,	@vl_ventas_1,	@vl_ventas_hoy)
+		SELECT @vl_cantidad = CANTIDAD
+		FROM REV_STOCK_CT
+		WHERE COD_PRODUCTO = @vc_cod_producto
+		AND COD_PROVEEDOR_EXT = @ve_cod_proveedor_ext
+
+		INSERT INTO @TEMPO (COD_PRODUCTO,		STOCK,		NEXT_CORRELATIVO,		STOCK_NOMINAL,		VENTAS_TRES,	VENTAS_DOS,		VENTAS_UNO,		VENTAS_HOY,		CANTIDAD) 
+					VALUES (@vc_cod_producto,	@vc_stock,	@vl_next_correlativo,	@vl_stock_nominal,	@vl_ventas_3,	@vl_ventas_2,	@vl_ventas_1,	@vl_ventas_hoy,	@vl_cantidad)
 
 		FETCH C_CURSOR INTO  @vc_cod_producto, @vc_stock	 
 	END
@@ -141,5 +149,6 @@ BEGIN
 		  ,VENTAS_DOS
 		  ,VENTAS_UNO
 		  ,VENTAS_HOY
+		  ,ISNULL(CANTIDAD, 0) CANTIDAD
 	FROM @TEMPO	
 END

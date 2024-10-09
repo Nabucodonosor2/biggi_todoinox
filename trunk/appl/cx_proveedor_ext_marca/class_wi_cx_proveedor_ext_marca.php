@@ -1,11 +1,40 @@
 <?php
 require_once(dirname(__FILE__)."/../../../../commonlib/trunk/php/auto_load.php");
 
-class dw_revision_stock extends datawindow {
-    function dw_revision_stock() {
+class dw_revision_stock extends datawindow{
+    function dw_revision_stock(){
         $sql = "EXEC dbo.spdw_revision_stock {KEY1}";
         
         parent::datawindow($sql, 'REVISION_STOCK', true, true);
+
+        $this->add_control(new edit_num('CANTIDAD',10, 10));
+    }
+
+    function update($db, $cod_proveedor_ext){
+        $sp = 'spu_revision_stock';
+
+        for ($i = 0; $i < $this->row_count(); $i++){
+            /*$status = $this->get_status_row($i);
+            if ($status == K_ROW_NOT_MODIFIED || $status == K_ROW_NEW)
+                continue;*/
+                
+            $COD_PRODUCTO	= $this->get_item($i, 'COD_PRODUCTO');
+            $CANTIDAD	    = $this->get_item($i, 'CANTIDAD');
+            
+            $CANTIDAD	= ($CANTIDAD =='') ? 0 : $CANTIDAD;
+                
+            $operacion = 'INSERT';
+                    
+            $param = "'$operacion'
+                     ,'$COD_PRODUCTO'
+                     ,$cod_proveedor_ext
+                     ,$CANTIDAD";
+                    
+            if(!$db->EXECUTE_SP($sp, $param))
+                return false;
+        }
+        
+        return true;
     }
 }
 
@@ -99,6 +128,27 @@ class wi_cx_proveedor_ext_marca extends w_input{
 	    $this->_load_record();
     }
 
+    function save_record($db){
+        $cod_proveedor_ext = $this->dws['dw_cx_proveedor_ext_marca']->get_item(0, 'COD_PROVEEDOR_EXT');
+
+        $sp = 'spu_revision_stock';
+    
+        $operacion = 'DELETE';
+        $param = "'$operacion'
+                   ,NULL
+                   ,$cod_proveedor_ext
+                   ,NULL";
+
+        if ($db->EXECUTE_SP($sp, $param)){
+            if(!$this->dws['dw_revision_stock']->update($db, $cod_proveedor_ext))
+                return false;
+
+            return true;
+        }
+
+        return false;
+    }
+
     function export_record(){
         error_reporting(E_ALL & ~E_NOTICE);
 		require_once(dirname(__FILE__)."/../../../../commonlib/trunk/php/php_writeexcel-0.3.0/class.writeexcel_workbook.inc.php");
@@ -173,6 +223,7 @@ class wi_cx_proveedor_ext_marca extends w_input{
 			$VENTAS_DOS         = $result[$i]['VENTAS_DOS'];
             $VENTAS_UNO         = $result[$i]['VENTAS_UNO'];
             $VENTAS_HOY         = $result[$i]['VENTAS_HOY'];
+            $CANTIDAD           = $result[$i]['CANTIDAD'];
 			
             $worksheet->write(3+$ln, 0, $COD_PRODUCTO, $text_item);
             $worksheet->write(3+$ln, 1, $STOCK, $text_item);
@@ -182,14 +233,14 @@ class wi_cx_proveedor_ext_marca extends w_input{
             $worksheet->write(3+$ln, 5, $VENTAS_DOS, $text_item);
             $worksheet->write(3+$ln, 6, $VENTAS_UNO, $text_item);
             $worksheet->write(3+$ln, 7, $VENTAS_HOY, $text_item);
-            $worksheet->write(3+$ln, 8, '', $text_item);
+            $worksheet->write(3+$ln, 8, $CANTIDAD, $text_item);
             $ln++;
 		}
 
 		$workbook->close();
 		
-		header("Content-Type: application/x-msexcel; name=\"$alias - REVISIÓN prueba.xls\"");
-		header("Content-Disposition: inline; filename=\"$alias - REVISIÓN prueba.xls\"");
+		header("Content-Type: application/x-msexcel; name=\"$alias - REVISIÓN.xls\"");
+		header("Content-Disposition: inline; filename=\"$alias - REVISIÓN.xls\"");
 		$fh=fopen($fname, "rb");
 		fpassthru($fh);
 		unlink($fname);
